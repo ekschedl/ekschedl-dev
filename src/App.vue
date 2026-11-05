@@ -10,74 +10,68 @@ const menuOpen = ref(false)
 const translations = {
   DE: {
     nav: ['Home', 'Projekte', 'Expertise', 'Über mich'],
-    contact: 'Kontakt',
+    contact: 'KONTAKT',
     role: 'Softwareentwicklerin',
     location: 'Graz, Österreich',
-    description:
-      'Ich entwickle Webanwendungen und Softwareprojekte mit Neugier, analytischem Denken und Liebe zum Detail.',
-    viewProjects: 'Meine Projekte ansehen',
-    viewAbout: 'Mehr über mich',
-    projectIntro: 'Ausgewählte Projekte',
-    allProjects: 'Meine Arbeiten',
-    expertise: 'Meine Expertise',
     about: 'Über mich',
+    aboutShort: 'Mein Weg, meine Erfahrungen und was mich antreibt.',
     aboutText:
-      'Ich habe den akademischen Lehrgang Software-Entwicklung an der FH CAMPUS 02 abgeschlossen und bei JAWA praktische Erfahrung in der Webentwicklung gesammelt. Mich begeistert es, Zusammenhänge zu verstehen, Lösungen zu entwickeln und kontinuierlich Neues zu lernen.',
+      'Ich habe den akademischen Lehrgang Software-Entwicklung an der FH CAMPUS 02 abgeschlossen und bei JAWA praktische Erfahrung in der Webentwicklung gesammelt. Ich entwickle gerne Software, verstehe Zusammenhänge und lerne kontinuierlich dazu.',
+    expertise: 'Expertise',
+    projectsTitle: 'Ausgewählte Projekte',
     contactTitle: 'Lass uns zusammenarbeiten.',
     contactText:
-      'Ich freue mich über interessante Projekte und berufliche Möglichkeiten in der Softwareentwicklung.',
+      'Ich freue mich über interessante Projekte und Möglichkeiten in der Softwareentwicklung.',
+    viewProjects: 'Projekte ansehen',
+    viewAbout: 'Mehr über mich',
     projectDescriptions: [
-      'iOS-App für Yoga und Achtsamkeit',
+      'iOS-App mit Swift, SwiftUI und Supabase',
       'Kartenspiel mit Java und JavaScript',
-      'Website für ein Kaffeehaus'
+      'Webprojekt mit HTML, CSS und JavaScript'
     ]
   },
   EN: {
     nav: ['Home', 'Projects', 'Expertise', 'About me'],
-    contact: 'Contact',
+    contact: "LET'S TALK",
     role: 'Software Developer',
     location: 'Graz, Austria',
-    description:
-      'I develop web applications and software projects with curiosity, analytical thinking and attention to detail.',
-    viewProjects: 'Explore my projects',
-    viewAbout: 'About me',
-    projectIntro: 'Selected Projects',
-    allProjects: 'My Work',
-    expertise: 'My Expertise',
     about: 'About me',
+    aboutShort: 'My journey, my experience and what motivates me.',
     aboutText:
-      'I completed an academic Software Development programme at FH CAMPUS 02 and gained practical experience in web development at JAWA. I enjoy understanding how things work, developing solutions and continuously learning.',
+      'I completed an academic Software Development programme at FH CAMPUS 02 and gained practical experience in web development at JAWA. I enjoy developing software, understanding how things work and continuously learning.',
+    expertise: 'Expertise',
+    projectsTitle: 'Selected Projects',
     contactTitle: "Let's work together.",
     contactText:
-      'I am open to interesting projects and career opportunities in software development.',
+      'I am open to interesting projects and opportunities in software development.',
+    viewProjects: 'View projects',
+    viewAbout: 'About me',
     projectDescriptions: [
-      'iOS app for yoga and mindfulness',
-      'Card game built with Java and JavaScript',
-      'Website for a coffee shop'
+      'iOS app with Swift, SwiftUI and Supabase',
+      'Card game with Java and JavaScript',
+      'Web project with HTML, CSS and JavaScript'
     ]
   },
   RU: {
     nav: ['Главная', 'Проекты', 'Навыки', 'Обо мне'],
-    contact: 'Контакт',
+    contact: 'КОНТАКТ',
     role: 'Разработчик ПО',
     location: 'Грац, Австрия',
-    description:
-      'Я разрабатываю веб-приложения и программные проекты, сочетая любознательность, аналитическое мышление и внимание к деталям.',
-    viewProjects: 'Мои проекты',
-    viewAbout: 'Обо мне',
-    projectIntro: 'Избранные проекты',
-    allProjects: 'Мои работы',
-    expertise: 'Мои навыки',
     about: 'Обо мне',
+    aboutShort: 'Мой путь, опыт и то, что меня вдохновляет.',
     aboutText:
-      'Я окончила академическую программу Software Development в FH CAMPUS 02 и получила практический опыт веб-разработки в JAWA. Мне нравится разбираться в сложных задачах, находить решения и постоянно изучать новое.',
+      'Я окончила академическую программу Software Development в FH CAMPUS 02 и получила практический опыт веб-разработки в JAWA. Мне нравится создавать программы, разбираться в их устройстве и постоянно учиться.',
+    expertise: 'Навыки',
+    projectsTitle: 'Избранные проекты',
     contactTitle: 'Давайте работать вместе.',
     contactText:
-      'Я открыта к интересным проектам и профессиональным возможностям в разработке программного обеспечения.',
+      'Я открыта к интересным проектам и возможностям в разработке программного обеспечения.',
+    viewProjects: 'Смотреть проекты',
+    viewAbout: 'Обо мне',
     projectDescriptions: [
-      'iOS-приложение для йоги и осознанности',
+      'iOS-приложение на Swift, SwiftUI и Supabase',
       'Карточная игра на Java и JavaScript',
-      'Сайт для кофейни'
+      'Веб-проект на HTML, CSS и JavaScript'
     ]
   }
 }
@@ -87,23 +81,23 @@ const t = computed(() => translations[language.value])
 const projects = [
   {
     id: 'yoganow',
-    number: '01',
     title: 'YogaNow Studio',
-    stack: ['Swift', 'SwiftUI', 'Supabase'],
+    subtitle: 'iOS App',
+    stack: 'Swift · SwiftUI · Supabase',
     image: '/images/yoganow.jpg'
   },
   {
     id: 'uno',
-    number: '02',
     title: 'UNO',
-    stack: ['Java', 'JavaScript'],
+    subtitle: 'Card Game',
+    stack: 'Java · JavaScript',
     image: '/images/uno.jpg'
   },
   {
     id: 'kaffeehaus',
-    number: '03',
     title: 'Kaffeehaus',
-    stack: ['HTML', 'CSS', 'JavaScript'],
+    subtitle: 'Website',
+    stack: 'HTML · CSS · JavaScript',
     image: '/images/kaffeehaus.jpg'
   }
 ]
@@ -134,7 +128,7 @@ function closeMenu() {
   <div class="page">
     <!-- HEADER -->
     <header class="header">
-      <a class="logo" href="#home" @click="closeMenu">
+      <a href="#home" class="logo" @click="closeMenu">
         EK<span>.</span>
       </a>
 
@@ -146,12 +140,15 @@ function closeMenu() {
         <a href="#home" @click="closeMenu">
           {{ t.nav[0] }}
         </a>
+
         <a href="#projects" @click="closeMenu">
           {{ t.nav[1] }}
         </a>
+
         <a href="#expertise" @click="closeMenu">
           {{ t.nav[2] }}
         </a>
+
         <a href="#about" @click="closeMenu">
           {{ t.nav[3] }}
         </a>
@@ -177,8 +174,8 @@ function closeMenu() {
         </a>
 
         <button
-          class="menu-button"
           type="button"
+          class="menu-button"
           aria-label="Toggle navigation"
           aria-controls="main-navigation"
           :aria-expanded="menuOpen"
@@ -190,10 +187,12 @@ function closeMenu() {
     </header>
 
     <main>
-      <!-- HERO -->
-      <section id="home" class="hero">
-        <div class="hero-portrait">
-          <div class="portrait-shape"></div>
+      <!-- BENTO STARTSEITE -->
+      <section id="home" class="bento-grid">
+        <!-- PORTRÄT LINKS -->
+        <div class="bento portrait-card">
+          <div class="portrait-decoration portrait-decoration-one"></div>
+          <div class="portrait-decoration portrait-decoration-two"></div>
 
           <img
             src="/images/ekaterina-cutout.png"
@@ -202,70 +201,65 @@ function closeMenu() {
           />
         </div>
 
-        <div class="hero-content">
-          <div class="hero-eyebrow">
-            <span class="eyebrow-line"></span>
-            {{ t.role }} / {{ t.location }}
+        <!-- NAME RECHTS OBEN -->
+        <div class="bento intro-card">
+          <div class="intro-content">
+            <h1>EKATERINA<span>.</span></h1>
+            <h2>{{ t.role }}</h2>
+            <p>{{ t.location }}</p>
           </div>
 
-          <h1>
-            Ekaterina<br />
-            Schedlberger<span>.</span>
-          </h1>
-
-          <p class="hero-description">
-            {{ t.description }}
-          </p>
-
-          <div class="hero-buttons">
-            <a href="#projects" class="primary-button">
-              {{ t.viewProjects }}
-              <span aria-hidden="true">↗</span>
-            </a>
-
-            <a href="#about" class="secondary-button">
-              {{ t.viewAbout }}
-              <span aria-hidden="true">↗</span>
-            </a>
-          </div>
+          <a
+            href="#projects"
+            class="circle-arrow"
+            :aria-label="t.viewProjects"
+          >
+            <span aria-hidden="true">→</span>
+          </a>
         </div>
 
-        <div class="hero-expertise">
-          <div class="expertise-item">
-            <span class="expertise-icon">&lt;/&gt;</span>
-            <div>
-              <strong>Web Development</strong>
-              <small>Vue · TypeScript · PHP</small>
-            </div>
+        <!-- DREI PROJEKTKACHELN -->
+        <a
+          v-for="project in projects"
+          :key="project.id"
+          :href="'#' + project.id"
+          class="bento mini-project"
+          :class="'mini-' + project.id"
+        >
+          <div class="mini-project-image">
+            <img :src="project.image" :alt="project.title" />
           </div>
 
-          <div class="expertise-item">
-            <span class="expertise-icon">▤</span>
-            <div>
-              <strong>Backend & Datenbanken</strong>
-              <small>PHP · SQL · REST</small>
-            </div>
-          </div>
+          <h3>{{ project.title }}</h3>
+        </a>
 
-          <div class="expertise-item">
-            <span class="expertise-icon">◇</span>
-            <div>
-              <strong>App Development</strong>
-              <small>Swift · SwiftUI</small>
-            </div>
+        <!-- EXPERTISE -->
+        <a href="#expertise" class="bento expertise-card">
+          <h2>{{ t.expertise }}</h2>
+
+          <div class="skill-preview">
+            <span>Vue.js</span>
+            <span>TypeScript</span>
+            <span>Docker</span>
+            <span>•••</span>
           </div>
-        </div>
+        </a>
+
+        <!-- ÜBER MICH -->
+        <a href="#about" class="bento about-card">
+          <h2>{{ t.about }}</h2>
+
+          <p>{{ t.aboutShort }}</p>
+
+          <span class="about-arrow" aria-hidden="true">→</span>
+        </a>
       </section>
 
-      <!-- PROJECTS -->
-      <section id="projects" class="projects-section">
-        <div class="section-top">
-          <div>
-            <span class="section-kicker">01 / PORTFOLIO</span>
-            <h2>{{ t.projectIntro }}</h2>
-          </div>
-
-          <span class="section-count">2026 / 03</span>
+      <!-- PROJEKTE -->
+      <section id="projects" class="content-section">
+        <div class="section-heading">
+          <span>01 / PORTFOLIO</span>
+          <h2>{{ t.projectsTitle }}</h2>
         </div>
 
         <div class="project-grid">
@@ -273,10 +267,9 @@ function closeMenu() {
             v-for="(project, index) in projects"
             :id="project.id"
             :key="project.id"
-            class="project-card"
-            :class="'project-' + project.id"
+            class="project-detail"
           >
-            <div class="project-visual">
+            <div class="project-image">
               <img
                 :src="project.image"
                 :alt="project.title"
@@ -284,23 +277,15 @@ function closeMenu() {
               />
             </div>
 
-            <div class="project-body">
-              <div class="project-meta">
-                <span>PROJECT / {{ project.number }}</span>
-                <span class="project-arrow" aria-hidden="true">↗</span>
-              </div>
+            <div class="project-info">
+              <span>{{ project.subtitle }}</span>
 
               <h3>{{ project.title }}</h3>
 
               <p>{{ t.projectDescriptions[index] }}</p>
 
-              <div class="project-tags">
-                <span
-                  v-for="technology in project.stack"
-                  :key="technology"
-                >
-                  {{ technology }}
-                </span>
+              <div class="project-stack">
+                {{ project.stack }}
               </div>
             </div>
           </article>
@@ -308,12 +293,10 @@ function closeMenu() {
       </section>
 
       <!-- EXPERTISE -->
-      <section id="expertise" class="expertise-section">
-        <div class="section-top">
-          <div>
-            <span class="section-kicker">02 / TECHNOLOGIES</span>
-            <h2>{{ t.expertise }}</h2>
-          </div>
+      <section id="expertise" class="content-section skills-section">
+        <div class="section-heading">
+          <span>02 / TECHNOLOGIES</span>
+          <h2>{{ t.expertise }}</h2>
         </div>
 
         <div class="skills">
@@ -323,43 +306,38 @@ function closeMenu() {
         </div>
       </section>
 
-      <!-- ABOUT -->
-      <section id="about" class="about-section">
-        <div class="about-heading">
-          <span class="section-kicker">03 / MY JOURNEY</span>
+      <!-- ÜBER MICH -->
+      <section id="about" class="content-section about-section">
+        <div class="section-heading">
+          <span>03 / MY JOURNEY</span>
           <h2>{{ t.about }}</h2>
         </div>
 
-        <div class="about-content">
-          <p>{{ t.aboutText }}</p>
-          <a href="#contact" class="text-link">
-            {{ t.contact }} ↗
-          </a>
-        </div>
+        <p class="about-description">
+          {{ t.aboutText }}
+        </p>
       </section>
 
-      <!-- CONTACT -->
-      <section id="contact" class="contact-section">
-        <span class="section-kicker">04 / CONTACT</span>
-
+      <!-- KONTAKT -->
+      <section id="contact" class="content-section contact-section">
         <h2>{{ t.contactTitle }}</h2>
+
         <p>{{ t.contactText }}</p>
 
         <a
           href="https://github.com/ekschedl"
           target="_blank"
           rel="noopener noreferrer"
-          class="primary-button"
+          class="contact-link"
         >
           GitHub ↗
         </a>
       </section>
     </main>
 
-    <footer class="footer">
+    <footer>
       <span>© 2026 Ekaterina Schedlberger</span>
       <span>Vue 3 · TypeScript</span>
-      <a href="#home">↑ TOP</a>
     </footer>
   </div>
 </template>
