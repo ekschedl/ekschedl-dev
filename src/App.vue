@@ -1,14 +1,45 @@
-
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
 type Language = 'DE' | 'EN' | 'RU'
 
+const languages: Language[] = ['DE', 'EN', 'RU']
 const language = ref<Language>('DE')
 const menuOpen = ref(false)
+const query = ref('')
+const technology = ref('')
+const darkMode = ref(false)
+
+onMounted(() => {
+  document.documentElement.lang = language.value.toLowerCase()
+  try {
+    darkMode.value = localStorage.getItem('portfolio-theme') === 'dark'
+  } catch {
+    // Theme switching also works when storage is unavailable.
+  }
+})
+
+watch(darkMode, (enabled) => {
+  const theme = enabled ? 'dark' : 'light'
+  document.documentElement.dataset.theme = theme
+  try {
+    localStorage.setItem('portfolio-theme', theme)
+  } catch {
+    // Keep the selected theme for this visit.
+  }
+})
 
 const translations = {
   DE: {
+    search: 'Projekte suchen',
+    searchHint: 'Titel, Beschreibung oder Technologie',
+    filter: 'Technologie filtern',
+    allTechnologies: 'Alle Technologien',
+    noResults: 'Keine passenden Projekte gefunden.',
+    reset: 'Suche und Filter zurücksetzen',
+    darkMode: 'Dunkelmodus',
+    navigationLabel: 'Hauptnavigation',
+    languageLabel: 'Sprache',
     nav: ['Start', 'Projekte', 'Technologien', 'Über mich'],
     contact: 'KONTAKT',
     role: 'Softwareentwicklerin',
@@ -37,6 +68,15 @@ const translations = {
     menuClose: 'Menü schließen'
   },
   EN: {
+    search: 'Search projects',
+    searchHint: 'Title, description or technology',
+    filter: 'Filter by technology',
+    allTechnologies: 'All technologies',
+    noResults: 'No matching projects found.',
+    reset: 'Reset search and filter',
+    darkMode: 'Dark mode',
+    navigationLabel: 'Main navigation',
+    languageLabel: 'Language',
     nav: ['Home', 'Projects', 'Technologies', 'About'],
     contact: "LET'S TALK",
     role: 'Software Developer',
@@ -65,6 +105,15 @@ const translations = {
     menuClose: 'Close menu'
   },
   RU: {
+    search: 'Поиск проектов',
+    searchHint: 'Название, описание или технология',
+    filter: 'Фильтр по технологии',
+    allTechnologies: 'Все технологии',
+    noResults: 'Подходящих проектов нет.',
+    reset: 'Сбросить поиск и фильтр',
+    darkMode: 'Тёмная тема',
+    navigationLabel: 'Основная навигация',
+    languageLabel: 'Язык',
     nav: ['Главная', 'Проекты', 'Технологии', 'Обо мне'],
     contact: 'КОНТАКТ',
     role: 'Разработчик ПО',
@@ -120,6 +169,46 @@ const projects = [
   }
 ]
 
+const projectTechnologies = [...new Set(projects.flatMap(({ stack }) => stack.split(' · ')))]
+  .sort((first, second) => first.localeCompare(second))
+
+const visibleProjects = computed(() => {
+  const locale = language.value.toLowerCase()
+  const terms = query.value.trim().toLocaleLowerCase(locale).split(/\s+/).filter(Boolean)
+
+  return projects
+    .map((project, index) => ({ ...project, description: t.value.projectDescriptions[index] }))
+    .filter((project) => {
+      const matchesTechnology = !technology.value || project.stack.split(' · ').includes(technology.value)
+      const searchable = [project.title, project.type, project.stack, project.description]
+        .join(' ')
+        .toLocaleLowerCase(locale)
+
+      return matchesTechnology && terms.every((term) => searchable.includes(term))
+    })
+})
+
+function resetProjectFilters() {
+  query.value = ''
+  technology.value = ''
+}
+
+async function openProject(event: MouseEvent, id: string) {
+  if (visibleProjects.value.some((project) => project.id === id)) return
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+
+  event.preventDefault()
+  resetProjectFilters()
+  await nextTick()
+
+  const hash = '#' + id
+  if (window.location.hash === hash) {
+    document.getElementById(id)?.scrollIntoView()
+  } else {
+    window.location.hash = hash
+  }
+}
+
 const skills = [
   { name: 'Vue 3', icon: 'vuedotjs', color: '42B883' },
   { name: 'TypeScript', icon: 'typescript', color: '3178C6' },
@@ -164,7 +253,7 @@ function closeMenu() {
         id="main-navigation"
         class="navigation"
         :class="{ open: menuOpen }"
-        aria-label="Main navigation"
+        :aria-label="t.navigationLabel"
       >
         <a href="#home" @click="closeMenu">{{ t.nav[0] }}</a>
         <a href="#projects" @click="closeMenu">{{ t.nav[1] }}</a>
@@ -173,9 +262,9 @@ function closeMenu() {
       </nav>
 
       <div class="header-actions">
-        <div class="languages" aria-label="Language">
+        <div class="languages" role="group" :aria-label="t.languageLabel">
           <button
-            v-for="lang in (['DE', 'EN', 'RU'] as const)"
+            v-for="lang in languages"
             :key="lang"
             type="button"
             :class="{ active: language === lang }"
@@ -185,6 +274,17 @@ function closeMenu() {
             {{ lang }}
           </button>
         </div>
+
+        <button
+          class="theme-button"
+          type="button"
+          :aria-label="t.darkMode"
+          :aria-pressed="darkMode"
+          :title="t.darkMode"
+          @click="darkMode = !darkMode"
+        >
+          <span aria-hidden="true">{{ darkMode ? '☾' : '☼' }}</span>
+        </button>
 
         <a class="header-contact" href="#contact">
           {{ t.contact }} <span aria-hidden="true">↗</span>
@@ -241,6 +341,7 @@ function closeMenu() {
           v-for="project in projects"
           :key="project.id"
           :href="'#' + project.id"
+          @click="openProject($event, project.id)"
           class="tile project-tile"
           :class="'tile-' + project.id"
         >
@@ -284,9 +385,33 @@ function closeMenu() {
           <p>{{ t.projectsIntro }}</p>
         </div>
 
-        <div class="projects-grid">
+        <div class="project-controls">
+          <label>
+            <span>{{ t.search }}</span>
+            <input v-model="query" type="search" :placeholder="t.searchHint" />
+          </label>
+
+          <label>
+            <span>{{ t.filter }}</span>
+            <select v-model="technology">
+              <option value="">{{ t.allTechnologies }}</option>
+              <option v-for="option in projectTechnologies" :key="option" :value="option">
+                {{ option }}
+              </option>
+            </select>
+          </label>
+        </div>
+
+        <div role="status">
+          <p v-if="!visibleProjects.length" class="project-empty">{{ t.noResults }}</p>
+        </div>
+        <button v-if="!visibleProjects.length" class="reset-filters" type="button" @click="resetProjectFilters">
+          {{ t.reset }}
+        </button>
+
+        <div v-if="visibleProjects.length" class="projects-grid">
           <article
-            v-for="(project, index) in projects"
+            v-for="project in visibleProjects"
             :id="project.id"
             :key="project.id"
             class="project-card"
@@ -302,7 +427,7 @@ function closeMenu() {
               <div>
                 <span class="project-type">{{ project.type }}</span>
                 <h3>{{ project.title }}</h3>
-                <p>{{ t.projectDescriptions[index] }}</p>
+                <p>{{ project.description }}</p>
                 <span class="project-stack">{{ project.stack }}</span>
               </div>
             </div>
