@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 :root {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
   color: var(--ink);
   background: var(--paper);
   font-synthesis: none;
@@ -88,9 +88,9 @@ select:focus-visible {
 }
 
 .logo {
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
   font-size: 43px;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -.055em;
 }
 
@@ -240,15 +240,16 @@ select:focus-visible {
 .tile-type,
 .section-number,
 .project-type {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.7px;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .09em;
   color: var(--accent);
 }
 
 .intro-tile h1 {
   margin: 9px 0 7px;
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
   font-size: clamp(42px, 5vw, 76px);
   font-weight: 500;
   letter-spacing: -.045em;
@@ -257,6 +258,11 @@ select:focus-visible {
 
 .intro-tile h1 span {
   color: var(--accent);
+}
+
+:root:not([data-theme="dark"]) .logo span,
+:root:not([data-theme="dark"]) .intro-tile h1 span {
+  color: #a6503d;
 }
 
 .intro-tile h2 {
@@ -365,7 +371,7 @@ select:focus-visible {
 
 .tile-bottom h3 {
   margin: 0;
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
   font-size: clamp(15px, 1.6vw, 22px);
   font-weight: 600;
 }
@@ -392,9 +398,9 @@ select:focus-visible {
 .expertise-tile h3,
 .about-tile h3 {
   margin: 10px 0;
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
   font-size: clamp(23px, 2.4vw, 33px);
-  font-weight: 550;
+  font-weight: 500;
   letter-spacing: -.025em;
 }
 
@@ -465,7 +471,7 @@ select:focus-visible {
 .section-head h2 {
   max-width: 850px;
   margin: 15px 0 12px;
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
   font-size: clamp(35px, 4vw, 56px);
   font-weight: 500;
   letter-spacing: -.035em;
@@ -597,10 +603,10 @@ select:focus-visible {
 
 .project-meta h3 {
   margin: 10px 0;
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
   font-size: 25px;
   letter-spacing: -.025em;
-  font-weight: 550;
+  font-weight: 500;
 }
 
 .project-meta p {
@@ -709,7 +715,7 @@ select:focus-visible {
 
 .contact-copy h2 {
   margin: 15px 0 20px;
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
   font-size: clamp(39px, 5vw, 70px);
   font-weight: 500;
   letter-spacing: -.035em;
@@ -773,9 +779,9 @@ select:focus-visible {
 }
 
 .art-code {
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
   font-size: clamp(80px, 11vw, 160px);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -10px;
   color: var(--art-ink);
 }
