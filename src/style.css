@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400..800&display=swap');
 :root {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
   color: var(--ink);
   background: var(--paper);
   font-synthesis: none;
@@ -88,10 +88,10 @@ select:focus-visible {
 }
 
 .logo {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   font-size: 43px;
-  font-weight: 800;
-  letter-spacing: -4px;
+  font-weight: 650;
+  letter-spacing: -.055em;
 }
 
 .logo span {
@@ -209,11 +209,7 @@ select:focus-visible {
 }
 
 .portrait-spark {
-  position: absolute;
-  top: 8%;
-  right: 9%;
-  color: rgba(255,255,255,.9);
-  font-size: 43px;
+  display: none;
 }
 
 .portrait-image {
@@ -252,10 +248,10 @@ select:focus-visible {
 
 .intro-tile h1 {
   margin: 9px 0 7px;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   font-size: clamp(42px, 5vw, 76px);
-  font-weight: 800;
-  letter-spacing: -4px;
+  font-weight: 500;
+  letter-spacing: -.045em;
   line-height: 1.1;
 }
 
@@ -266,7 +262,7 @@ select:focus-visible {
 .intro-tile h2 {
   margin: 0;
   font-size: clamp(17px, 2vw, 26px);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .location {
@@ -296,13 +292,13 @@ select:focus-visible {
   width: 48px;
   height: 48px;
   flex-shrink: 0;
-  border: 1px solid var(--ink);
+  border: 1px solid transparent;
   border-radius: 50%;
   font-size: 25px;
   transition: background .2s, color .2s, transform .2s;
 }
 
-.round-arrow:hover {
+.intro-tile:is(:hover, :focus-visible) .round-arrow {
   background: var(--ink);
   color: var(--on-ink);
   transform: rotate(45deg);
@@ -369,9 +365,9 @@ select:focus-visible {
 
 .tile-bottom h3 {
   margin: 0;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   font-size: clamp(15px, 1.6vw, 22px);
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .tile-bottom > span {
@@ -396,9 +392,10 @@ select:focus-visible {
 .expertise-tile h3,
 .about-tile h3 {
   margin: 10px 0;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   font-size: clamp(23px, 2.4vw, 33px);
-  letter-spacing: -1px;
+  font-weight: 550;
+  letter-spacing: -.025em;
 }
 
 .expertise-preview {
@@ -431,6 +428,30 @@ select:focus-visible {
   font-size: 25px;
 }
 
+/* MATCHING ARROW INTERACTIONS */
+.tile-bottom > span,
+.tile-corner-arrow,
+:is(.header-contact, .primary-link, .secondary-link) > span[aria-hidden="true"] {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 1.35em;
+  height: 1.35em;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  line-height: 1;
+  transition: background .2s, color .2s, border-color .2s, transform .2s;
+}
+
+.project-tile:is(:hover, :focus-visible) .tile-bottom > span,
+.tile:is(:hover, :focus-visible) .tile-corner-arrow,
+:is(.header-contact, .primary-link, .secondary-link):is(:hover, :focus-visible) > span[aria-hidden="true"] {
+  background: var(--ink);
+  color: var(--on-ink);
+  border-color: var(--on-ink);
+  transform: rotate(45deg);
+}
+
 /* SHARED SECTIONS */
 .section {
   padding: clamp(65px, 8vw, 120px) 1%;
@@ -440,9 +461,10 @@ select:focus-visible {
 .section-head h2 {
   max-width: 850px;
   margin: 15px 0 12px;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   font-size: clamp(35px, 4vw, 56px);
-  letter-spacing: -2.5px;
+  font-weight: 500;
+  letter-spacing: -.035em;
   line-height: 1.15;
 }
 
@@ -571,8 +593,10 @@ select:focus-visible {
 
 .project-meta h3 {
   margin: 10px 0;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   font-size: 25px;
+  letter-spacing: -.025em;
+  font-weight: 550;
 }
 
 .project-meta p {
@@ -681,10 +705,10 @@ select:focus-visible {
 
 .contact-copy h2 {
   margin: 15px 0 20px;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   font-size: clamp(39px, 5vw, 70px);
-  font-weight: 800;
-  letter-spacing: -3px;
+  font-weight: 500;
+  letter-spacing: -.035em;
   line-height: 1.12;
 }
 
@@ -745,7 +769,7 @@ select:focus-visible {
 }
 
 .art-code {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   font-size: clamp(80px, 11vw, 160px);
   font-weight: 800;
   letter-spacing: -10px;
@@ -753,9 +777,7 @@ select:focus-visible {
 }
 
 .art-star {
-  margin-right: 40px;
-  font-size: 80px;
-  color: var(--art-accent);
+  display: none;
 }
 
 /* FOOTER */
@@ -790,7 +812,7 @@ select:focus-visible {
 
   .intro-tile h1 {
     font-size: clamp(34px, 5vw, 58px);
-    letter-spacing: -2px;
+    letter-spacing: -.035em;
   }
 
   .expertise-tile,

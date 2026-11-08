@@ -319,7 +319,7 @@ function closeMenu() {
           />
         </div>
 
-        <div class="tile intro-tile">
+        <a href="#projects" class="tile intro-tile" :aria-label="t.nav[1]">
           <div>
             <span class="eyebrow">HELLO, I'M</span>
             <h1>Ekaterina<span>.</span></h1>
@@ -329,13 +329,9 @@ function closeMenu() {
 
           <div class="intro-bottom">
             <p>{{ t.heroNote }}</p>
-            <a
-              href="#projects"
-              class="round-arrow"
-              :aria-label="t.nav[1]"
-            >↗</a>
+            <span class="round-arrow" aria-hidden="true">↗</span>
           </div>
-        </div>
+        </a>
 
         <a
           v-for="project in projects"
