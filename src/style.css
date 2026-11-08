@@ -445,10 +445,14 @@ select:focus-visible {
 
 .project-tile:is(:hover, :focus-visible) .tile-bottom > span,
 .tile:is(:hover, :focus-visible) .tile-corner-arrow,
-:is(.header-contact, .primary-link, .secondary-link):is(:hover, :focus-visible) > span[aria-hidden="true"] {
+:is(.primary-link, .secondary-link):is(:hover, :focus-visible) > span[aria-hidden="true"] {
   background: var(--ink);
   color: var(--on-ink);
   border-color: var(--on-ink);
+  transform: rotate(45deg);
+}
+
+.header-contact:is(:hover, :focus-visible) > span[aria-hidden="true"] {
   transform: rotate(45deg);
 }
 
