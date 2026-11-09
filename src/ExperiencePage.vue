@@ -120,7 +120,7 @@ const entries = [
 
 const copy = {
   DE: {
-    sortLabel: 'Sortieren', newest: 'Neueste zuerst', oldest: 'Älteste zuerst',
+    sortLabel: 'Sortieren', techStack: 'Technologien', newest: 'Neueste zuerst', oldest: 'Älteste zuerst',
     filter: "Nach Bereich filtern",
     categories: { all: "Alle", it: "Softwareentwicklung", finance: "Wertpapier", hospitality: "Hotellerie", interpreting: "Dolmetschen", break: "Karenz & Neuorientierung" },
     title: 'Berufserfahrung',
@@ -133,7 +133,7 @@ const copy = {
     fields: ["Wertpapier", "Allgemeinmedizinische Erst- und Grundversorgung", "Hotellerie und Tourismus", "Berufspraxis im Rahmen der dualen Ausbildung"]
   },
   EN: {
-    sortLabel: 'Sort', newest: 'Newest first', oldest: 'Oldest first',
+    sortLabel: 'Sort', techStack: 'Technologies', newest: 'Newest first', oldest: 'Oldest first',
     filter: "Filter by category",
     categories: { all: "All", it: "Software development", finance: "Securities", hospitality: "Hospitality", interpreting: "Interpreting", break: "Leave & career transition" },
     title: 'Work experience',
@@ -146,7 +146,7 @@ const copy = {
     fields: ["Securities", "General medical first-contact and primary care", "Hospitality and tourism", "Practical placement as part of dual training"]
   },
   RU: {
-    sortLabel: 'Сортировка', newest: 'Сначала новые', oldest: 'Сначала старые',
+    sortLabel: 'Сортировка', techStack: 'Технологии', newest: 'Сначала новые', oldest: 'Сначала старые',
     filter: "Фильтр по категории",
     categories: { all: "Все", it: "Разработка ПО", finance: "Ценные бумаги", hospitality: "Гостиничное дело", interpreting: "Устный перевод", break: "Отпуск и смена профессии" },
     title: 'Опыт работы',
@@ -243,7 +243,7 @@ function formatMonth(value: string) {
         <ul v-if="entry.tasks" class="experience-tasks">
           <li v-for="task in entry.tasks[languageIndex]" :key="task">{{ task }}</li>
         </ul>
-        <ul v-if="entry.institution === 'JAWA'" class="experience-stack" aria-label="Tech stack">
+        <ul v-if="entry.institution === 'JAWA'" class="experience-stack" :aria-label="t.techStack">
           <li v-for="tool in ['PHP', 'Xdebug', 'SQL', 'Jira Service Management', 'INFORUM']" :key="tool">
             {{ tool }}
           </li>

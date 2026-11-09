@@ -29,7 +29,7 @@ const copy = {
     institution: 'Institution', location: 'Location', recognition: 'Recognition',
     places: ['Graz, Austria', 'Online', 'Irkutsk, Russia', 'Bratsk, Russia'],
     titles: ['Academically certified software developer', 'Vue.js – Fundamentals and first project', 'JavaScript', 'Web development training', 'English B1', 'English A2 and B1', 'Bachelor’s studies in Transcultural Communication – German, Italian and Russian', 'German C1', 'Economist and manager', 'Banking', 'Primary school'],
-    banking: 'BMWfi – recognition as Bankkauffrau (Austrian banking apprenticeship qualification)'
+    banking: 'BMWfi – recognition as a bank clerk (Austrian apprenticeship qualification)'
   },
   RU: {
     reset: 'Сбросить',
@@ -43,7 +43,7 @@ const copy = {
     institution: 'Учебное заведение', location: 'Место', recognition: 'Признание квалификации',
     places: ['Грац, Австрия', 'Онлайн', 'Иркутск, Россия', 'Братск, Россия'],
     titles: ['Разработчик программного обеспечения с академической квалификацией', 'Vue.js – основы и первый проект', 'JavaScript', 'Профессиональная подготовка по веб-разработке', 'Английский B1', 'Английский A2 и B1', 'Бакалавриат по транскультурной коммуникации – немецкий, итальянский и русский языки', 'Немецкий C1', 'Экономист-менеджер', 'Банковское дело', 'Начальная школа'],
-    banking: 'BMWfi – признание квалификации Bankkauffrau (австрийская профессия в банковском деле)'
+    banking: 'BMWfi – признание квалификации банковского служащего в Австрии'
   }
 }
 
@@ -54,6 +54,7 @@ const sortOrder = ref<'newest' | 'oldest'>('newest')
 
 const entries: {
   category: Exclude<Category, 'all'>
+  additionalCategories?: Exclude<Category, 'all'>[]
   start: string
   end: string
   institution?: string
@@ -66,7 +67,7 @@ const entries: {
   { category: 'it', start: '2022-11', end: '2023-03', institution: 'WIFI Steiermark', place: 0 },
   { category: 'language', start: '2019-10', end: '2020-01', institution: 'Internationales Sprachzentrum an der Universität Graz', place: 0 },
   { category: 'language', start: '2016-11', end: '2017-07', institution: 'Internationales Sprachzentrum an der Universität Graz', place: 0 },
-  { category: 'degree', start: '2010-09', end: '2015-09', institution: 'Karl-Franzens-Universität Graz', place: 0 },
+  { category: 'degree', additionalCategories: ['language'], start: '2010-09', end: '2015-09', institution: 'Karl-Franzens-Universität Graz', place: 0 },
   { category: 'language', start: '2009-09', end: '2010-07', institution: 'Vorstudienlehrgang der Grazer Universitäten und Hochschulen', place: 0 },
   { category: 'degree', start: '2002-09', end: '2006-12', institution: 'Baikal Universität für Ökonomie und Recht', place: 2, recognition: 'ENIC NARIC Austria' },
   { category: 'degree', start: '2000-09', end: '2002-07', institution: 'Kolleg der Baikal Universität für Ökonomie und Recht', place: 2, recognition: 'banking' },
@@ -75,7 +76,7 @@ const entries: {
 
 const indexedEntries = entries.map((entry, index) => ({ ...entry, index }))
 const visibleEntries = computed(() => indexedEntries
-  .filter((entry) => selectedCategory.value === 'all' || entry.category === selectedCategory.value)
+  .filter((entry) => selectedCategory.value === 'all' || entry.category === selectedCategory.value || entry.additionalCategories?.includes(selectedCategory.value) === true)
   .sort((first, second) => {
     const order = first.start.localeCompare(second.start)
     return sortOrder.value === 'newest' ? -order : order
@@ -153,7 +154,14 @@ function formatMonth(value: string) {
         :class="{ 'education-entry-featured': entry.index === 0 }"
       >
         <div class="project-type education-dates">
-          <span class="education-category">{{ t.categories[entry.category] }}</span>
+          <span class="education-category-list">
+            <span
+              v-for="category in [entry.category, ...(entry.additionalCategories ?? [])]"
+              :key="category"
+              class="education-category"
+              :data-category="category"
+            >{{ t.categories[category] }}</span>
+          </span>
           <time :datetime="entry.start">{{ formatMonth(entry.start) }}</time>
           –
           <time :datetime="entry.end">{{ formatMonth(entry.end) }}</time>
@@ -316,12 +324,23 @@ function formatMonth(value: string) {
 }
 
 .education-filters button[aria-pressed='true'] {
-  box-shadow: inset 0 0 0 2px var(--ink);
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.education-category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
 .education-category {
-  display: block;
-  margin-bottom: 6px;
+  display: inline-block;
+  padding: 3px 8px;
+  border: 1px solid color-mix(in srgb, var(--ink) 24%, transparent);
+  border-radius: 999px;
+  background: var(--category-color);
   font-weight: 700;
 }
 

@@ -76,6 +76,8 @@ const translations = {
     languageLabel: 'Sprache',
     nav: ['Start', 'Portfolio', 'Technologien', 'Über mich'],
     contact: 'KONTAKT',
+    valueLabels: ['Programmieren', 'Gestalten', 'Lernen', 'Wiederholen'],
+    heroGreeting: 'HALLO, ICH BIN', whatIUse: 'WOMIT ICH ARBEITE', more: '+ weitere', aboutTile: 'EIN WENIG ÜBER MICH', footerMade: 'Mit Vue 3 und Neugier gemacht.',
     role: 'Softwareentwicklerin',
     location: 'Graz, Österreich',
     heroNote: 'Ideen verstehen. Lösungen entwickeln. Neues lernen.',
@@ -83,8 +85,11 @@ const translations = {
     projectsIntro: 'Eine Auswahl meiner Projekte und Ideen.',
     technologiesTitle: 'Mein Tech-Stack.',
     technologiesIntro: 'Technologien, mit denen ich arbeite und weiterlerne.',
-    techGroups: ['Programmierung & Web', 'Apps & Daten', 'Werkzeuge', 'KI-Werkzeuge', 'Ausbildungsschwerpunkte'], projectUse: 'Im Projekt eingesetzt', studyUse: 'In der Ausbildung vertieft',
-    techFilterAll: "Alle Bereiche", techFilterGroups: ["Programmierung & Web", "Apps & Daten", "Werkzeuge", "KI-Werkzeuge"],
+    techGroups: ['Frontend & Apps', 'Backend & Daten', 'Werkzeuge', 'KI-Werkzeuge', 'Ausbildungsschwerpunkte'], projectUse: 'Im Projekt eingesetzt', studyUse: 'In der Ausbildung vertieft',
+    sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIEN', sectionAbout: '03 / ÜBER MICH', sectionContact: '04 / KONTAKT',
+    projectTypes: { mobile: 'MOBILE APP', game: 'KONSOLENSPIEL', web: 'WEBPROJEKT' },
+    studyTopics: "studyTopics: 'Objektorientierte Programmierung · Algorithmen · Softwarearchitektur · Softwarequalitätssicherung'",
+    techFilterAll: "Alle Bereiche", techFilterGroups: ["Frontend & Apps", "Backend & Daten", "Werkzeuge", "KI-Werkzeuge"],
     techFilterReset: 'Zurücksetzen',
     about: 'Über mich',
     aboutShort: 'Mein Weg und was mich antreibt.',
@@ -122,6 +127,8 @@ const translations = {
     languageLabel: 'Language',
     nav: ['Home', 'Portfolio', 'Technologies', 'About'],
     contact: "LET'S TALK",
+    valueLabels: ['Code', 'Create', 'Learn', 'Repeat'],
+    heroGreeting: 'HELLO, I’M', whatIUse: 'WHAT I USE', more: '+ more', aboutTile: 'A LITTLE ABOUT ME', footerMade: 'Made with Vue 3 and curiosity.',
     role: 'Software Developer',
     location: 'Graz, Austria',
     heroNote: 'Explore ideas. Build solutions. Keep learning.',
@@ -129,8 +136,11 @@ const translations = {
     projectsIntro: 'A selection of my projects and ideas.',
     technologiesTitle: 'My tech stack.',
     technologiesIntro: 'Technologies I use and continue to explore.',
-    techGroups: ['Programming & web', 'Apps & data', 'Tools', 'AI tools', 'Study topics'], projectUse: 'Used in projects', studyUse: 'Covered in training',
-    techFilterAll: "All areas", techFilterGroups: ["Programming & web", "Apps & data", "Tools", "AI tools"],
+    techGroups: ['Frontend & apps', 'Backend & data', 'Tools', 'AI tools', 'Study topics'], projectUse: 'Used in projects', studyUse: 'Covered in training',
+    sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIES', sectionAbout: '03 / ABOUT ME', sectionContact: '04 / CONTACT',
+    projectTypes: { mobile: 'MOBILE APP', game: 'CONSOLE GAME', web: 'WEB PROJECT' },
+    studyTopics: "studyTopics: 'Object-oriented programming · Algorithms · Software architecture · Software quality assurance'",
+    techFilterAll: "All areas", techFilterGroups: ["Frontend & apps", "Backend & data", "Tools", "AI tools"],
     techFilterReset: 'Reset',
     about: 'About me',
     aboutShort: 'My journey and what motivates me.',
@@ -168,6 +178,8 @@ const translations = {
     languageLabel: 'Язык',
     nav: ['Главная', 'Портфолио', 'Технологии', 'Обо мне'],
     contact: 'КОНТАКТ',
+    valueLabels: ['Программировать', 'Создавать', 'Учиться', 'Повторять'],
+    heroGreeting: 'ПРИВЕТ, Я', whatIUse: 'МОИ ИНСТРУМЕНТЫ', more: 'и другие', aboutTile: 'НЕМНОГО ОБО МНЕ', footerMade: 'С любовью к коду и деталям.',
     role: 'Разработчик ПО',
     location: 'Грац, Австрия',
     heroNote: 'Исследовать идеи. Находить решения. Учиться новому.',
@@ -175,8 +187,11 @@ const translations = {
     projectsIntro: 'Некоторые из моих проектов и идей.',
     technologiesTitle: 'Мой стек технологий.',
     technologiesIntro: 'Технологии, с которыми я работаю и продолжаю развиваться.',
-    techGroups: ['Разработка и веб', 'Приложения и данные', 'Инструменты', 'ИИ-инструменты', 'Темы обучения'], projectUse: 'Использовала в проектах', studyUse: 'Изучала в рамках обучения',
-    techFilterAll: "Все разделы", techFilterGroups: ["Разработка и веб", "Приложения и данные", "Инструменты", "ИИ-инструменты"],
+    techGroups: ['Фронтенд и приложения', 'Бэкенд и данные', 'Инструменты', 'ИИ-инструменты', 'Темы обучения'], projectUse: 'Использовала в проектах', studyUse: 'Изучала в рамках обучения',
+    sectionPortfolio: '01 / ПОРТФОЛИО', sectionTechnologies: '02 / ТЕХНОЛОГИИ', sectionAbout: '03 / ОБО МНЕ', sectionContact: '04 / КОНТАКТЫ',
+    projectTypes: { mobile: 'МОБИЛЬНОЕ ПРИЛОЖЕНИЕ', game: 'КОНСОЛЬНАЯ ИГРА', web: 'ВЕБ-ПРОЕКТ' },
+    studyTopics: "studyTopics: 'Объектно-ориентированное программирование · Алгоритмы · Архитектура ПО · Обеспечение качества ПО'",
+    techFilterAll: "Все разделы", techFilterGroups: ["Фронтенд и приложения", "Бэкенд и данные", "Инструменты", "ИИ-инструменты"],
     techFilterReset: 'Сбросить',
     about: 'Обо мне',
     aboutShort: 'Мой путь и то, что меня вдохновляет.',
@@ -326,6 +341,7 @@ const skillGroups = [
       { name: 'JavaScript', icon: 'javascript', color: 'B99B00' },
       { name: 'TypeScript', icon: 'typescript', color: '3178C6' },
       { name: 'Vue 3', icon: 'vuedotjs', color: '42B883' },
+      { name: 'SwiftUI', icon: 'swift', color: 'F05138', note: 'project' },
       { name: 'PHP', icon: 'php', color: '777BB4' },
       { name: 'Java', icon: 'openjdk', color: '437291' }
     ]
@@ -333,7 +349,6 @@ const skillGroups = [
   {
     key: 'apps',
     skills: [
-      { name: 'SwiftUI', icon: 'swift', color: 'F05138', note: 'project' },
       { name: 'Supabase', icon: 'supabase', color: '3ECF8E', note: 'project' },
       { name: 'SQL · MySQL', icon: 'mysql', color: '4479A1' },
       { name: 'REST APIs', icon: 'fastapi', color: '009688' }
@@ -355,7 +370,7 @@ const skillGroups = [
   },
   {
     key: 'study',
-    text: 'OOP · Algorithmen · Softwarearchitektur · Softwarequalitätssicherung'
+    textKey: 'studyTopics'
   }
 ]
 
@@ -378,10 +393,10 @@ const visibleSkillGroups = computed(() => skillGroups.filter((group) =>
 ))
 
 const values = [
-  { symbol: '⌘', label: 'Code' },
-  { symbol: '↗', label: 'Create' },
-  { symbol: '♡', label: 'Learn' },
-  { symbol: '⟳', label: 'Repeat' }
+  { symbol: '⌘' },
+  { symbol: '↗' },
+  { symbol: '♡' },
+  { symbol: '⟳' }
 ]
 
 // Hier später deine bestätigten Kontaktdaten eintragen.
@@ -491,7 +506,7 @@ function closeMenu() {
 
         <a href="#projects" class="tile intro-tile" :aria-label="t.nav[1]">
           <div>
-            <span class="eyebrow">HELLO, I'M</span>
+            <span class="eyebrow">{{ t.heroGreeting }}</span>
             <h1>Ekaterina<span>.</span></h1>
             <h2>{{ t.role }}</h2>
             <p class="location">{{ t.location }}</p>
@@ -512,7 +527,7 @@ function closeMenu() {
           :data-area="project.area"
           :class="'tile-' + project.id"
         >
-          <span class="tile-type">{{ project.type }}</span>
+          <span class="tile-type">{{ t.projectTypes[project.area] }}</span>
 
           <div class="tile-project-image">
             <img :src="project.image" :alt="project.title" loading="lazy" />
@@ -525,19 +540,19 @@ function closeMenu() {
         </a>
 
         <a href="#technologies" class="tile expertise-tile">
-          <span class="tile-type">WHAT I USE</span>
+          <span class="tile-type">{{ t.whatIUse }}</span>
           <h3>{{ t.nav[2] }}</h3>
           <div class="expertise-preview">
             <span>Vue </span>
             <span>TypeScript</span>
             <span>PHP</span>
-            <span>+ more</span>
+            <span>{{ t.more }}</span>
           </div>
           <span class="tile-corner-arrow" aria-hidden="true">↗</span>
         </a>
 
         <a href="#about" class="tile about-tile">
-          <span class="tile-type">A LITTLE ABOUT ME</span>
+          <span class="tile-type">{{ t.aboutTile }}</span>
           <h3>{{ t.about }}</h3>
           <p>{{ t.aboutShort }}</p>
           <span class="tile-corner-arrow" aria-hidden="true">↗</span>
@@ -547,7 +562,7 @@ function closeMenu() {
       <!-- 01 / PORTFOLIO -->
       <section id="projects" class="section projects-section">
         <div class="section-head">
-          <span class="section-number">01 / PORTFOLIO</span>
+          <span class="section-number">{{ t.sectionPortfolio }}</span>
           <h2>{{ t.projectsTitle }}</h2>
           <p>{{ t.projectsIntro }}</p>
         </div>
@@ -648,7 +663,7 @@ function closeMenu() {
       <!-- 02 / TECHNOLOGIES -->
       <section id="technologies" class="section technologies-section">
         <div class="section-head">
-          <span class="section-number">02 / TECHNOLOGIES</span>
+          <span class="section-number">{{ t.sectionTechnologies }}</span>
           <h2>{{ t.technologiesTitle }}</h2>
           <p>{{ t.technologiesIntro }}</p>
         </div>
@@ -672,7 +687,7 @@ function closeMenu() {
         <div class="tech-groups">
           <section v-for="(group, index) in visibleSkillGroups" :key="group.key" class="tech-group">
             <h3>{{ t.techGroups[group.key === 'study' ? 4 : filterableSkillGroupKeys.indexOf(group.key as SkillGroupKey)] }}</h3>
-            <p v-if="group.text" class="tech-study">{{ group.text }}</p>
+            <p v-if="group.textKey" class="tech-study">{{ t.studyTopics }}</p>
             <div v-else class="tech-list">
           <div
             v-for="skill in group.skills"
@@ -695,7 +710,7 @@ function closeMenu() {
       <section id="about" class="section about-section">
         <div class="about-layout">
           <div class="section-head">
-            <span class="section-number">03 / ABOUT ME</span>
+            <span class="section-number">{{ t.sectionAbout }}</span>
             <h2>{{ t.aboutTitle }}</h2>
           </div>
 
@@ -704,12 +719,12 @@ function closeMenu() {
 
             <div class="values-line">
               <div
-                v-for="value in values"
-                :key="value.label"
+                v-for="(value, index) in values"
+                :key="value.symbol"
                 class="value-item"
               >
                 <span aria-hidden="true">{{ value.symbol }}</span>
-                <strong>{{ value.label }}</strong>
+                <strong>{{ t.valueLabels[index] }}</strong>
               </div>
             </div>
           </div>
@@ -719,7 +734,7 @@ function closeMenu() {
       <!-- 04 / SAY HELLO -->
       <section id="contact" class="section contact-section">
         <div class="contact-copy">
-          <span class="section-number">04 / SAY HELLO</span>
+          <span class="section-number">{{ t.sectionContact }}</span>
           <h2>{{ t.helloTitle }}</h2>
           <p>{{ t.helloText }}</p>
 
@@ -752,7 +767,7 @@ function closeMenu() {
 
     <footer class="footer">
       <span>© 2026 Ekaterina Schedlberger</span>
-      <span>Made with Vue 3 + curiosity.</span>
+      <span>{{ t.footerMade }}</span>
     </footer>
   </div>
 </template>
