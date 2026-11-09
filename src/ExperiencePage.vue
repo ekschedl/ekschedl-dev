@@ -6,6 +6,7 @@ const props = defineProps<{ language: 'DE' | 'EN' | 'RU' }>()
 const categories = ['all', 'it', 'finance', 'hospitality', 'interpreting', 'break'] as const
 type Category = typeof categories[number]
 const selectedCategory = ref<Category>('all')
+const sortOrder = ref<'newest' | 'oldest'>('newest')
 
 const entries = [
   {
@@ -119,6 +120,7 @@ const entries = [
 
 const copy = {
   DE: {
+    sortLabel: 'Sortieren', newest: 'Neueste zuerst', oldest: 'Älteste zuerst',
     filter: "Nach Bereich filtern",
     categories: { all: "Alle", it: "Softwareentwicklung", finance: "Wertpapier", hospitality: "Hotellerie", interpreting: "Dolmetschen", break: "Karenz & Neuorientierung" },
     title: 'Berufserfahrung',
@@ -131,6 +133,7 @@ const copy = {
     fields: ["Wertpapier", "Allgemeinmedizinische Erst- und Grundversorgung", "Hotellerie und Tourismus", "Berufspraxis im Rahmen der dualen Ausbildung"]
   },
   EN: {
+    sortLabel: 'Sort', newest: 'Newest first', oldest: 'Oldest first',
     filter: "Filter by category",
     categories: { all: "All", it: "Software development", finance: "Securities", hospitality: "Hospitality", interpreting: "Interpreting", break: "Leave & career transition" },
     title: 'Work experience',
@@ -143,6 +146,7 @@ const copy = {
     fields: ["Securities", "General medical first-contact and primary care", "Hospitality and tourism", "Practical placement as part of dual training"]
   },
   RU: {
+    sortLabel: 'Сортировка', newest: 'Сначала новые', oldest: 'Сначала старые',
     filter: "Фильтр по категории",
     categories: { all: "Все", it: "Разработка ПО", finance: "Ценные бумаги", hospitality: "Гостиничное дело", interpreting: "Устный перевод", break: "Отпуск и смена профессии" },
     title: 'Опыт работы',
@@ -157,9 +161,13 @@ const copy = {
 }
 
 const numberedEntries = entries.map((entry, index) => ({ ...entry, number: index + 1 }))
-const visibleEntries = computed(() => selectedCategory.value === 'all'
-  ? numberedEntries
-  : numberedEntries.filter((entry) => entry.category === selectedCategory.value)
+const visibleEntries = computed(() => numberedEntries
+  .filter((entry) => selectedCategory.value === 'all' || entry.category === selectedCategory.value)
+  .sort((first, second) => {
+    const order = first.start.localeCompare(second.start)
+    return sortOrder.value === 'newest' ? -order : order
+  })
+  .map((entry, index) => ({ ...entry, number: index + 1 }))
 )
 
 const languageIndex = computed(() => ({ DE: 0, EN: 1, RU: 2 })[props.language])
@@ -196,6 +204,12 @@ function formatMonth(value: string) {
       </button>
     </div>
 
+    <div class="experience-toolbar">
+      <div class="experience-sort" role="group" :aria-label="t.sortLabel">
+        <button type="button" :aria-label="t.newest" :aria-pressed="sortOrder === 'newest'" :title="t.newest" @click="sortOrder = 'newest'">↓</button>
+        <button type="button" :aria-label="t.oldest" :aria-pressed="sortOrder === 'oldest'" :title="t.oldest" @click="sortOrder = 'oldest'">↑</button>
+      </div>
+    </div>
     <ol class="experience-list" role="list">
       <li
         v-for="entry in visibleEntries"
@@ -309,6 +323,34 @@ function formatMonth(value: string) {
   display: block;
   margin-top: 8px;
   color: var(--ink);
+}
+
+.experience-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 18px 0 -10px;
+}
+
+.experience-sort {
+  display: flex;
+  gap: 4px;
+}
+
+.experience-sort button {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 20px;
+}
+
+.experience-sort button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--mist);
 }
 
 .experience-list {

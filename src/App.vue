@@ -31,7 +31,8 @@ const projectAreas = ['mobile', 'game', 'web'] as const
 type ProjectArea = typeof projectAreas[number]
 type ProjectFilterMode = 'area' | 'technology'
 const projectFilterMode = ref<ProjectFilterMode>('area')
-const selectedArea = ref<ProjectArea | ''>('')
+const selectedAreas = ref<ProjectArea[]>([])
+const projectSort = ref<'newest' | 'oldest'>('newest')
 const selectedTechnologies = ref<string[]>([])
 const darkMode = ref(false)
 
@@ -69,6 +70,7 @@ const translations = {
     areaMode: 'Nach Projektbereich',
     technologyMode: 'Nach Technologie',
     projectCount: '{visible} von {total} Projekten',
+    sortLabel: 'Sortieren', newest: 'Neueste zuerst', oldest: 'Älteste zuerst', created: 'Erstellt',
     darkMode: 'Dunkelmodus',
     navigationLabel: 'Hauptnavigation',
     languageLabel: 'Sprache',
@@ -111,6 +113,7 @@ const translations = {
     areaMode: 'By project area',
     technologyMode: 'By technology',
     projectCount: '{visible} of {total} projects',
+    sortLabel: 'Sort', newest: 'Newest first', oldest: 'Oldest first', created: 'Created',
     darkMode: 'Dark mode',
     navigationLabel: 'Main navigation',
     languageLabel: 'Language',
@@ -153,6 +156,7 @@ const translations = {
     areaMode: 'По типу проекта',
     technologyMode: 'По технологии',
     projectCount: 'Проекты: {visible} из {total}',
+    sortLabel: 'Сортировка', newest: 'Сначала новые', oldest: 'Сначала старые', created: 'Создано',
     darkMode: 'Тёмная тема',
     navigationLabel: 'Основная навигация',
     languageLabel: 'Язык',
@@ -191,6 +195,7 @@ const projects = [
   {
     id: 'yoganow',
     title: 'YogaNow Studio',
+    createdAt: '2026-06',
     type: 'iOS APP',
     area: 'mobile',
     image: '/images/yoganow.jpg',
@@ -199,6 +204,7 @@ const projects = [
   {
     id: 'uno',
     title: 'UNO',
+    createdAt: '2025-12',
     type: 'CARD GAME',
     area: 'game',
     image: '/images/uno.jpg',
@@ -207,6 +213,7 @@ const projects = [
   {
     id: 'kaffeehaus',
     title: 'Kaffeehaus',
+    createdAt: '2025-06',
     type: 'WEB PROJECT',
     area: 'web',
     image: '/images/kaffeehaus.jpg',
@@ -232,12 +239,16 @@ const visibleProjects = computed(() => {
       const stack = project.stack.split(' · ')
       const matchesTechnology = selectedTechnologies.value.length === 0
         || selectedTechnologies.value.some((item) => stack.includes(item))
-      const matchesArea = !selectedArea.value || project.area === selectedArea.value
+      const matchesArea = !selectedAreas.value.length || selectedAreas.value.includes(project.area)
       return matchesArea && matchesTechnology
+    })
+    .sort((first, second) => {
+      const order = first.createdAt.localeCompare(second.createdAt)
+      return projectSort.value === 'newest' ? -order : order
     })
 })
 
-const hasProjectFilters = computed(() => Boolean(selectedArea.value) || selectedTechnologies.value.length > 0)
+const hasProjectFilters = computed(() => selectedAreas.value.length > 0 || selectedTechnologies.value.length > 0)
 const projectCount = computed(() => t.value.projectCount
   .replace('{visible}', String(visibleProjects.value.length))
   .replace('{total}', String(projects.length))
@@ -249,9 +260,18 @@ function switchProjectFilterMode(mode: ProjectFilterMode) {
   projectFilterMode.value = mode
 }
 
-function selectProjectArea(area: ProjectArea | '') {
-  selectedArea.value = area
-  if (area) selectedTechnologies.value = []
+function toggleProjectArea(area: ProjectArea | '') {
+  if (!area) {
+    selectedAreas.value = []
+    selectedTechnologies.value = []
+    return
+  }
+
+  const selected = selectedAreas.value
+  selectedAreas.value = selected.includes(area)
+    ? selected.filter((item) => item !== area)
+    : [...selected, area]
+  selectedTechnologies.value = []
 }
 
 function toggleTechnology(option: string) {
@@ -260,7 +280,7 @@ function toggleTechnology(option: string) {
     return
   }
 
-  selectedArea.value = ''
+  selectedAreas.value = []
   const selected = selectedTechnologies.value
   selectedTechnologies.value = selected.includes(option)
     ? selected.filter((item) => item !== option)
@@ -268,7 +288,7 @@ function toggleTechnology(option: string) {
 }
 
 function resetProjectFilters() {
-  selectedArea.value = ''
+  selectedAreas.value = []
   selectedTechnologies.value = []
 }
 
@@ -490,6 +510,22 @@ function closeMenu() {
                 {{ t.reset }}
               </button>
             </div>
+            <div class="project-sort" role="group" :aria-label="t.sortLabel">
+              <button
+                type="button"
+                :aria-label="t.newest"
+                :aria-pressed="projectSort === 'newest'"
+                :title="t.newest"
+                @click="projectSort = 'newest'"
+              >↓</button>
+              <button
+                type="button"
+                :aria-label="t.oldest"
+                :aria-pressed="projectSort === 'oldest'"
+                :title="t.oldest"
+                @click="projectSort = 'oldest'"
+              >↑</button>
+            </div>
           </div>
           <fieldset v-if="projectFilterMode === 'area'" class="project-technology-filters">
             <legend>{{ t.areaFilter }}</legend>
@@ -499,8 +535,8 @@ function closeMenu() {
                 :key="area"
                 type="button"
                 :data-area="area"
-                :aria-pressed="area ? selectedArea === area : !selectedArea && !selectedTechnologies.length"
-                @click="selectProjectArea(area)"
+                :aria-pressed="area ? selectedAreas.includes(area) : !selectedAreas.length"
+                @click="toggleProjectArea(area)"
               >
                 {{ area ? t.areas[area] : t.allAreas }}
               </button>
@@ -515,7 +551,7 @@ function closeMenu() {
                 :key="option"
                 type="button"
                 :data-area="technologyAreas.get(option)"
-                :aria-pressed="option ? selectedTechnologies.includes(option) : !selectedTechnologies.length && !selectedArea"
+                :aria-pressed="option ? selectedTechnologies.includes(option) : !selectedTechnologies.length"
                 @click="toggleTechnology(option)"
               >
                 {{ option || t.allTechnologies }}
@@ -542,6 +578,7 @@ function closeMenu() {
               <div>
                 <span class="project-type project-area" :data-area="project.area">{{ t.areas[project.area] }}</span>
                 <h3>{{ project.title }}</h3>
+                <p class="project-created">{{ t.created }} · {{ new Intl.DateTimeFormat(language.toLowerCase(), { month: 'long', year: 'numeric' }).format(new Date(project.createdAt + '-01T00:00:00')) }}</p>
                 <p>{{ project.description }}</p>
                 <span class="project-stack">{{ project.stack }}</span>
               </div>
@@ -673,6 +710,30 @@ function closeMenu() {
 .project-filter-mode button[aria-pressed='true'] {
   background: var(--ink);
   color: var(--on-ink);
+}
+
+.project-sort {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.project-sort button {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 20px;
+}
+
+.project-sort button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--mist);
 }
 
 .project-filter-summary {

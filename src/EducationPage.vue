@@ -5,6 +5,7 @@ const props = defineProps<{ language: 'DE' | 'EN' | 'RU' }>()
 
 const copy = {
   DE: {
+    reset: 'Zurücksetzen', sortLabel: 'Sortieren', newest: 'Neueste zuerst', oldest: 'Älteste zuerst',
     filter: 'Nach Bereich filtern', categories: { all: 'Alle', degree: 'Schule, Studium & Abschlüsse', it: 'IT-Weiterbildungen', language: 'Sprachkurse' },
     title: 'Ausbildung', label: 'Mein Bildungsweg',
     intro: 'Von Sprachen und Wirtschaft über Webentwicklung bis zum Abschluss als akademisch geprüfte Softwareentwicklerin.',
@@ -17,6 +18,8 @@ const copy = {
     banking: 'BMWfi – Anerkennung als Bankkauffrau (österreichischer Lehrberuf)'
   },
   EN: {
+    reset: 'Reset',
+    sortLabel: 'Sort', newest: 'Newest first', oldest: 'Oldest first',
     filter: 'Filter by category', categories: { all: 'All', degree: 'School, university & qualifications', it: 'IT training', language: 'Language courses' },
     title: 'Education', label: 'My learning journey',
     intro: 'From languages and economics through web development to qualifying as an academically certified software developer.',
@@ -29,6 +32,8 @@ const copy = {
     banking: 'BMWfi – recognition as Bankkauffrau (Austrian banking apprenticeship qualification)'
   },
   RU: {
+    reset: 'Сбросить',
+    sortLabel: 'Сортировка', newest: 'Сначала новые', oldest: 'Сначала старые',
     filter: 'Фильтр по категории', categories: { all: 'Все', degree: 'Школа, вуз и квалификации', it: 'Курсы по ИТ', language: 'Языковые курсы' },
     title: 'Образование', label: 'Мой путь в образовании',
     intro: 'От изучения языков и экономики через веб-разработку к академической квалификации разработчика программного обеспечения.',
@@ -45,6 +50,7 @@ const copy = {
 const categories = ['all', 'degree', 'it', 'language'] as const
 type Category = typeof categories[number]
 const selectedCategory = ref<Category>('all')
+const sortOrder = ref<'newest' | 'oldest'>('newest')
 
 const entries: {
   category: Exclude<Category, 'all'>
@@ -68,12 +74,20 @@ const entries: {
 ]
 
 const indexedEntries = entries.map((entry, index) => ({ ...entry, index }))
-const visibleEntries = computed(() => selectedCategory.value === 'all'
-  ? indexedEntries
-  : indexedEntries.filter((entry) => entry.category === selectedCategory.value)
+const visibleEntries = computed(() => indexedEntries
+  .filter((entry) => selectedCategory.value === 'all' || entry.category === selectedCategory.value)
+  .sort((first, second) => {
+    const order = first.start.localeCompare(second.start)
+    return sortOrder.value === 'newest' ? -order : order
+  })
 )
 
 const t = computed(() => copy[props.language])
+function resetEducationControls() {
+  selectedCategory.value = 'all'
+  sortOrder.value = 'newest'
+}
+
 const formatter = computed(() => new Intl.DateTimeFormat(
   { DE: 'de-AT', EN: 'en-GB', RU: 'ru-RU' }[props.language],
   { month: 'long', year: 'numeric', timeZone: 'UTC' }
@@ -104,6 +118,32 @@ function formatMonth(value: string) {
       </button>
     </div>
 
+    <div class="education-toolbar">
+      <div class="education-sort" role="group" :aria-label="t.sortLabel">
+        <button
+          type="button"
+          :aria-label="t.newest"
+          :aria-pressed="sortOrder === 'newest'"
+          :title="t.newest"
+          @click="sortOrder = 'newest'"
+        >↓</button>
+        <button
+          type="button"
+          :aria-label="t.oldest"
+          :aria-pressed="sortOrder === 'oldest'"
+          :title="t.oldest"
+          @click="sortOrder = 'oldest'"
+        >↑</button>
+      </div>
+      <button
+        v-if="selectedCategory !== 'all' || sortOrder !== 'newest'"
+        class="education-reset"
+        type="button"
+        @click="resetEducationControls"
+      >
+        {{ t.reset }}
+      </button>
+    </div>
     <ol class="projects-grid education-list" role="list">
       <li
         v-for="entry in visibleEntries"
@@ -176,6 +216,65 @@ function formatMonth(value: string) {
   margin: 0;
   font-size: clamp(1rem, 2vw, 1.2rem);
   line-height: 1.6;
+}
+
+.education-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.education-sort {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.education-sort button {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 20px;
+}
+
+.education-sort button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--mist);
+}
+
+.education-reset {
+  padding: 6px 8px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+  .education-toolbar {
+    justify-content: space-between;
+  }
+
+  .education-sort {
+    margin-left: auto;
+  }
+
+  .education-reset {
+    font-size: 12px;
+  }
 }
 
 .education-list {
