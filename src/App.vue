@@ -75,7 +75,7 @@ const translations = {
     navigationLabel: 'Hauptnavigation',
     languageLabel: 'Sprache',
     nav: ['Start', 'Portfolio', 'Technologien', 'Über mich'],
-    contact: 'KONTAKT', cvDownload: 'Lebenslauf herunterladen',
+    contact: 'KONTAKT', cvDownload: 'Lebenslauf herunterladen', cvShort: 'Lebenslauf',
     valueLabels: ['Programmieren', 'Gestalten', 'Lernen', 'Wiederholen'],
     logoHome: 'ek. – Zur Startseite oben', heroGreeting: 'HALLO, ICH BIN', whatIUse: 'WOMIT ICH ARBEITE', more: '+ weitere', aboutTile: 'EIN WENIG ÜBER MICH', footerMade: 'Mit Vue 3 und Neugier gemacht.',
     role: 'Softwareentwicklerin',
@@ -126,7 +126,7 @@ const translations = {
     navigationLabel: 'Main navigation',
     languageLabel: 'Language',
     nav: ['Home', 'Portfolio', 'Technologies', 'About'],
-    contact: "LET'S TALK", cvDownload: 'Download CV',
+    contact: "LET'S TALK", cvDownload: 'Download CV', cvShort: 'CV',
     valueLabels: ['Code', 'Create', 'Learn', 'Repeat'],
     logoHome: 'ek. – Back to top of home page', heroGreeting: 'HELLO, I’M', whatIUse: 'WHAT I USE', more: '+ more', aboutTile: 'A LITTLE ABOUT ME', footerMade: 'Made with Vue 3 and curiosity.',
     role: 'Software Developer',
@@ -177,7 +177,7 @@ const translations = {
     navigationLabel: 'Основная навигация',
     languageLabel: 'Язык',
     nav: ['Главная', 'Портфолио', 'Технологии', 'Обо мне'],
-    contact: 'КОНТАКТ', cvDownload: 'Скачать резюме',
+    contact: 'КОНТАКТ', cvDownload: 'Скачать резюме', cvShort: 'Резюме',
     valueLabels: ['Программировать', 'Создавать', 'Учиться', 'Повторять'],
     logoHome: 'ek. – На главную страницу', heroGreeting: 'ПРИВЕТ, Я', whatIUse: 'МОИ ИНСТРУМЕНТЫ', more: 'и другие', aboutTile: 'НЕМНОГО ОБО МНЕ', footerMade: 'С любовью к коду и деталям.',
     role: 'Разработчик ПО',
@@ -476,7 +476,9 @@ function closeMenu() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            {{ t.cvDownload }} <span aria-hidden="true">↓</span>
+            <span class="cv-label-full">{{ t.cvDownload }}</span>
+            <span class="cv-label-short">{{ t.cvShort }}</span>
+            <span class="cv-arrow" aria-hidden="true">↓</span>
           </a>
           <a class="header-contact" :href="homeLink('#contact')">
             {{ t.contact }} <span aria-hidden="true">↗</span>
@@ -507,7 +509,7 @@ function closeMenu() {
           <span class="portrait-spark" aria-hidden="true">✳</span>
 
           <img
-            src="/images/Objekt.png"
+            src="/images/ekaterina-cutout.png"
             alt="Ekaterina Schedlberger"
             class="portrait-image"
             fetchpriority="high"
@@ -968,5 +970,108 @@ function closeMenu() {
   margin: 10px 0 0;
   color: var(--muted);
   line-height: 1.8;
+}
+
+.header-cv {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--on-ink);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.header-cv:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px var(--art-accent);
+}
+
+.cv-arrow {
+  display: inline-block;
+  font-size: 16px;
+  line-height: 1;
+  transition: transform .18s ease;
+}
+
+.header-cv:hover .cv-arrow {
+  transform: translateY(2px);
+}
+
+.cv-label-short {
+  display: none;
+}
+
+.languages {
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.languages button {
+  display: grid;
+  min-width: 30px;
+  min-height: 28px;
+  place-items: center;
+  padding: 3px 5px;
+  border-radius: 6px;
+  font-size: 10px;
+}
+
+.languages button.active {
+  background: var(--ink);
+  color: var(--on-ink);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .16);
+}
+
+@media (max-width: 920px) {
+  .header-cv {
+    min-height: 36px;
+    padding: 0 11px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 520px) {
+  .header-actions {
+    gap: 8px;
+  }
+
+  .cv-label-full {
+    display: none;
+  }
+
+  .cv-label-short {
+    display: inline;
+  }
+
+  .header-cv {
+    min-height: 34px;
+    padding: 0 9px;
+    gap: 5px;
+  }
+
+  .languages button {
+    min-width: 27px;
+    min-height: 26px;
+    padding: 2px 4px;
+    font-size: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-cv,
+  .cv-arrow {
+    transition: none;
+  }
 }
 </style>
