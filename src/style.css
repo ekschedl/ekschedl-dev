@@ -1057,6 +1057,67 @@ select:focus-visible {
 
 }
 
+/* Give the home tiles enough room for words on the narrowest screens. */
+@media (max-width: 260px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+  }
+
+  .hero-grid > .portrait-tile,
+  .hero-grid > .intro-tile,
+  .hero-grid > .project-tile,
+  .hero-grid > .expertise-tile,
+  .hero-grid > .about-tile {
+    grid-column: 1;
+    grid-row: auto;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .portrait-tile {
+    min-height: 320px;
+  }
+
+  .intro-tile {
+    min-height: 210px;
+    padding: 18px 16px;
+  }
+
+  .intro-tile h1 {
+    font-size: clamp(26px, 14vw, 34px);
+    overflow-wrap: anywhere;
+  }
+
+  .intro-tile h2 {
+    font-size: clamp(14px, 7.5vw, 17px);
+    overflow-wrap: anywhere;
+  }
+
+  .intro-bottom {
+    gap: 8px;
+  }
+
+  .intro-bottom p {
+    min-width: 0;
+    max-width: none;
+    overflow-wrap: anywhere;
+  }
+
+  .round-arrow {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .project-tile,
+  .expertise-tile,
+  .about-tile {
+    min-height: 165px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

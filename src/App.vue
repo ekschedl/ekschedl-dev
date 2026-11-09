@@ -1083,6 +1083,23 @@ function closeMenu() {
   box-shadow: inset 0 -2px 0 var(--accent);
 }
 
+.theme-button,
+.menu-button,
+.languages button,
+.header-cv {
+  transition: border-radius .18s ease, background-color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+
+.theme-button:hover,
+.menu-button:hover,
+.languages button:hover {
+  border-radius: 8px;
+}
+
+.header-cv:hover {
+  border-radius: 14px;
+}
+
 
 @media (min-width: 1301px) and (max-width: 1650px) {
   .header {
@@ -1269,7 +1286,11 @@ function closeMenu() {
   }
 
   .theme-button {
-    display: none;
+    display: grid;
+    width: 30px;
+    min-width: 30px;
+    height: 32px;
+    min-height: 32px;
   }
 
   .languages button {
@@ -1292,37 +1313,78 @@ function closeMenu() {
   }
 }
 
-@media (max-width: 220px) {
+@media (max-width: 260px) {
   .logo {
-    font-size: 26px;
+    font-size: 30px;
   }
 
-  .languages button {
-    width: 18px;
-    min-width: 18px;
-    font-size: 10px;
+  .header {
+    gap: 2px;
   }
 
   .header-actions {
     gap: 2px;
   }
 
-  .header {
-    gap: 3px;
+  .languages button {
+    width: 20px;
+    min-width: 20px;
   }
 
-  .header-cv {
-    width: 32px;
-    min-width: 32px;
-    height: 32px;
-    min-height: 32px;
+  .theme-button {
+    width: 26px;
+    min-width: 26px;
+    height: 30px;
+    min-height: 30px;
   }
 
+  .header-cv,
   .menu-button {
     width: 34px;
     min-width: 34px;
-    height: 34px;
-    min-height: 34px;
+    height: 32px;
+    min-height: 32px;
+  }
+}
+
+@media (max-width: 220px) {
+  .logo {
+    font-size: 24px;
+  }
+
+  .languages button {
+    width: 20px;
+    min-width: 20px;
+    font-size: 10px;
+  }
+
+  .header-actions {
+    gap: 1px;
+  }
+
+  .header {
+    gap: 2px;
+  }
+
+  .theme-button {
+    width: 26px;
+    min-width: 26px;
+    height: 30px;
+    min-height: 30px;
+  }
+
+  .header-cv {
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+    min-height: 30px;
+  }
+
+  .menu-button {
+    width: 32px;
+    min-width: 32px;
+    height: 30px;
+    min-height: 30px;
   }
 }
 </style>
