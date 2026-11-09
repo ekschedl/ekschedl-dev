@@ -50,8 +50,10 @@ html {
 }
 
 body {
+  width: 100%;
+  min-width: 0;
   margin: 0;
-  min-width: 320px;
+  overflow-x: clip;
 }
 
 a {
