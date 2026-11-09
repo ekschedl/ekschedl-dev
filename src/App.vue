@@ -13,6 +13,11 @@ const isExperience = /^\/berufserfahrung\/?$/i.test(window.location.pathname)
 const experienceLabels = { DE: 'Berufserfahrung', EN: 'Work experience', RU: 'Опыт работы' }
 const isEducation = /^\/ausbildung\/?$/i.test(window.location.pathname)
 const educationLabels = { DE: 'Ausbildung', EN: 'Education', RU: 'Образование' }
+const portfolioName = computed(() => ({
+  DE: 'Ekaterina Schedlberger',
+  EN: 'Ekaterina Schedlberger',
+  RU: 'Екатерина Шедльбергер'
+})[language.value])
 
 function homeLink(hash: string) {
   return isEducation || isExperience ? '/' + hash : hash
@@ -21,9 +26,9 @@ function homeLink(hash: string) {
 function updatePageLanguage() {
   document.documentElement.lang = language.value.toLowerCase()
   if (isEducation) {
-    document.title = educationLabels[language.value] + ' | Ekaterina Schedlberger'
+    document.title = educationLabels[language.value] + ' | ' + portfolioName.value
   } else if (isExperience) {
-    document.title = experienceLabels[language.value] + ' | Ekaterina Schedlberger'
+    document.title = experienceLabels[language.value] + ' | ' + portfolioName.value
   }
 }
 const menuOpen = ref(false)
@@ -71,13 +76,13 @@ const translations = {
     technologyMode: 'Nach Technologie',
     projectCount: '{visible} von {total} Projekten',
     sortLabel: 'Sortieren', newest: 'Neueste zuerst', oldest: 'Älteste zuerst', created: 'Erstellt',
-    darkMode: 'Dunkelmodus',
+    switchToDark: 'Dunkelmodus einschalten', switchToLight: 'Hellmodus einschalten',
     navigationLabel: 'Hauptnavigation',
     languageLabel: 'Sprache',
     nav: ['Start', 'Portfolio', 'Technologien', 'Über mich'],
     contact: 'KONTAKT', cvDownload: 'CV herunterladen', cvShort: 'CV',
     valueLabels: ['Programmieren', 'Gestalten', 'Lernen', 'Wiederholen'],
-    logoHome: 'ek. – Zur Startseite oben', heroGreeting: 'HALLO, ICH BIN', whatIUse: 'WOMIT ICH ARBEITE', more: '+ weitere', aboutTile: 'EIN WENIG ÜBER MICH', footerMade: 'Mit Vue 3 und Neugier gemacht.',
+    logoHome: 'ek. – Zur Startseite oben', heroGreeting: 'HALLO, ICH BIN', heroName: 'Ekaterina', whatIUse: 'WOMIT ICH ARBEITE', more: '+ weitere', aboutTile: 'EIN WENIG ÜBER MICH', footerMade: 'Mit Vue 3 und Neugier gemacht.', footerCopyright: '© 2026 Ekaterina Schedlberger',
     role: 'Softwareentwicklerin',
     location: 'Graz, Österreich',
     heroNote: 'Ideen verstehen. Lösungen entwickeln. Neues lernen.',
@@ -88,7 +93,8 @@ const translations = {
     techGroups: ['Frontend & Apps', 'Backend & Daten', 'Werkzeuge', 'KI-Werkzeuge', 'Ausbildungsschwerpunkte'], projectUse: 'Im Projekt eingesetzt', studyUse: 'In der Ausbildung vertieft',
     sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIEN', sectionAbout: '03 / ÜBER MICH', sectionContact: '04 / KONTAKT',
     projectTypes: { mobile: 'MOBILE APP', game: 'KONSOLENSPIEL', web: 'WEBPROJEKT' },
-    studyTopics: "studyTopics: 'Objektorientierte Programmierung · Algorithmen · Softwarearchitektur · Softwarequalitätssicherung'",
+    projectTypesShort: { mobile: 'APP', game: 'SPIEL', web: 'WEB' },
+    studyTopics: 'Objektorientierte Programmierung · Algorithmen · Softwarearchitektur · Softwarequalitätssicherung',
     techFilterAll: "Alle Bereiche", techFilterGroups: ["Frontend & Apps", "Backend & Daten", "Werkzeuge", "KI-Werkzeuge"],
     techFilterReset: 'Zurücksetzen',
     about: 'Über mich',
@@ -122,13 +128,13 @@ const translations = {
     technologyMode: 'By technology',
     projectCount: '{visible} of {total} projects',
     sortLabel: 'Sort', newest: 'Newest first', oldest: 'Oldest first', created: 'Created',
-    darkMode: 'Dark mode',
+    switchToDark: 'Switch to dark mode', switchToLight: 'Switch to light mode',
     navigationLabel: 'Main navigation',
     languageLabel: 'Language',
     nav: ['Home', 'Portfolio', 'Technologies', 'About'],
     contact: "LET'S TALK", cvDownload: 'Download CV', cvShort: 'CV',
     valueLabels: ['Code', 'Create', 'Learn', 'Repeat'],
-    logoHome: 'ek. – Back to top of home page', heroGreeting: 'HELLO, I’M', whatIUse: 'WHAT I USE', more: '+ more', aboutTile: 'A LITTLE ABOUT ME', footerMade: 'Made with Vue 3 and curiosity.',
+    logoHome: 'ek. – Back to top of home page', heroGreeting: 'HELLO, I’M', heroName: 'Ekaterina', whatIUse: 'WHAT I USE', more: '+ more', aboutTile: 'A LITTLE ABOUT ME', footerMade: 'Made with Vue 3 and curiosity.', footerCopyright: '© 2026 Ekaterina Schedlberger',
     role: 'Software Developer',
     location: 'Graz, Austria',
     heroNote: 'Explore ideas. Build solutions. Keep learning.',
@@ -139,7 +145,8 @@ const translations = {
     techGroups: ['Frontend & apps', 'Backend & data', 'Tools', 'AI tools', 'Study topics'], projectUse: 'Used in projects', studyUse: 'Covered in training',
     sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIES', sectionAbout: '03 / ABOUT ME', sectionContact: '04 / CONTACT',
     projectTypes: { mobile: 'MOBILE APP', game: 'CONSOLE GAME', web: 'WEB PROJECT' },
-    studyTopics: "studyTopics: 'Object-oriented programming · Algorithms · Software architecture · Software quality assurance'",
+    projectTypesShort: { mobile: 'APP', game: 'GAME', web: 'WEB' },
+    studyTopics: 'Object-oriented programming · Algorithms · Software architecture · Software quality assurance',
     techFilterAll: "All areas", techFilterGroups: ["Frontend & apps", "Backend & data", "Tools", "AI tools"],
     techFilterReset: 'Reset',
     about: 'About me',
@@ -173,13 +180,13 @@ const translations = {
     technologyMode: 'По технологии',
     projectCount: 'Проекты: {visible} из {total}',
     sortLabel: 'Сортировка', newest: 'Сначала новые', oldest: 'Сначала старые', created: 'Создано',
-    darkMode: 'Тёмная тема',
+    switchToDark: 'Включить тёмную тему', switchToLight: 'Включить светлую тему',
     navigationLabel: 'Основная навигация',
     languageLabel: 'Язык',
     nav: ['Главная', 'Портфолио', 'Технологии', 'Обо мне'],
     contact: 'КОНТАКТ', cvDownload: 'Скачать резюме', cvShort: 'Резюме',
     valueLabels: ['Программировать', 'Создавать', 'Учиться', 'Повторять'],
-    logoHome: 'ek. – На главную страницу', heroGreeting: 'ПРИВЕТ, Я', whatIUse: 'МОИ ИНСТРУМЕНТЫ', more: 'и другие', aboutTile: 'НЕМНОГО ОБО МНЕ', footerMade: 'С любовью к коду и деталям.',
+    logoHome: 'ek. – На главную страницу', heroGreeting: 'ПРИВЕТ, Я', heroName: 'Екатерина', whatIUse: 'МОИ ИНСТРУМЕНТЫ', more: 'и другие', aboutTile: 'НЕМНОГО ОБО МНЕ', footerMade: 'С любовью к коду и деталям.', footerCopyright: '© 2026 Екатерина Шедльбергер',
     role: 'Разработчик ПО',
     location: 'Грац, Австрия',
     heroNote: 'Исследовать идеи. Находить решения. Учиться новому.',
@@ -190,7 +197,8 @@ const translations = {
     techGroups: ['Фронтенд и приложения', 'Бэкенд и данные', 'Инструменты', 'ИИ-инструменты', 'Темы обучения'], projectUse: 'Использовала в проектах', studyUse: 'Изучала в рамках обучения',
     sectionPortfolio: '01 / ПОРТФОЛИО', sectionTechnologies: '02 / ТЕХНОЛОГИИ', sectionAbout: '03 / ОБО МНЕ', sectionContact: '04 / КОНТАКТЫ',
     projectTypes: { mobile: 'МОБИЛЬНОЕ ПРИЛОЖЕНИЕ', game: 'КОНСОЛЬНАЯ ИГРА', web: 'ВЕБ-ПРОЕКТ' },
-    studyTopics: "studyTopics: 'Объектно-ориентированное программирование · Алгоритмы · Архитектура ПО · Обеспечение качества ПО'",
+    projectTypesShort: { mobile: 'ПРИЛ.', game: 'ИГРА', web: 'ВЕБ' },
+    studyTopics: 'Объектно-ориентированное программирование · Алгоритмы · Архитектура ПО · Обеспечение качества ПО',
     techFilterAll: "Все разделы", techFilterGroups: ["Фронтенд и приложения", "Бэкенд и данные", "Инструменты", "ИИ-инструменты"],
     techFilterReset: 'Сбросить',
     about: 'Обо мне',
@@ -392,6 +400,15 @@ const visibleSkillGroups = computed(() => skillGroups.filter((group) =>
   group.key === 'study' || selectedSkillGroups.value.length === 0 || selectedSkillGroups.value.includes(group.key as SkillGroupKey)
 ))
 
+function handleSkillIconLoad(event: Event) {
+  const image = event.currentTarget as HTMLImageElement
+  image.parentElement?.classList.add('has-icon')
+}
+
+function handleSkillIconError(event: Event) {
+  (event.currentTarget as HTMLImageElement).hidden = true
+}
+
 const values = [
   { symbol: '⌘' },
   { symbol: '↗' },
@@ -461,12 +478,12 @@ function closeMenu() {
         <button
           class="theme-button"
           type="button"
-          :aria-label="t.darkMode"
+          :aria-label="darkMode ? t.switchToLight : t.switchToDark"
           :aria-pressed="darkMode"
-          :title="t.darkMode"
+          :title="darkMode ? t.switchToLight : t.switchToDark"
           @click="darkMode = !darkMode"
         >
-          <span aria-hidden="true">{{ darkMode ? '☾' : '☼' }}</span>
+          <span aria-hidden="true">{{ darkMode ? '☼' : '☾' }}</span>
         </button>
 
         <div class="header-ctas">
@@ -510,7 +527,7 @@ function closeMenu() {
 
           <img
             src="/images/ekaterina-cutout.png"
-            alt="Ekaterina Schedlberger"
+            :alt="portfolioName"
             class="portrait-image"
             fetchpriority="high"
           />
@@ -519,7 +536,7 @@ function closeMenu() {
         <a href="#projects" class="tile intro-tile" :aria-label="t.nav[1]">
           <div>
             <span class="eyebrow">{{ t.heroGreeting }}</span>
-            <h1>Ekaterina<span>.</span></h1>
+            <h1>{{ t.heroName }}<span>.</span></h1>
             <h2>{{ t.role }}</h2>
             <p class="location">{{ t.location }}</p>
           </div>
@@ -539,7 +556,8 @@ function closeMenu() {
           :data-area="project.area"
           :class="'tile-' + project.id"
         >
-          <span class="tile-type">{{ t.projectTypes[project.area] }}</span>
+          <span class="tile-type tile-type-full">{{ t.projectTypes[project.area] }}</span>
+          <span class="tile-type tile-type-compact">{{ t.projectTypesShort[project.area] }}</span>
 
           <div class="tile-project-image">
             <img :src="project.image" :alt="project.title" loading="lazy" />
@@ -697,22 +715,28 @@ function closeMenu() {
           >{{ t.techFilterReset }}</button>
         </div>
         <div class="tech-groups">
-          <section v-for="(group, index) in visibleSkillGroups" :key="group.key" class="tech-group">
+          <section v-for="(group, index) in visibleSkillGroups" :key="group.key" class="tech-group" :class="{ 'tech-group-study': group.textKey }">
             <h3>{{ t.techGroups[group.key === 'study' ? 4 : filterableSkillGroupKeys.indexOf(group.key as SkillGroupKey)] }}</h3>
             <p v-if="group.textKey" class="tech-study">{{ t.studyTopics }}</p>
             <div v-else class="tech-list">
-          <div
-            v-for="skill in group.skills"
-            :key="skill.name"
-            class="tech-item"
-          >
-            <img
-              :src="`https://cdn.simpleicons.org/${skill.icon}/${skill.color}`"
-              alt=""
-              loading="lazy"
-            />
-            <span>{{ skill.name }}</span>
-          </div>
+              <div
+                v-for="skill in group.skills"
+                :key="skill.name"
+                class="tech-item"
+                :style="{ '--skill-color': '#' + skill.color }"
+              >
+                <span class="tech-icon" aria-hidden="true">
+                  <img
+                    :src="`https://cdn.simpleicons.org/${skill.icon}/${skill.color}`"
+                    alt=""
+                    loading="lazy"
+                    @load="handleSkillIconLoad"
+                    @error="handleSkillIconError"
+                  />
+                  <span class="tech-icon-fallback">{{ skill.name.slice(0, 2) }}</span>
+                </span>
+                <span>{{ skill.name }}</span>
+              </div>
             </div>
           </section>
         </div>
@@ -778,7 +802,7 @@ function closeMenu() {
     </main>
 
     <footer class="footer">
-      <span>© 2026 Ekaterina Schedlberger</span>
+      <span>{{ t.footerCopyright }}</span>
       <span>{{ t.footerMade }}</span>
     </footer>
   </div>
@@ -922,23 +946,29 @@ function closeMenu() {
 .tech-group-filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 28px;
+  gap: 10px;
+  margin-top: 32px;
 }
 
 .tech-group-filters button {
-  padding: 7px 10px;
+  padding: 10px 15px;
   border: 1px solid var(--control-line);
-  border-radius: 8px;
+  border-radius: 999px;
   background: var(--surface);
   color: var(--ink);
   font: inherit;
-  font-size: 13px;
+  font-size: 15px;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease;
 }
 
 .tech-group-filters button[aria-pressed='true'] {
   border-color: var(--accent);
   background: var(--mist);
+}
+
+.tech-group-filters button:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .tech-group-filters .tech-filter-reset {
@@ -951,25 +981,58 @@ function closeMenu() {
 
 .tech-groups {
   display: grid;
-  gap: 28px;
-  margin-top: 38px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.tech-group {
+  min-width: 0;
+  padding: clamp(18px, 2.2vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.tech-group-study {
+  grid-column: 1 / -1;
+  background: color-mix(in srgb, var(--mist) 38%, var(--surface));
 }
 
 .tech-group h3 {
   margin: 0;
   font-family: 'IBM Plex Sans', system-ui, sans-serif;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: clamp(19px, 1.6vw, 23px);
+  font-weight: 600;
 }
 
 .tech-group .tech-list {
-  margin-top: 10px;
+  margin-top: 18px;
 }
 
 .tech-study {
-  margin: 10px 0 0;
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
   color: var(--muted);
-  line-height: 1.8;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+@media (max-width: 680px) {
+  .tech-groups {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .tech-group-study {
+    grid-column: auto;
+  }
+
+  .tech-group-filters button {
+    padding: 9px 13px;
+    font-size: 14px;
+  }
 }
 
 .menu-button {
@@ -977,9 +1040,9 @@ function closeMenu() {
   width: 44px;
   height: 44px;
   padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--surface);
   color: var(--ink);
   font-size: 22px;
 }
@@ -1111,7 +1174,7 @@ function closeMenu() {
   }
 
   .navigation a {
-    font-size: 12px;
+    font-size: 16px;
   }
 
   .header-actions {
@@ -1154,6 +1217,7 @@ function closeMenu() {
 
   .navigation a {
     padding: 12px 14px;
+    font-size: 18px;
   }
 
   .menu-button {
@@ -1162,6 +1226,18 @@ function closeMenu() {
 }
 
 @media (max-width: 920px) {
+  .header-contact {
+    display: none;
+  }
+
+  .cv-label-full {
+    display: none;
+  }
+
+  .cv-label-short {
+    display: inline;
+  }
+
   .header-cv {
     min-height: 36px;
     padding: 0 11px;
@@ -1170,6 +1246,11 @@ function closeMenu() {
 }
 
 @media (max-width: 520px) {
+  .logo {
+    flex: 0 0 auto;
+    margin-right: 8px;
+  }
+
   .header {
     flex-wrap: nowrap;
     min-height: 0;
@@ -1216,8 +1297,8 @@ function closeMenu() {
   }
 
   .header-cv {
-    width: 44px;
-    min-width: 44px;
+    width: 40px;
+    min-width: 40px;
     min-height: 40px;
     padding: 0 6px;
     gap: 0;
@@ -1234,9 +1315,9 @@ function closeMenu() {
   .menu-button {
     width: 40px;
     min-width: 40px;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
+    border: 1px solid var(--control-line);
+    border-radius: 8px;
+    background: var(--surface);
     color: var(--ink);
   }
 
@@ -1300,22 +1381,25 @@ function closeMenu() {
   }
 
   .header-cv {
-    width: 40px;
-    min-width: 40px;
-    padding: 0 4px;
+    width: 30px;
+    min-width: 30px;
+    height: 32px;
+    min-height: 32px;
+    padding: 0;
   }
 
   .menu-button {
-    width: 40px;
-    min-width: 40px;
-    height: 40px;
-    min-height: 40px;
+    width: 30px;
+    min-width: 30px;
+    height: 32px;
+    min-height: 32px;
   }
 }
 
 @media (max-width: 260px) {
   .logo {
     font-size: 30px;
+    margin-right: 4px;
   }
 
   .header {
@@ -1332,10 +1416,10 @@ function closeMenu() {
   }
 
   .theme-button {
-    width: 26px;
-    min-width: 26px;
-    height: 30px;
-    min-height: 30px;
+    width: 34px;
+    min-width: 34px;
+    height: 32px;
+    min-height: 32px;
   }
 
   .header-cv,
@@ -1350,6 +1434,7 @@ function closeMenu() {
 @media (max-width: 220px) {
   .logo {
     font-size: 24px;
+    margin-right: 3px;
   }
 
   .languages button {
@@ -1367,8 +1452,8 @@ function closeMenu() {
   }
 
   .theme-button {
-    width: 26px;
-    min-width: 26px;
+    width: 30px;
+    min-width: 30px;
     height: 30px;
     min-height: 30px;
   }
@@ -1381,8 +1466,8 @@ function closeMenu() {
   }
 
   .menu-button {
-    width: 32px;
-    min-width: 32px;
+    width: 30px;
+    min-width: 30px;
     height: 30px;
     min-height: 30px;
   }

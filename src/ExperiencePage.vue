@@ -107,7 +107,8 @@ const entries = [
     start: "2025-09",
     end: "2026-10",
     roles: ["Softwareentwicklung", "Software development", "Разработка программного обеспечения"],
-    institution: "JAWA",
+    institution: "JAWA Management Software GmbH",
+    institutionRu: "австрийская компания-разработчик программного обеспечения для управления бизнес-процессами",
     place: 0,
     field: 3,
     tasks: [
@@ -125,12 +126,12 @@ const copy = {
     categories: { all: "Alle", it: "Softwareentwicklung", finance: "Wertpapier", hospitality: "Hotellerie", interpreting: "Dolmetschen", break: "Karenz & Neuorientierung" },
     title: 'Berufserfahrung',
     label: 'Mein Berufsweg',
-    intro: 'Meine Stationen in der Softwareentwicklung, Hotellerie, Sprachmittlung und im Wertpapierbereich.',
+    intro: 'Mein Weg in die Softwareentwicklung begann lange vor dem ersten Code. Das Finanzwesen lehrte mich Genauigkeit, die Hotellerie Aufmerksamkeit für Menschen, und durch die Sprachmittlung lernte ich, Verständigung zwischen Menschen zu schaffen. Heute verbinde ich diese Erfahrungen, um durchdachte Softwarelösungen zu entwickeln.',
     place: "Ort",
     field: "Bereich",
     position: "Position",
     places: ["Graz, Österreich", "Moskau, Russland", "Novosibirsk, Russland", "Irkutsk, Russland"],
-    fields: ["Wertpapier", "Allgemeinmedizinische Erst- und Grundversorgung", "Hotellerie und Tourismus", "Berufspraxis im Rahmen der dualen Ausbildung"]
+    fields: ["Wertpapier", "Allgemeinmedizinische Erst- und Grundversorgung", "Hotellerie und Tourismus", "Softwareentwicklung und Managementplattformen für die produzierende Industrie"]
   },
   EN: {
     sortLabel: 'Sort', techStack: 'Technologies', newest: 'Newest first', oldest: 'Oldest first',
@@ -138,12 +139,12 @@ const copy = {
     categories: { all: "All", it: "Software development", finance: "Securities", hospitality: "Hospitality", interpreting: "Interpreting", break: "Leave & career transition" },
     title: 'Work experience',
     label: 'My career',
-    intro: 'My experience in software development, hospitality, interpreting and securities.',
+    intro: 'My path into software development began long before my first line of code. Finance taught me precision, hospitality taught me to pay attention to people, and interpreting taught me to find common ground. Today I bring these experiences together to build thoughtful software solutions.',
     place: "Location",
     field: "Sector",
     position: "Position",
     places: ["Graz, Austria", "Moscow, Russia", "Novosibirsk, Russia", "Irkutsk, Russia"],
-    fields: ["Securities", "General medical first-contact and primary care", "Hospitality and tourism", "Practical placement as part of dual training"]
+    fields: ["Securities", "General medical first-contact and primary care", "Hospitality and tourism", "Software development and management platforms for manufacturing"]
   },
   RU: {
     sortLabel: 'Сортировка', techStack: 'Технологии', newest: 'Сначала новые', oldest: 'Сначала старые',
@@ -151,12 +152,12 @@ const copy = {
     categories: { all: "Все", it: "Разработка ПО", finance: "Ценные бумаги", hospitality: "Гостиничное дело", interpreting: "Устный перевод", break: "Отпуск и смена профессии" },
     title: 'Опыт работы',
     label: 'Мой профессиональный путь',
-    intro: 'Мой опыт в разработке ПО, гостиничном деле, устном переводе и сфере ценных бумаг.',
+    intro: 'Мой путь в разработку начался задолго до первого кода. Финансы научили меня точности, гостиничное дело — вниманию к людям, а перевод — находить общий язык. Сегодня я объединяю этот опыт в работе над продуманными программными решениями.',
     place: "Место",
     field: "Сфера",
     position: "Должность",
     places: ["Грац, Австрия", "Москва, Россия", "Новосибирск, Россия", "Иркутск, Россия"],
-    fields: ["Ценные бумаги", "Первичная общемедицинская помощь", "Гостиничное дело и туризм", "Практика в рамках дуального обучения"]
+    fields: ["Ценные бумаги", "Первичная общемедицинская помощь", "Гостиничное дело и туризм", "Разработка ПО и платформ управления для производственной отрасли"]
   }
 }
 
@@ -225,7 +226,11 @@ function formatMonth(value: string) {
           <time :datetime="entry.end">{{ formatMonth(entry.end) }}</time>
         </div>
         <span class="experience-category project-type">{{ t.categories[entry.category] }}</span>
-        <h2>{{ entry.institution || entry.roles[languageIndex] }}</h2>
+        <h2>
+          <a v-if="entry.institution === 'JAWA Management Software GmbH'" href="https://jawa.at/en/" target="_blank" rel="noreferrer">{{ entry.institution }}</a>
+          <template v-else>{{ entry.institution || entry.roles[languageIndex] }}</template>
+          <span v-if="props.language === 'RU' && 'institutionRu' in entry" class="experience-company-translation"> — {{ entry.institutionRu }}</span>
+        </h2>
         <dl v-if="entry.institution || entry.place !== undefined" class="experience-details">
           <div v-if="entry.place !== undefined">
             <dt>{{ t.place }}</dt>
@@ -243,7 +248,7 @@ function formatMonth(value: string) {
         <ul v-if="entry.tasks" class="experience-tasks">
           <li v-for="task in entry.tasks[languageIndex]" :key="task">{{ task }}</li>
         </ul>
-        <ul v-if="entry.institution === 'JAWA'" class="experience-stack" :aria-label="t.techStack">
+        <ul v-if="entry.institution === 'JAWA Management Software GmbH'" class="experience-stack" :aria-label="t.techStack">
           <li v-for="tool in ['PHP', 'Xdebug', 'SQL', 'Jira Service Management', 'INFORUM']" :key="tool">
             {{ tool }}
           </li>
@@ -392,6 +397,22 @@ function formatMonth(value: string) {
   font-weight: 500;
 }
 
+.experience-entry h2 a {
+  color: inherit;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.12em;
+}
+
+.experience-entry h2 a:hover {
+  text-decoration-color: currentColor;
+}
+
+.experience-company-translation {
+  font-size: 0.78em;
+  font-weight: 400;
+}
+
 .experience-date {
   display: flex;
   align-items: baseline;
@@ -448,5 +469,44 @@ function formatMonth(value: string) {
   margin: 14px 0 0;
   padding-inline-start: 20px;
   line-height: 1.7;
+}
+
+@media (max-width: 380px) {
+  .experience-heading {
+    padding: 18px 14px;
+  }
+
+  .experience-heading h1 {
+    font-size: clamp(24px, 8vw, 32px);
+  }
+
+  .experience-heading p {
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+
+  .experience-list {
+    padding-inline-start: 18px;
+  }
+
+  .experience-entry {
+    padding: 18px 14px;
+  }
+
+  .experience-entry h2 {
+    font-size: 20px;
+    overflow-wrap: anywhere;
+  }
+
+  .experience-filters button,
+  .experience-entry,
+  .experience-details dd,
+  .experience-tasks li {
+    overflow-wrap: anywhere;
+  }
+
+  .experience-filters button {
+    max-width: 100%;
+  }
 }
 </style>
