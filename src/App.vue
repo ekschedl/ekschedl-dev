@@ -75,7 +75,7 @@ const translations = {
     navigationLabel: 'Hauptnavigation',
     languageLabel: 'Sprache',
     nav: ['Start', 'Portfolio', 'Technologien', 'Über mich'],
-    contact: 'KONTAKT', cvDownload: 'Lebenslauf herunterladen', cvShort: 'Lebenslauf',
+    contact: 'KONTAKT', cvDownload: 'CV herunterladen', cvShort: 'CV',
     valueLabels: ['Programmieren', 'Gestalten', 'Lernen', 'Wiederholen'],
     logoHome: 'ek. – Zur Startseite oben', heroGreeting: 'HALLO, ICH BIN', whatIUse: 'WOMIT ICH ARBEITE', more: '+ weitere', aboutTile: 'EIN WENIG ÜBER MICH', footerMade: 'Mit Vue 3 und Neugier gemacht.',
     role: 'Softwareentwicklerin',
@@ -972,18 +972,36 @@ function closeMenu() {
   line-height: 1.8;
 }
 
+.menu-button {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 22px;
+}
+
+.header-ctas {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 10px;
+}
+
 .header-cv {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 40px;
-  padding: 0 14px;
+  min-height: 44px;
+  padding: 0 16px;
   border: 1px solid var(--accent);
   border-radius: 10px;
   background: var(--accent);
   color: var(--on-ink);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
   transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
@@ -1010,27 +1028,58 @@ function closeMenu() {
 }
 
 .languages {
-  gap: 2px;
-  padding: 3px;
+  flex: 0 0 auto;
+  gap: 1px;
+  padding: 4px;
   border: 1px solid var(--line);
-  border-radius: 9px;
+  border-radius: 10px;
   background: var(--surface);
 }
 
 .languages button {
   display: grid;
-  min-width: 30px;
-  min-height: 28px;
+  min-width: 34px;
+  min-height: 34px;
   place-items: center;
-  padding: 3px 5px;
-  border-radius: 6px;
-  font-size: 10px;
+  padding: 5px 7px;
+  border-radius: 7px;
+  font-size: 11px;
 }
 
 .languages button.active {
   background: var(--ink);
   color: var(--on-ink);
   box-shadow: 0 1px 3px rgba(0, 0, 0, .16);
+}
+
+@media (max-width: 1450px) {
+  .navigation {
+    display: none;
+    position: absolute;
+    z-index: 30;
+    top: 75px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 15px;
+    border-radius: 12px;
+    background: var(--paper);
+    box-shadow: 0 15px 35px rgba(0,0,0,.08);
+  }
+
+  .navigation.open {
+    display: flex;
+  }
+
+  .navigation a {
+    padding: 12px 14px;
+  }
+
+  .menu-button {
+    display: block;
+  }
 }
 
 @media (max-width: 920px) {
@@ -1055,16 +1104,36 @@ function closeMenu() {
   }
 
   .header-cv {
-    min-height: 34px;
-    padding: 0 9px;
-    gap: 5px;
+    min-height: 32px;
+    padding: 0 8px;
+    gap: 4px;
+    border-radius: 8px;
+    font-size: 10px;
+  }
+
+  .languages {
+    gap: 0;
+    padding: 2px;
+    border-radius: 8px;
   }
 
   .languages button {
-    min-width: 27px;
-    min-height: 26px;
-    padding: 2px 4px;
-    font-size: 9px;
+    min-width: 30px;
+    min-height: 30px;
+    padding: 4px 5px;
+    border-radius: 6px;
+    font-size: 10px;
+  }
+
+  .header-ctas {
+    gap: 6px;
+  }
+
+  .menu-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 20px;
   }
 }
 
