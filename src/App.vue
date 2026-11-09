@@ -27,8 +27,10 @@ function updatePageLanguage() {
   }
 }
 const menuOpen = ref(false)
-const query = ref('')
-const technology = ref('')
+const projectAreas = ['mobile', 'game', 'web'] as const
+type ProjectArea = typeof projectAreas[number]
+const selectedArea = ref<ProjectArea | ''>('')
+const selectedTechnologies = ref<string[]>([])
 const darkMode = ref(false)
 
 onMounted(() => {
@@ -54,12 +56,15 @@ watch(darkMode, (enabled) => {
 
 const translations = {
   DE: {
-    search: 'Projekte suchen',
-    searchHint: 'Titel, Beschreibung oder Technologie',
+    areaFilter: 'Projektbereich',
+    filterOptions: 'Projektfilter',
+    allAreas: 'Alle Bereiche',
+    areas: { mobile: 'Mobile App', game: 'Spiel', web: 'Webentwicklung' },
     filter: 'Technologie filtern',
     allTechnologies: 'Alle Technologien',
     noResults: 'Keine passenden Projekte gefunden.',
-    reset: 'Suche und Filter zurücksetzen',
+    reset: 'Alle Filter zurücksetzen',
+    filterOr: 'oder',
     darkMode: 'Dunkelmodus',
     navigationLabel: 'Hauptnavigation',
     languageLabel: 'Sprache',
@@ -84,19 +89,22 @@ const translations = {
     email: 'E-Mail schreiben',
     projectDescriptions: [
       'Eine iOS-App mit SwiftUI und Supabase.',
-      'Kartenspiele mit Java und JavaScript.',
+      'UNO als Konsolenspiel.',
       'Ein Webprojekt mit HTML, CSS und JavaScript.'
     ],
     menuOpen: 'Menü öffnen',
     menuClose: 'Menü schließen'
   },
   EN: {
-    search: 'Search projects',
-    searchHint: 'Title, description or technology',
+    areaFilter: 'Project area',
+    filterOptions: 'Project filters',
+    allAreas: 'All areas',
+    areas: { mobile: 'Mobile app', game: 'Game', web: 'Web development' },
     filter: 'Filter by technology',
     allTechnologies: 'All technologies',
     noResults: 'No matching projects found.',
-    reset: 'Reset search and filter',
+    reset: 'Reset all filters',
+    filterOr: 'or',
     darkMode: 'Dark mode',
     navigationLabel: 'Main navigation',
     languageLabel: 'Language',
@@ -121,19 +129,22 @@ const translations = {
     email: 'Send an email',
     projectDescriptions: [
       'An iOS app built with SwiftUI and Supabase.',
-      'Card games built with Java and JavaScript.',
+      'UNO as a console game.',
       'A web project with HTML, CSS and JavaScript.'
     ],
     menuOpen: 'Open menu',
     menuClose: 'Close menu'
   },
   RU: {
-    search: 'Поиск проектов',
-    searchHint: 'Название, описание или технология',
+    areaFilter: 'Тип проекта',
+    filterOptions: 'Фильтры проектов',
+    allAreas: 'Все типы',
+    areas: { mobile: 'Мобильное приложение', game: 'Игра', web: 'Веб-разработка' },
     filter: 'Фильтр по технологии',
     allTechnologies: 'Все технологии',
     noResults: 'Подходящих проектов нет.',
-    reset: 'Сбросить поиск и фильтр',
+    reset: 'Сбросить все фильтры',
+    filterOr: 'или',
     darkMode: 'Тёмная тема',
     navigationLabel: 'Основная навигация',
     languageLabel: 'Язык',
@@ -158,7 +169,7 @@ const translations = {
     email: 'Написать письмо',
     projectDescriptions: [
       'iOS-приложение на SwiftUI и Supabase.',
-      'Карточные игры на Java и JavaScript.',
+      'UNO в консольной версии.',
       'Веб-проект на HTML, CSS и JavaScript.'
     ],
     menuOpen: 'Открыть меню',
@@ -173,6 +184,7 @@ const projects = [
     id: 'yoganow',
     title: 'YogaNow Studio',
     type: 'iOS APP',
+    area: 'mobile',
     image: '/images/yoganow.jpg',
     stack: 'Swift · SwiftUI · Supabase'
   },
@@ -180,6 +192,7 @@ const projects = [
     id: 'uno',
     title: 'UNO',
     type: 'CARD GAME',
+    area: 'game',
     image: '/images/uno.jpg',
     stack: 'Java · JavaScript'
   },
@@ -187,33 +200,56 @@ const projects = [
     id: 'kaffeehaus',
     title: 'Kaffeehaus',
     type: 'WEB PROJECT',
+    area: 'web',
     image: '/images/kaffeehaus.jpg',
     stack: 'HTML · CSS · JavaScript'
   }
-]
+] as const
 
 const projectTechnologies = [...new Set(projects.flatMap(({ stack }) => stack.split(' · ')))]
   .sort((first, second) => first.localeCompare(second))
 
-const visibleProjects = computed(() => {
-  const locale = language.value.toLowerCase()
-  const terms = query.value.trim().toLocaleLowerCase(locale).split(/\s+/).filter(Boolean)
+const technologyAreas = new Map(projectTechnologies.map((technology) => {
+  const areas = new Set(projects
+    .filter((project) => project.stack.split(' · ').includes(technology))
+    .map((project) => project.area))
 
+  return [technology, areas.size === 1 ? [...areas][0] : undefined] as const
+}))
+
+const visibleProjects = computed(() => {
   return projects
     .map((project, index) => ({ ...project, description: t.value.projectDescriptions[index] }))
     .filter((project) => {
-      const matchesTechnology = !technology.value || project.stack.split(' · ').includes(technology.value)
-      const searchable = [project.title, project.type, project.stack, project.description]
-        .join(' ')
-        .toLocaleLowerCase(locale)
-
-      return matchesTechnology && terms.every((term) => searchable.includes(term))
+      const stack = project.stack.split(' · ')
+      const matchesTechnology = selectedTechnologies.value.length === 0
+        || selectedTechnologies.value.some((item) => stack.includes(item))
+      const matchesArea = !selectedArea.value || project.area === selectedArea.value
+      return matchesArea && matchesTechnology
     })
 })
 
+function selectProjectArea(area: ProjectArea | '') {
+  selectedArea.value = area
+  if (area) selectedTechnologies.value = []
+}
+
+function toggleTechnology(option: string) {
+  if (!option) {
+    selectedTechnologies.value = []
+    return
+  }
+
+  selectedArea.value = ''
+  const selected = selectedTechnologies.value
+  selectedTechnologies.value = selected.includes(option)
+    ? selected.filter((item) => item !== option)
+    : [...selected, option]
+}
+
 function resetProjectFilters() {
-  query.value = ''
-  technology.value = ''
+  selectedArea.value = ''
+  selectedTechnologies.value = []
 }
 
 async function openProject(event: MouseEvent, id: string) {
@@ -375,6 +411,7 @@ function closeMenu() {
           :href="'#' + project.id"
           @click="openProject($event, project.id)"
           class="tile project-tile"
+          :data-area="project.area"
           :class="'tile-' + project.id"
         >
           <span class="tile-type">{{ project.type }}</span>
@@ -417,30 +454,55 @@ function closeMenu() {
           <p>{{ t.projectsIntro }}</p>
         </div>
 
-        <div class="project-controls">
-          <label>
-            <span>{{ t.search }}</span>
-            <input v-model="query" type="search" :placeholder="t.searchHint" />
-          </label>
+        <div class="project-controls" role="group" :aria-label="t.filterOptions">
+          <div class="project-filter-header">
+            <button
+              class="reset-filters"
+              type="button"
+              :disabled="!selectedArea && !selectedTechnologies.length"
+              @click="resetProjectFilters"
+            >
+              {{ t.reset }}
+            </button>
+          </div>
+          <fieldset class="project-technology-filters" :class="{ 'filter-group-active': selectedArea }">
+            <legend>{{ t.areaFilter }}</legend>
+            <div class="project-filter-buttons">
+              <button
+                v-for="area in (['', ...projectAreas] as const)"
+                :key="area"
+                type="button"
+                :data-area="area"
+                :aria-pressed="area ? selectedArea === area : !selectedArea && !selectedTechnologies.length"
+                @click="selectProjectArea(area)"
+              >
+                {{ area ? t.areas[area] : t.allAreas }}
+              </button>
+            </div>
+          </fieldset>
 
-          <label>
-            <span>{{ t.filter }}</span>
-            <select v-model="technology">
-              <option value="">{{ t.allTechnologies }}</option>
-              <option v-for="option in projectTechnologies" :key="option" :value="option">
-                {{ option }}
-              </option>
-            </select>
-          </label>
+          <div class="project-filter-divider">{{ t.filterOr }}</div>
+
+          <fieldset class="project-technology-filters" :class="{ 'filter-group-active': selectedTechnologies.length }">
+            <legend>{{ t.filter }}</legend>
+            <div class="project-filter-buttons">
+              <button
+                v-for="option in ['', ...projectTechnologies]"
+                :key="option"
+                type="button"
+                :data-area="technologyAreas.get(option)"
+                :aria-pressed="option ? selectedTechnologies.includes(option) : !selectedTechnologies.length && !selectedArea"
+                @click="toggleTechnology(option)"
+              >
+                {{ option || t.allTechnologies }}
+              </button>
+            </div>
+          </fieldset>
         </div>
 
         <div role="status">
           <p v-if="!visibleProjects.length" class="project-empty">{{ t.noResults }}</p>
         </div>
-        <button v-if="!visibleProjects.length" class="reset-filters" type="button" @click="resetProjectFilters">
-          {{ t.reset }}
-        </button>
-
         <div v-if="visibleProjects.length" class="projects-grid">
           <article
             v-for="project in visibleProjects"
@@ -448,16 +510,13 @@ function closeMenu() {
             :key="project.id"
             class="project-card"
           >
-            <div
-              class="project-visual"
-              :class="'visual-' + project.id"
-            >
+            <div class="project-visual" :data-area="project.area">
               <img :src="project.image" :alt="project.title" loading="lazy" />
             </div>
 
             <div class="project-meta">
               <div>
-                <span class="project-type">{{ project.type }}</span>
+                <span class="project-type project-area" :data-area="project.area">{{ t.areas[project.area] }}</span>
                 <h3>{{ project.title }}</h3>
                 <p>{{ project.description }}</p>
                 <span class="project-stack">{{ project.stack }}</span>
@@ -556,3 +615,103 @@ function closeMenu() {
     </footer>
   </div>
 </template>
+
+<style scoped>
+.project-filter-header {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.project-filter-divider {
+  display: flex;
+  flex: 1 1 100%;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.project-filter-divider::before,
+.project-filter-divider::after {
+  flex: 1;
+  border-top: 1px solid var(--line);
+  content: '';
+}
+
+.project-filter-header button:disabled {
+  background: var(--surface);
+  color: var(--muted);
+  cursor: default;
+}
+
+.project-technology-filters {
+  flex: 1 1 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 14px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.project-technology-filters.filter-group-active {
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+.project-technology-filters legend {
+  padding: 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.project-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.project-filter-buttons button {
+  padding: 8px 12px;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--area-color, var(--surface));
+  color: var(--ink);
+}
+
+.project-filter-buttons button:hover {
+  border-color: var(--ink);
+}
+
+.project-filter-buttons button[aria-pressed='true'] {
+  background: var(--area-color, var(--surface));
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+[data-area='mobile'] {
+  --area-color: var(--mist);
+}
+
+[data-area='game'] {
+  --area-color: var(--lilac);
+}
+
+[data-area='web'] {
+  --area-color: var(--slate);
+}
+
+.project-tile[data-area],
+.project-visual[data-area],
+.project-area[data-area] {
+  background: var(--area-color);
+}
+
+.project-area {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: var(--ink);
+}
+</style>
