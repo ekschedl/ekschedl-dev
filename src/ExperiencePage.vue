@@ -149,6 +149,7 @@ function formatMonth(value: string) {
 <template>
   <main class="section" aria-labelledby="experience-title">
     <header class="tile experience-heading">
+      <span class="experience-code" aria-hidden="true">&lt;/&gt;</span>
       <h1 id="experience-title">{{ t.title }}</h1>
       <p>{{ t.intro }}</p>
     </header>
@@ -160,7 +161,8 @@ function formatMonth(value: string) {
         class="tile project-card project-meta experience-entry"
         :class="{ 'experience-featured': position === entries.length - 1 }"
       >
-        <div class="project-type">
+        <div class="project-type experience-date">
+          <span class="experience-index" aria-hidden="true">{{ String(position + 1).padStart(2, '0') }}</span>
           <time :datetime="entry.start">{{ formatMonth(entry.start) }}</time>
           –
           <time :datetime="entry.end">{{ formatMonth(entry.end) }}</time>
@@ -183,6 +185,11 @@ function formatMonth(value: string) {
         <ul v-if="entry.tasks" class="experience-tasks">
           <li v-for="task in entry.tasks[languageIndex]" :key="task">{{ task }}</li>
         </ul>
+        <ul v-if="entry.institution === 'JAWA'" class="experience-stack" aria-label="Tech stack">
+          <li v-for="tool in ['PHP', 'Xdebug', 'SQL', 'Jira Service Management', 'INFORUM']" :key="tool">
+            {{ tool }}
+          </li>
+        </ul>
       </li>
     </ol>
   </main>
@@ -191,7 +198,23 @@ function formatMonth(value: string) {
 <style scoped>
 .experience-heading {
   padding: clamp(24px, 6vw, 76px);
-  background: var(--slate);
+  isolation: isolate;
+  background-color: var(--slate);
+  background-image:
+    linear-gradient(var(--art-ink) 1px, transparent 1px),
+    linear-gradient(90deg, var(--art-ink) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.experience-code {
+  position: absolute;
+  inset-inline-end: 5%;
+  bottom: 0;
+  z-index: -1;
+  color: var(--art-ink);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(5rem, 17vw, 14rem);
+  line-height: 1;
 }
 
 .experience-heading h1 {
@@ -215,7 +238,7 @@ function formatMonth(value: string) {
   gap: 20px;
   margin: 28px 0 0;
   padding: 0 0 0 clamp(20px, 4vw, 44px);
-  border-inline-start: 2px solid var(--accent);
+  border-inline-start: 2px dashed var(--accent);
   list-style: none;
 }
 
@@ -233,7 +256,7 @@ function formatMonth(value: string) {
   top: 26px;
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: 2px;
   background: var(--accent);
   content: '';
 }
@@ -249,8 +272,36 @@ function formatMonth(value: string) {
   font-weight: 500;
 }
 
-.experience-entry .project-type {
+.experience-date {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
   color: var(--ink);
+}
+
+.experience-index {
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: var(--mist);
+}
+
+.experience-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.experience-stack li {
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
 }
 
 .experience-details {
