@@ -1,0 +1,101 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+
+const props = defineProps<{ language: 'DE' | 'EN' | 'RU' }>()
+
+const copy = {
+  DE: {
+    title: 'Ausbildung', completed: 'Erfolgreich abgeschlossen im Oktober 2026',
+    focus: 'Schwerpunkte', topics: 'Objektorientierte Programmierung, Algorithmen, Datenbanken, Softwarearchitektur, REST-APIs und Softwarequalitätssicherung.',
+    practice: 'Berufspraxis bei JAWA', project: 'Mitarbeit an Kundenprojekten und an INFORUM, Fehleranalyse mit PHP und Xdebug, SQL und Jira Service Management.',
+    institution: 'Einrichtung', location: 'Ort', recognition: 'Anerkennung',
+    places: ['Graz, Österreich', 'Online', 'Irkutsk, Russland', 'Bratsk, Russland'],
+    titles: ['Akademisch geprüfte Softwareentwicklerin', 'Vue.js – Grundlagen und erstes Projekt', 'JavaScript', 'Ausbildung zur Web Developerin', 'Englisch B1', 'Englisch A2 und B1', 'Bachelorstudium Transkulturelle Kommunikation – Deutsch, Italienisch und Russisch', 'Deutsch C1', 'Ökonom – Manager', 'Bankwesen', 'Grundschule'],
+    banking: 'BMWfi – Anerkennung als Bankkauffrau (österreichischer Lehrberuf)'
+  },
+  EN: {
+    title: 'Education', completed: 'Successfully completed in October 2026',
+    focus: 'Areas of study', topics: 'Object-oriented programming, algorithms, databases, software architecture, REST APIs and software quality assurance.',
+    practice: 'Practical training at JAWA', project: 'Contributed to client projects and INFORUM, investigated issues with PHP and Xdebug, and worked with SQL and Jira Service Management.',
+    institution: 'Institution', location: 'Location', recognition: 'Recognition',
+    places: ['Graz, Austria', 'Online', 'Irkutsk, Russia', 'Bratsk, Russia'],
+    titles: ['Academically certified software developer', 'Vue.js – Fundamentals and first project', 'JavaScript', 'Web development training', 'English B1', 'English A2 and B1', 'Bachelor’s studies in Transcultural Communication – German, Italian and Russian', 'German C1', 'Economist and manager', 'Banking', 'Primary school'],
+    banking: 'BMWfi – recognition as Bankkauffrau (Austrian banking apprenticeship qualification)'
+  },
+  RU: {
+    title: 'Образование', completed: 'Обучение успешно завершено в октябре 2026 года',
+    focus: 'Основные темы', topics: 'Объектно-ориентированное программирование, алгоритмы, базы данных, архитектура ПО, REST API и обеспечение качества ПО.',
+    practice: 'Практика в JAWA', project: 'Участие в клиентских проектах и разработке INFORUM, анализ ошибок с помощью PHP и Xdebug, работа с SQL и Jira Service Management.',
+    institution: 'Учебное заведение', location: 'Место', recognition: 'Признание квалификации',
+    places: ['Грац, Австрия', 'Онлайн', 'Иркутск, Россия', 'Братск, Россия'],
+    titles: ['Разработчик программного обеспечения с академической квалификацией', 'Vue.js – основы и первый проект', 'JavaScript', 'Профессиональная подготовка по веб-разработке', 'Английский B1', 'Английский A2 и B1', 'Бакалавриат по транскультурной коммуникации – немецкий, итальянский и русский языки', 'Немецкий C1', 'Экономист-менеджер', 'Банковское дело', 'Начальная школа'],
+    banking: 'BMWfi – признание квалификации Bankkauffrau (австрийская профессия в банковском деле)'
+  }
+}
+
+const entries = [
+  { start: '2025-02', end: '2026-10', institution: 'FH CAMPUS 02 – Fachhochschule der Wirtschaft & zam Steiermark GmbH', place: 0 },
+  { start: '2025-01', end: '2025-03', institution: 'Glo Academy', place: 1 },
+  { start: '2024-03', end: '2024-05', institution: 'Glo Academy', place: 1 },
+  { start: '2022-11', end: '2023-03', institution: 'WIFI Steiermark', place: 0 },
+  { start: '2019-10', end: '2020-01', institution: 'Internationales Sprachzentrum an der Universität Graz', place: 0 },
+  { start: '2016-11', end: '2017-07', institution: 'Internationales Sprachzentrum an der Universität Graz', place: 0 },
+  { start: '2010-09', end: '2015-09', institution: 'Karl-Franzens-Universität Graz', place: 0 },
+  { start: '2009-09', end: '2010-07', institution: 'Vorstudienlehrgang der Grazer Universitäten und Hochschulen', place: 0 },
+  { start: '2002-09', end: '2006-12', institution: 'Baikal Universität für Ökonomie und Recht', place: 2, recognition: 'ENIC NARIC Austria' },
+  { start: '2000-09', end: '2002-07', institution: 'Kolleg der Baikal Universität für Ökonomie und Recht', place: 2, recognition: 'banking' },
+  { start: '1990-09', end: '2000-07', place: 3 }
+]
+
+const t = computed(() => copy[props.language])
+const formatter = computed(() => new Intl.DateTimeFormat(
+  { DE: 'de-AT', EN: 'en-GB', RU: 'ru-RU' }[props.language],
+  { month: 'long', year: 'numeric', timeZone: 'UTC' }
+))
+
+function formatMonth(value: string) {
+  return formatter.value.format(new Date(value + '-01T00:00:00Z'))
+}
+</script>
+
+<template>
+  <main class="education-page" aria-labelledby="education-title">
+    <h1 id="education-title">{{ t.title }}</h1>
+    <ol class="education-list" role="list">
+      <li
+        v-for="(entry, index) in entries"
+        :key="entry.start"
+        class="education-entry"
+        :class="{ 'education-entry-featured': index === 0 }"
+      >
+        <p class="education-dates">
+          <time :datetime="entry.start">{{ formatMonth(entry.start) }}</time>
+          –
+          <time :datetime="entry.end">{{ formatMonth(entry.end) }}</time>
+        </p>
+        <h2>{{ t.titles[index] }}</h2>
+        <p v-if="index === 0" class="education-completed">{{ t.completed }}</p>
+        <dl class="education-details">
+          <div v-if="entry.institution">
+            <dt>{{ t.institution }}</dt>
+            <dd>{{ entry.institution }}</dd>
+          </div>
+          <div>
+            <dt>{{ t.location }}</dt>
+            <dd>{{ t.places[entry.place] }}</dd>
+          </div>
+          <div v-if="entry.recognition">
+            <dt>{{ t.recognition }}</dt>
+            <dd>{{ entry.recognition === 'banking' ? t.banking : entry.recognition }}</dd>
+          </div>
+        </dl>
+        <template v-if="index === 0">
+          <h3>{{ t.focus }}</h3>
+          <p>{{ t.topics }}</p>
+          <h3>{{ t.practice }}</h3>
+          <p>{{ t.project }}</p>
+        </template>
+      </li>
+    </ol>
+  </main>
+</template>

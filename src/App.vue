@@ -1,22 +1,45 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import EducationPage from './EducationPage.vue'
+import ExperiencePage from './ExperiencePage.vue'
 
 type Language = 'DE' | 'EN' | 'RU'
 
 const languages: Language[] = ['DE', 'EN', 'RU']
 const language = ref<Language>('DE')
+const educationPath = '/Ausbildung'
+const experiencePath = '/Berufserfahrung'
+const isExperience = /^\/berufserfahrung\/?$/i.test(window.location.pathname)
+const experienceLabels = { DE: 'Berufserfahrung', EN: 'Work experience', RU: 'Опыт работы' }
+const isEducation = /^\/ausbildung\/?$/i.test(window.location.pathname)
+const educationLabels = { DE: 'Ausbildung', EN: 'Education', RU: 'Образование' }
+
+function homeLink(hash: string) {
+  return isEducation || isExperience ? '/' + hash : hash
+}
+
+function updatePageLanguage() {
+  document.documentElement.lang = language.value.toLowerCase()
+  if (isEducation) {
+    document.title = educationLabels[language.value] + ' | Ekaterina Schedlberger'
+  } else if (isExperience) {
+    document.title = experienceLabels[language.value] + ' | Ekaterina Schedlberger'
+  }
+}
 const menuOpen = ref(false)
 const query = ref('')
 const technology = ref('')
 const darkMode = ref(false)
 
 onMounted(() => {
-  document.documentElement.lang = language.value.toLowerCase()
   try {
     darkMode.value = localStorage.getItem('portfolio-theme') === 'dark'
+    const savedLanguage = languages.find((item) => item === localStorage.getItem('portfolio-language'))
+    if (savedLanguage) language.value = savedLanguage
   } catch {
-    // Theme switching also works when storage is unavailable.
+    // Language and theme switching also work when storage is unavailable.
   }
+  updatePageLanguage()
 })
 
 watch(darkMode, (enabled) => {
@@ -233,7 +256,12 @@ const emailAddress = ''
 
 function changeLanguage(next: Language) {
   language.value = next
-  document.documentElement.lang = next.toLowerCase()
+  updatePageLanguage()
+  try {
+    localStorage.setItem('portfolio-language', next)
+  } catch {
+    // Keep the selected language for this page.
+  }
   menuOpen.value = false
 }
 
@@ -245,7 +273,7 @@ function closeMenu() {
 <template>
   <div class="page">
     <header class="header">
-      <a href="#home" class="logo" @click="closeMenu">
+      <a :href="homeLink('#home')" class="logo" @click="closeMenu">
         ek<span>.</span>
       </a>
 
@@ -255,10 +283,16 @@ function closeMenu() {
         :class="{ open: menuOpen }"
         :aria-label="t.navigationLabel"
       >
-        <a href="#home" @click="closeMenu">{{ t.nav[0] }}</a>
-        <a href="#projects" @click="closeMenu">{{ t.nav[1] }}</a>
-        <a href="#technologies" @click="closeMenu">{{ t.nav[2] }}</a>
-        <a href="#about" @click="closeMenu">{{ t.nav[3] }}</a>
+        <a :href="homeLink('#home')" @click="closeMenu">{{ t.nav[0] }}</a>
+        <a :href="homeLink('#projects')" @click="closeMenu">{{ t.nav[1] }}</a>
+        <a :href="homeLink('#technologies')" @click="closeMenu">{{ t.nav[2] }}</a>
+        <a :href="homeLink('#about')" @click="closeMenu">{{ t.nav[3] }}</a>
+        <a :href="educationPath" :aria-current="isEducation ? 'page' : undefined" @click="closeMenu">
+          {{ educationLabels[language] }}
+        </a>
+        <a :href="experiencePath" :aria-current="isExperience ? 'page' : undefined" @click="closeMenu">
+          {{ experienceLabels[language] }}
+        </a>
       </nav>
 
       <div class="header-actions">
@@ -286,7 +320,7 @@ function closeMenu() {
           <span aria-hidden="true">{{ darkMode ? '☾' : '☼' }}</span>
         </button>
 
-        <a class="header-contact" href="#contact">
+        <a class="header-contact" :href="homeLink('#contact')">
           {{ t.contact }} <span aria-hidden="true">↗</span>
         </a>
 
@@ -303,7 +337,9 @@ function closeMenu() {
       </div>
     </header>
 
-    <main>
+    <EducationPage v-if="isEducation" :language="language" />
+    <ExperiencePage v-else-if="isExperience" :language="language" />
+    <main v-else>
       <!-- HERO BENTO -->
       <section id="home" class="hero-grid">
         <div class="tile portrait-tile">
