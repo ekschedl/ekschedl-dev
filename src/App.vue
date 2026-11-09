@@ -82,7 +82,7 @@ const translations = {
     nav: ['Start', 'Portfolio', 'Technologien', 'Über mich'],
     contact: 'KONTAKT', cvDownload: 'CV herunterladen', cvShort: 'CV',
     valueLabels: ['Programmieren', 'Gestalten', 'Lernen', 'Wiederholen'],
-    logoHome: 'ek. – Zur Startseite oben', heroGreeting: 'HALLO, ICH BIN', heroName: 'Ekaterina', whatIUse: 'WOMIT ICH ARBEITE', more: '+ weitere', aboutTile: 'EIN WENIG ÜBER MICH', footerMade: 'Mit Vue 3 und Neugier gemacht.', footerCopyright: '© 2026 Ekaterina Schedlberger',
+    logoHome: 'ek. – Zur Startseite oben', heroGreeting: 'HALLO, ICH BIN', heroName: 'Ekaterina', whatIUse: 'WOMIT ICH ARBEITE', more: '+ weitere', aboutTile: 'EIN WENIG ÜBER MICH', footerMade: 'Mit Liebe zum Code und zum Detail.', footerCopyright: '© 2026 Ekaterina Schedlberger',
     role: 'Softwareentwicklerin',
     location: 'Graz, Österreich',
     heroNote: 'Ideen verstehen. Lösungen entwickeln. Neues lernen.',
@@ -134,7 +134,7 @@ const translations = {
     nav: ['Home', 'Portfolio', 'Technologies', 'About'],
     contact: "LET'S TALK", cvDownload: 'Download CV', cvShort: 'CV',
     valueLabels: ['Code', 'Create', 'Learn', 'Repeat'],
-    logoHome: 'ek. – Back to top of home page', heroGreeting: 'HELLO, I’M', heroName: 'Ekaterina', whatIUse: 'WHAT I USE', more: '+ more', aboutTile: 'A LITTLE ABOUT ME', footerMade: 'Made with Vue 3 and curiosity.', footerCopyright: '© 2026 Ekaterina Schedlberger',
+    logoHome: 'ek. – Back to top of home page', heroGreeting: 'HELLO, I’M', heroName: 'Ekaterina', whatIUse: 'WHAT I USE', more: '+ more', aboutTile: 'A LITTLE ABOUT ME', footerMade: 'Made with love for code and detail.', footerCopyright: '© 2026 Ekaterina Schedlberger',
     role: 'Software Developer',
     location: 'Graz, Austria',
     heroNote: 'Explore ideas. Build solutions. Keep learning.',
@@ -187,7 +187,7 @@ const translations = {
     contact: 'КОНТАКТ', cvDownload: 'Скачать резюме', cvShort: 'Резюме',
     valueLabels: ['Программировать', 'Создавать', 'Учиться', 'Повторять'],
     logoHome: 'ek. – На главную страницу', heroGreeting: 'ПРИВЕТ, Я', heroName: 'Екатерина', whatIUse: 'МОИ ИНСТРУМЕНТЫ', more: 'и другие', aboutTile: 'НЕМНОГО ОБО МНЕ', footerMade: 'С любовью к коду и деталям.', footerCopyright: '© 2026 Екатерина Шедльбергер',
-    role: 'Разработчик ПО',
+    role: 'Разработчик программного обеспечения',
     location: 'Грац, Австрия',
     heroNote: 'Исследовать идеи. Находить решения. Учиться новому.',
     projectsTitle: 'То, что я создаю.',
@@ -203,9 +203,9 @@ const translations = {
     techFilterReset: 'Сбросить',
     about: 'Обо мне',
     aboutShort: 'Мой путь и то, что меня вдохновляет.',
-    aboutTitle: 'Оставаться любознательной. Создавать новое.',
+    aboutTitle: 'С интересом к жизни. С радостью — к новому.',
     aboutText:
-      'Я окончила академическую программу Software Development в FH CAMPUS 02 и получила практический опыт веб-разработки в JAWA. Мне нравится разбираться в программном обеспечении, находить решения и пробовать что-то новое.',
+      'Я люблю жизнь, свою семью, движение и танцы. Люблю смеяться, узнавать новое и постоянно учиться. Эту энергию и любознательность я привношу и в разработку программного обеспечения: мне нравится разбираться в задачах и создавать продуманные решения.',
     helloTitle: 'Давайте создавать вместе.',
     helloText:
       'Я открыта к интересным проектам, новым задачам и профессиональным возможностям в разработке программного обеспечения.',
@@ -492,10 +492,14 @@ function closeMenu() {
             href="https://ekschedl.com/wp-content/uploads/2025/06/Lebenslauf_Juni2025.pdf"
             target="_blank"
             rel="noopener noreferrer"
+            :aria-label="t.cvDownload"
+            :title="t.cvDownload"
           >
             <span class="cv-label-full">{{ t.cvDownload }}</span>
             <span class="cv-label-short">{{ t.cvShort }}</span>
-            <span class="cv-arrow" aria-hidden="true">↓</span>
+            <svg class="cv-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v12m0 0 5-5m-5 5-5-5M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
           </a>
           <a class="header-contact" :href="homeLink('#contact')">
             {{ t.contact }} <span aria-hidden="true">↗</span>
@@ -1105,9 +1109,10 @@ function closeMenu() {
 }
 
 .cv-arrow {
-  display: inline-block;
-  font-size: 16px;
-  line-height: 1;
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
   transition: transform .18s ease;
 }
 
@@ -1148,15 +1153,22 @@ function closeMenu() {
 
 .theme-button,
 .menu-button,
-.languages button,
 .header-cv {
   transition: border-radius .18s ease, background-color .18s ease, transform .18s ease, box-shadow .18s ease;
 }
 
+.languages button {
+  transition: color .18s ease, box-shadow .18s ease;
+}
+
 .theme-button:hover,
-.menu-button:hover,
-.languages button:hover {
+.menu-button:hover {
   border-radius: 8px;
+}
+
+.languages button.active:hover {
+  border-radius: 0;
+  box-shadow: inset 0 -2px 0 var(--accent);
 }
 
 .header-cv:hover {
@@ -1285,7 +1297,7 @@ function closeMenu() {
   }
 
   .cv-label-short {
-    display: inline;
+    display: none;
   }
 
   .header-contact,
@@ -1308,7 +1320,9 @@ function closeMenu() {
   }
 
   .cv-arrow {
-    display: none;
+    display: block;
+    width: 18px;
+    height: 18px;
   }
 
   .theme-button,
