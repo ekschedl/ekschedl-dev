@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps<{ language: 'DE' | 'EN' | 'RU' }>()
 
 const copy = {
   DE: {
+    filter: 'Nach Bereich filtern', categories: { all: 'Alle', degree: 'Schule, Studium & Abschlüsse', it: 'IT-Weiterbildungen', language: 'Sprachkurse' },
     title: 'Ausbildung', label: 'Mein Bildungsweg',
     intro: 'Von Sprachen und Wirtschaft über Webentwicklung bis zum Abschluss als akademisch geprüfte Softwareentwicklerin.',
     completed: 'Erfolgreich abgeschlossen im Oktober 2026',
@@ -16,6 +17,7 @@ const copy = {
     banking: 'BMWfi – Anerkennung als Bankkauffrau (österreichischer Lehrberuf)'
   },
   EN: {
+    filter: 'Filter by category', categories: { all: 'All', degree: 'School, university & qualifications', it: 'IT training', language: 'Language courses' },
     title: 'Education', label: 'My learning journey',
     intro: 'From languages and economics through web development to qualifying as an academically certified software developer.',
     completed: 'Successfully completed in October 2026',
@@ -27,6 +29,7 @@ const copy = {
     banking: 'BMWfi – recognition as Bankkauffrau (Austrian banking apprenticeship qualification)'
   },
   RU: {
+    filter: 'Фильтр по категории', categories: { all: 'Все', degree: 'Школа, вуз и квалификации', it: 'Курсы по ИТ', language: 'Языковые курсы' },
     title: 'Образование', label: 'Мой путь в образовании',
     intro: 'От изучения языков и экономики через веб-разработку к академической квалификации разработчика программного обеспечения.',
     completed: 'Обучение успешно завершено в октябре 2026 года',
@@ -39,19 +42,36 @@ const copy = {
   }
 }
 
-const entries = [
-  { start: '2025-02', end: '2026-10', institution: 'FH CAMPUS 02 – Fachhochschule der Wirtschaft & zam Steiermark GmbH', place: 0 },
-  { start: '2025-01', end: '2025-03', institution: 'Glo Academy', place: 1 },
-  { start: '2024-03', end: '2024-05', institution: 'Glo Academy', place: 1 },
-  { start: '2022-11', end: '2023-03', institution: 'WIFI Steiermark', place: 0 },
-  { start: '2019-10', end: '2020-01', institution: 'Internationales Sprachzentrum an der Universität Graz', place: 0 },
-  { start: '2016-11', end: '2017-07', institution: 'Internationales Sprachzentrum an der Universität Graz', place: 0 },
-  { start: '2010-09', end: '2015-09', institution: 'Karl-Franzens-Universität Graz', place: 0 },
-  { start: '2009-09', end: '2010-07', institution: 'Vorstudienlehrgang der Grazer Universitäten und Hochschulen', place: 0 },
-  { start: '2002-09', end: '2006-12', institution: 'Baikal Universität für Ökonomie und Recht', place: 2, recognition: 'ENIC NARIC Austria' },
-  { start: '2000-09', end: '2002-07', institution: 'Kolleg der Baikal Universität für Ökonomie und Recht', place: 2, recognition: 'banking' },
-  { start: '1990-09', end: '2000-07', place: 3 }
+const categories = ['all', 'degree', 'it', 'language'] as const
+type Category = typeof categories[number]
+const selectedCategory = ref<Category>('all')
+
+const entries: {
+  category: Exclude<Category, 'all'>
+  start: string
+  end: string
+  institution?: string
+  place: number
+  recognition?: string
+}[] = [
+  { category: 'degree', start: '2025-02', end: '2026-10', institution: 'FH CAMPUS 02 – Fachhochschule der Wirtschaft & zam Steiermark GmbH', place: 0 },
+  { category: 'it', start: '2025-01', end: '2025-03', institution: 'Glo Academy', place: 1 },
+  { category: 'it', start: '2024-03', end: '2024-05', institution: 'Glo Academy', place: 1 },
+  { category: 'it', start: '2022-11', end: '2023-03', institution: 'WIFI Steiermark', place: 0 },
+  { category: 'language', start: '2019-10', end: '2020-01', institution: 'Internationales Sprachzentrum an der Universität Graz', place: 0 },
+  { category: 'language', start: '2016-11', end: '2017-07', institution: 'Internationales Sprachzentrum an der Universität Graz', place: 0 },
+  { category: 'degree', start: '2010-09', end: '2015-09', institution: 'Karl-Franzens-Universität Graz', place: 0 },
+  { category: 'language', start: '2009-09', end: '2010-07', institution: 'Vorstudienlehrgang der Grazer Universitäten und Hochschulen', place: 0 },
+  { category: 'degree', start: '2002-09', end: '2006-12', institution: 'Baikal Universität für Ökonomie und Recht', place: 2, recognition: 'ENIC NARIC Austria' },
+  { category: 'degree', start: '2000-09', end: '2002-07', institution: 'Kolleg der Baikal Universität für Ökonomie und Recht', place: 2, recognition: 'banking' },
+  { category: 'degree', start: '1990-09', end: '2000-07', place: 3 }
 ]
+
+const indexedEntries = entries.map((entry, index) => ({ ...entry, index }))
+const visibleEntries = computed(() => selectedCategory.value === 'all'
+  ? indexedEntries
+  : indexedEntries.filter((entry) => entry.category === selectedCategory.value)
+)
 
 const t = computed(() => copy[props.language])
 const formatter = computed(() => new Intl.DateTimeFormat(
@@ -71,20 +91,35 @@ function formatMonth(value: string) {
       <h1 id="education-title">{{ t.title }}</h1>
       <p>{{ t.intro }}</p>
     </header>
+    <div class="education-filters" role="group" :aria-label="t.filter">
+      <button
+        v-for="category in categories"
+        :key="category"
+        type="button"
+        :data-category="category"
+        :aria-pressed="selectedCategory === category"
+        @click="selectedCategory = category"
+      >
+        {{ t.categories[category] }}
+      </button>
+    </div>
+
     <ol class="projects-grid education-list" role="list">
       <li
-        v-for="(entry, index) in entries"
+        v-for="entry in visibleEntries"
         :key="entry.start"
+        :data-category="entry.category"
         class="tile project-card project-meta education-entry"
-        :class="{ 'education-entry-featured': index === 0 }"
+        :class="{ 'education-entry-featured': entry.index === 0 }"
       >
         <div class="project-type education-dates">
+          <span class="education-category">{{ t.categories[entry.category] }}</span>
           <time :datetime="entry.start">{{ formatMonth(entry.start) }}</time>
           –
           <time :datetime="entry.end">{{ formatMonth(entry.end) }}</time>
         </div>
-        <h3>{{ t.titles[index] }}</h3>
-        <div v-if="index === 0" class="project-stack education-completed">{{ t.completed }}</div>
+        <h3>{{ t.titles[entry.index] }}</h3>
+        <div v-if="entry.index === 0" class="project-stack education-completed">{{ t.completed }}</div>
         <dl class="education-details">
           <div v-if="entry.institution">
             <dt>{{ t.institution }}</dt>
@@ -99,7 +134,7 @@ function formatMonth(value: string) {
             <dd>{{ entry.recognition === 'banking' ? t.banking : entry.recognition }}</dd>
           </div>
         </dl>
-        <template v-if="index === 0">
+        <template v-if="entry.index === 0">
           <div class="education-notes">
             <div>
               <h4>{{ t.focus }}</h4>
@@ -150,16 +185,45 @@ function formatMonth(value: string) {
 
 .education-entry {
   padding: clamp(18px, 3vw, 30px);
-  background: var(--mist);
+  background: var(--category-color);
   overflow-wrap: anywhere;
 }
 
-.education-entry:nth-child(3n + 2) {
-  background: var(--slate);
+[data-category='degree'] {
+  --category-color: var(--mist);
 }
 
-.education-entry:nth-child(3n) {
-  background: var(--lilac);
+[data-category='it'] {
+  --category-color: var(--lilac);
+}
+
+[data-category='language'] {
+  --category-color: var(--slate);
+}
+
+.education-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.education-filters button {
+  padding: 8px 12px;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--category-color, var(--surface));
+  color: var(--ink);
+}
+
+.education-filters button[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.education-category {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
 }
 
 .education-entry-featured {
@@ -168,7 +232,7 @@ function formatMonth(value: string) {
   gap: 12px;
   padding: clamp(24px, 5vw, 60px);
   border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--mist) 55%, var(--surface));
+  background: var(--category-color);
 }
 
 .education-details {
@@ -203,7 +267,7 @@ function formatMonth(value: string) {
   justify-self: start;
   padding: 7px 12px;
   border-radius: 6px;
-  background: var(--mist);
+  background: var(--surface);
   color: var(--ink);
   line-height: 1.5;
 }
