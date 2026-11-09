@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps<{ language: 'DE' | 'EN' | 'RU' }>()
 
+const categories = ['all', 'it', 'finance', 'hospitality', 'interpreting', 'break'] as const
+type Category = typeof categories[number]
+const selectedCategory = ref<Category>('all')
+
 const entries = [
   {
+    category: "finance" as const,
     start: "2002-09",
     end: "2004-05",
     roles: ["Mitarbeiterin in der Registrierungsabteilung", "Registration department staff member", "Сотрудница отдела регистрации"],
@@ -18,6 +23,7 @@ const entries = [
     ],
   },
   {
+    category: "finance" as const,
     start: "2004-05",
     end: "2007-02",
     roles: ["Mitarbeiterin im Backoffice", "Back office staff member", "Сотрудница бэк-офиса"],
@@ -31,6 +37,7 @@ const entries = [
     ],
   },
   {
+    category: "finance" as const,
     start: "2007-03",
     end: "2008-09",
     roles: ["Leiterin des Backoffice", "Head of Back Office", "Руководительница бэк-офиса"],
@@ -44,12 +51,14 @@ const entries = [
     ],
   },
   {
+    category: "break" as const,
     start: "2008-10",
     end: "2009-01",
     roles: ["Berufliche Neuorientierung", "Career transition", "Профессиональная переориентация"],
     place: 1,
   },
   {
+    category: "finance" as const,
     start: "2009-02",
     end: "2009-06",
     roles: ["Internes Controlling von Wertpapiergeschäften", "Internal controlling of securities transactions", "Внутренний контроль операций с ценными бумагами"],
@@ -63,11 +72,13 @@ const entries = [
     ],
   },
   {
+    category: "break" as const,
     start: "2012-07",
     end: "2014-01",
     roles: ["Karenzzeit", "Parental leave", "Отпуск по уходу за ребёнком"],
   },
   {
+    category: "interpreting" as const,
     start: "2014-04",
     end: "2015-10",
     roles: ["Ehrenamtliche Dolmetscherin für Russisch", "Volunteer Russian interpreter", "Волонтёр — устный переводчик русского языка"],
@@ -76,11 +87,13 @@ const entries = [
     field: 1,
   },
   {
+    category: "break" as const,
     start: "2015-12",
     end: "2020-01",
     roles: ["Karenzzeit", "Parental leave", "Отпуск по уходу за ребёнком"],
   },
   {
+    category: "hospitality" as const,
     start: "2020-08",
     end: "2024-07",
     roles: ["Rezeptionistin", "Receptionist", "Администратор гостиницы"],
@@ -89,6 +102,7 @@ const entries = [
     field: 2,
   },
   {
+    category: "it" as const,
     start: "2025-09",
     end: "2026-10",
     roles: ["Softwareentwicklung", "Software development", "Разработка программного обеспечения"],
@@ -105,7 +119,10 @@ const entries = [
 
 const copy = {
   DE: {
+    filter: "Nach Bereich filtern",
+    categories: { all: "Alle", it: "Softwareentwicklung", finance: "Wertpapier", hospitality: "Hotellerie", interpreting: "Dolmetschen", break: "Karenz & Neuorientierung" },
     title: 'Berufserfahrung',
+    label: 'Mein Berufsweg',
     intro: 'Meine Stationen in der Softwareentwicklung, Hotellerie, Sprachmittlung und im Wertpapierbereich.',
     place: "Ort",
     field: "Bereich",
@@ -114,7 +131,10 @@ const copy = {
     fields: ["Wertpapier", "Allgemeinmedizinische Erst- und Grundversorgung", "Hotellerie und Tourismus", "Berufspraxis im Rahmen der dualen Ausbildung"]
   },
   EN: {
+    filter: "Filter by category",
+    categories: { all: "All", it: "Software development", finance: "Securities", hospitality: "Hospitality", interpreting: "Interpreting", break: "Leave & career transition" },
     title: 'Work experience',
+    label: 'My career',
     intro: 'My experience in software development, hospitality, interpreting and securities.',
     place: "Location",
     field: "Sector",
@@ -123,7 +143,10 @@ const copy = {
     fields: ["Securities", "General medical first-contact and primary care", "Hospitality and tourism", "Practical placement as part of dual training"]
   },
   RU: {
+    filter: "Фильтр по категории",
+    categories: { all: "Все", it: "Разработка ПО", finance: "Ценные бумаги", hospitality: "Гостиничное дело", interpreting: "Устный перевод", break: "Отпуск и смена профессии" },
     title: 'Опыт работы',
+    label: 'Мой профессиональный путь',
     intro: 'Мой опыт в разработке ПО, гостиничном деле, устном переводе и сфере ценных бумаг.',
     place: "Место",
     field: "Сфера",
@@ -132,6 +155,12 @@ const copy = {
     fields: ["Ценные бумаги", "Первичная общемедицинская помощь", "Гостиничное дело и туризм", "Практика в рамках дуального обучения"]
   }
 }
+
+const numberedEntries = entries.map((entry, index) => ({ ...entry, number: index + 1 }))
+const visibleEntries = computed(() => selectedCategory.value === 'all'
+  ? numberedEntries
+  : numberedEntries.filter((entry) => entry.category === selectedCategory.value)
+)
 
 const languageIndex = computed(() => ({ DE: 0, EN: 1, RU: 2 })[props.language])
 
@@ -149,24 +178,39 @@ function formatMonth(value: string) {
 <template>
   <main class="section" aria-labelledby="experience-title">
     <header class="tile experience-heading">
-      <span class="experience-code" aria-hidden="true">&lt;/&gt;</span>
+      <span class="eyebrow">{{ t.label }}</span>
       <h1 id="experience-title">{{ t.title }}</h1>
       <p>{{ t.intro }}</p>
     </header>
 
+    <div class="experience-filters" role="group" :aria-label="t.filter">
+      <button
+        v-for="category in categories"
+        :key="category"
+        type="button"
+        :data-category="category"
+        :aria-pressed="selectedCategory === category"
+        @click="selectedCategory = category"
+      >
+        {{ t.categories[category] }}
+      </button>
+    </div>
+
     <ol class="experience-list" role="list">
       <li
-        v-for="(entry, position) in entries"
+        v-for="entry in visibleEntries"
         :key="entry.start"
+        :data-category="entry.category"
         class="tile project-card project-meta experience-entry"
-        :class="{ 'experience-featured': position === entries.length - 1 }"
+        :class="{ 'experience-featured': entry.category === 'it' }"
       >
         <div class="project-type experience-date">
-          <span class="experience-index" aria-hidden="true">{{ String(position + 1).padStart(2, '0') }}</span>
+          <span class="experience-index" aria-hidden="true">{{ String(entry.number).padStart(2, '0') }}</span>
           <time :datetime="entry.start">{{ formatMonth(entry.start) }}</time>
           –
           <time :datetime="entry.end">{{ formatMonth(entry.end) }}</time>
         </div>
+        <span class="experience-category project-type">{{ t.categories[entry.category] }}</span>
         <h2>{{ entry.institution || entry.roles[languageIndex] }}</h2>
         <dl v-if="entry.institution || entry.place !== undefined" class="experience-details">
           <div v-if="entry.place !== undefined">
@@ -198,27 +242,15 @@ function formatMonth(value: string) {
 <style scoped>
 .experience-heading {
   padding: clamp(24px, 6vw, 76px);
-  isolation: isolate;
-  background-color: var(--slate);
-  background-image:
-    linear-gradient(var(--art-ink) 1px, transparent 1px),
-    linear-gradient(90deg, var(--art-ink) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background: var(--slate);
 }
 
-.experience-code {
-  position: absolute;
-  inset-inline-end: 5%;
-  bottom: 0;
-  z-index: -1;
-  color: var(--art-ink);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: clamp(5rem, 17vw, 14rem);
-  line-height: 1;
+.experience-heading .eyebrow {
+  color: var(--ink);
 }
 
 .experience-heading h1 {
-  margin: 0 0 16px;
+  margin: 10px 0 16px;
   font-family: 'IBM Plex Sans', system-ui, sans-serif;
   font-size: clamp(2rem, 7vw, 5.5rem);
   font-weight: 500;
@@ -230,7 +262,53 @@ function formatMonth(value: string) {
 .experience-heading p {
   max-width: 48ch;
   margin: 0;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   line-height: 1.6;
+}
+
+[data-category='it'] {
+  --category-color: var(--mist);
+}
+
+[data-category='finance'] {
+  --category-color: var(--slate);
+}
+
+[data-category='hospitality'] {
+  --category-color: var(--lilac);
+}
+
+[data-category='interpreting'] {
+  --category-color: var(--blue);
+}
+
+[data-category='break'] {
+  --category-color: var(--surface);
+}
+
+.experience-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.experience-filters button {
+  padding: 8px 12px;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--category-color, var(--surface));
+  color: var(--ink);
+}
+
+.experience-filters button[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.experience-category {
+  display: block;
+  margin-top: 8px;
+  color: var(--ink);
 }
 
 .experience-list {
@@ -246,7 +324,7 @@ function formatMonth(value: string) {
   overflow: visible;
   padding: clamp(18px, 3vw, 30px);
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: color-mix(in srgb, var(--category-color) 45%, var(--surface));
   overflow-wrap: anywhere;
 }
 
@@ -283,7 +361,7 @@ function formatMonth(value: string) {
 .experience-index {
   padding: 3px 7px;
   border-radius: 4px;
-  background: var(--mist);
+  background: var(--category-color);
 }
 
 .experience-stack {
