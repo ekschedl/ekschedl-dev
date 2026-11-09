@@ -192,20 +192,19 @@ function formatMonth(value: string) {
       <p>{{ t.intro }}</p>
     </header>
 
-    <div class="experience-filters" role="group" :aria-label="t.filter">
-      <button
-        v-for="category in categories"
-        :key="category"
-        type="button"
-        :data-category="category"
-        :aria-pressed="selectedCategory === category"
-        @click="selectedCategory = category"
-      >
-        {{ t.categories[category] }}
-      </button>
-    </div>
-
-    <div class="experience-toolbar">
+    <div class="experience-controls">
+      <div class="experience-filters" role="group" :aria-label="t.filter">
+        <button
+          v-for="category in categories"
+          :key="category"
+          type="button"
+          :data-category="category"
+          :aria-pressed="selectedCategory === category"
+          @click="selectedCategory = category"
+        >
+          {{ t.categories[category] }}
+        </button>
+      </div>
       <div class="experience-sort" role="group" :aria-label="t.sortLabel">
         <button type="button" :aria-label="t.newest" :aria-pressed="sortOrder === 'newest'" :title="t.newest" @click="sortOrder = 'newest'">↓</button>
         <button type="button" :aria-label="t.oldest" :aria-pressed="sortOrder === 'oldest'" :title="t.oldest" @click="sortOrder = 'oldest'">↑</button>
@@ -309,6 +308,15 @@ function formatMonth(value: string) {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  min-width: 0;
+  margin-top: 0;
+}
+
+.experience-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
   margin-top: 24px;
 }
 
@@ -330,15 +338,10 @@ function formatMonth(value: string) {
   color: var(--ink);
 }
 
-.experience-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  margin: 18px 0 -10px;
-}
-
 .experience-sort {
   display: flex;
   gap: 4px;
+  flex: 0 0 auto;
 }
 
 .experience-sort button {
@@ -361,7 +364,7 @@ function formatMonth(value: string) {
 .experience-list {
   display: grid;
   gap: 20px;
-  margin: 28px 0 0;
+  margin: 20px 0 0;
   padding: 0 0 0 clamp(20px, 4vw, 44px);
   border-inline-start: 2px dashed var(--accent);
   list-style: none;
