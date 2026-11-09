@@ -973,8 +973,9 @@ function closeMenu() {
 }
 
 .menu-button {
-  width: 42px;
-  height: 42px;
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -1001,11 +1002,28 @@ function closeMenu() {
   flex: 0 0 auto;
 }
 
+.header-contact {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 0 20px;
+}
+
+.theme-button {
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+}
+
 .header-cv {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  box-sizing: border-box;
+  height: 44px;
   min-height: 44px;
   padding: 0 16px;
   border: 1px solid var(--accent);
@@ -1039,7 +1057,9 @@ function closeMenu() {
 }
 
 .languages {
+  box-sizing: border-box;
   flex: 0 0 auto;
+  height: 44px;
   gap: 1px;
   padding: 4px;
   border: 1px solid var(--line);
@@ -1114,10 +1134,17 @@ function closeMenu() {
     display: inline;
   }
 
+  .header-contact,
+  .theme-button,
+  .menu-button,
+  .header-cv {
+    height: 40px;
+    min-height: 40px;
+  }
+
   .header-cv {
     width: 44px;
     min-width: 44px;
-    height: 40px;
     min-height: 40px;
     padding: 0 6px;
     gap: 0;
@@ -1134,8 +1161,6 @@ function closeMenu() {
   .menu-button {
     width: 40px;
     min-width: 40px;
-    height: 40px;
-    min-height: 40px;
     border: 1px solid var(--line);
     border-radius: 10px;
     background: var(--surface);
@@ -1143,6 +1168,7 @@ function closeMenu() {
   }
 
   .languages {
+    box-sizing: border-box;
     height: 40px;
     gap: 0;
     padding: 2px;
