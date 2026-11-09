@@ -1091,7 +1091,8 @@ select:focus-visible {
   }
 
   .intro-tile h2 {
-    font-size: clamp(14px, 7.5vw, 17px);
+    font-size: clamp(13px, 6.8vw, 16px);
+    line-height: 1.25;
     overflow-wrap: anywhere;
   }
 
@@ -1102,7 +1103,7 @@ select:focus-visible {
   .intro-bottom p {
     min-width: 0;
     max-width: none;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
   .round-arrow {
@@ -1115,6 +1116,44 @@ select:focus-visible {
   .expertise-tile,
   .about-tile {
     min-height: 165px;
+  }
+
+  .section-head h2 {
+    font-size: clamp(26px, 11vw, 32px);
+    overflow-wrap: anywhere;
+  }
+
+  .section-head > p,
+  .about-content > p,
+  .contact-copy > p {
+    overflow-wrap: anywhere;
+  }
+
+  .contact-section {
+    min-height: 0;
+    padding: 32px 16px;
+  }
+
+  .contact-copy h2 {
+    font-size: clamp(28px, 12vw, 34px);
+    overflow-wrap: anywhere;
+  }
+
+  .contact-art {
+    display: none;
+  }
+
+  .contact-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .contact-actions > a {
+    justify-content: space-between;
+    min-width: 0;
+    max-width: 100%;
+    padding: 12px;
+    overflow-wrap: anywhere;
   }
 }
 
