@@ -1083,7 +1083,38 @@ function closeMenu() {
   box-shadow: inset 0 -2px 0 var(--accent);
 }
 
-@media (max-width: 1750px) {
+
+@media (min-width: 1301px) and (max-width: 1650px) {
+  .header {
+    gap: 14px;
+  }
+
+  .navigation {
+    gap: 15px;
+  }
+
+  .navigation a {
+    font-size: 12px;
+  }
+
+  .header-actions {
+    gap: 10px;
+  }
+
+  .header-ctas {
+    gap: 8px;
+  }
+
+  .cv-label-full {
+    display: none;
+  }
+
+  .cv-label-short {
+    display: inline;
+  }
+}
+
+@media (max-width: 1300px) {
   .navigation {
     display: none;
     position: absolute;
