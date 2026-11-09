@@ -29,6 +29,8 @@ function updatePageLanguage() {
 const menuOpen = ref(false)
 const projectAreas = ['mobile', 'game', 'web'] as const
 type ProjectArea = typeof projectAreas[number]
+type ProjectFilterMode = 'area' | 'technology'
+const projectFilterMode = ref<ProjectFilterMode>('area')
 const selectedArea = ref<ProjectArea | ''>('')
 const selectedTechnologies = ref<string[]>([])
 const darkMode = ref(false)
@@ -64,7 +66,9 @@ const translations = {
     allTechnologies: 'Alle Technologien',
     noResults: 'Keine passenden Projekte gefunden.',
     reset: 'Alle Filter zurücksetzen',
-    filterOr: 'oder',
+    areaMode: 'Nach Projektbereich',
+    technologyMode: 'Nach Technologie',
+    projectCount: '{visible} von {total} Projekten',
     darkMode: 'Dunkelmodus',
     navigationLabel: 'Hauptnavigation',
     languageLabel: 'Sprache',
@@ -104,7 +108,9 @@ const translations = {
     allTechnologies: 'All technologies',
     noResults: 'No matching projects found.',
     reset: 'Reset all filters',
-    filterOr: 'or',
+    areaMode: 'By project area',
+    technologyMode: 'By technology',
+    projectCount: '{visible} of {total} projects',
     darkMode: 'Dark mode',
     navigationLabel: 'Main navigation',
     languageLabel: 'Language',
@@ -144,7 +150,9 @@ const translations = {
     allTechnologies: 'Все технологии',
     noResults: 'Подходящих проектов нет.',
     reset: 'Сбросить все фильтры',
-    filterOr: 'или',
+    areaMode: 'По типу проекта',
+    technologyMode: 'По технологии',
+    projectCount: 'Проекты: {visible} из {total}',
     darkMode: 'Тёмная тема',
     navigationLabel: 'Основная навигация',
     languageLabel: 'Язык',
@@ -228,6 +236,18 @@ const visibleProjects = computed(() => {
       return matchesArea && matchesTechnology
     })
 })
+
+const hasProjectFilters = computed(() => Boolean(selectedArea.value) || selectedTechnologies.value.length > 0)
+const projectCount = computed(() => t.value.projectCount
+  .replace('{visible}', String(visibleProjects.value.length))
+  .replace('{total}', String(projects.length))
+)
+
+function switchProjectFilterMode(mode: ProjectFilterMode) {
+  if (mode === projectFilterMode.value) return
+  resetProjectFilters()
+  projectFilterMode.value = mode
+}
 
 function selectProjectArea(area: ProjectArea | '') {
   selectedArea.value = area
@@ -456,16 +476,22 @@ function closeMenu() {
 
         <div class="project-controls" role="group" :aria-label="t.filterOptions">
           <div class="project-filter-header">
-            <button
-              class="reset-filters"
-              type="button"
-              :disabled="!selectedArea && !selectedTechnologies.length"
-              @click="resetProjectFilters"
-            >
-              {{ t.reset }}
-            </button>
+            <div class="project-filter-mode" role="group" :aria-label="t.filterOptions">
+              <button type="button" :aria-pressed="projectFilterMode === 'area'" @click="switchProjectFilterMode('area')">
+                {{ t.areaMode }}
+              </button>
+              <button type="button" :aria-pressed="projectFilterMode === 'technology'" @click="switchProjectFilterMode('technology')">
+                {{ t.technologyMode }}
+              </button>
+            </div>
+            <div class="project-filter-summary">
+              <span role="status">{{ hasProjectFilters ? projectCount : '' }}</span>
+              <button v-if="hasProjectFilters" class="reset-filters" type="button" @click="resetProjectFilters">
+                {{ t.reset }}
+              </button>
+            </div>
           </div>
-          <fieldset class="project-technology-filters" :class="{ 'filter-group-active': selectedArea }">
+          <fieldset v-if="projectFilterMode === 'area'" class="project-technology-filters">
             <legend>{{ t.areaFilter }}</legend>
             <div class="project-filter-buttons">
               <button
@@ -481,9 +507,7 @@ function closeMenu() {
             </div>
           </fieldset>
 
-          <div class="project-filter-divider">{{ t.filterOr }}</div>
-
-          <fieldset class="project-technology-filters" :class="{ 'filter-group-active': selectedTechnologies.length }">
+          <fieldset v-else class="project-technology-filters">
             <legend>{{ t.filter }}</legend>
             <div class="project-filter-buttons">
               <button
@@ -617,54 +641,61 @@ function closeMenu() {
 </template>
 
 <style scoped>
-.project-filter-header {
+.project-filter-header,
+.project-filter-summary,
+.project-filter-mode {
   display: flex;
-  flex: 1 1 100%;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
+  gap: 8px;
 }
 
-.project-filter-divider {
-  display: flex;
+.project-filter-header {
   flex: 1 1 100%;
-  align-items: center;
-  gap: 12px;
-  color: var(--muted);
-  font-size: 13px;
+  justify-content: space-between;
 }
 
-.project-filter-divider::before,
-.project-filter-divider::after {
-  flex: 1;
-  border-top: 1px solid var(--line);
-  content: '';
-}
-
-.project-filter-header button:disabled {
+.project-filter-mode {
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
   background: var(--surface);
+}
+
+.project-filter-mode button {
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+}
+
+.project-filter-mode button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.project-filter-summary {
   color: var(--muted);
-  cursor: default;
+  font-size: 14px;
 }
 
 .project-technology-filters {
   flex: 1 1 100%;
   min-width: 0;
   margin: 0;
-  padding: 8px 14px 14px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-}
-
-.project-technology-filters.filter-group-active {
-  border-color: var(--accent);
-  background: var(--surface);
+  padding: 0;
+  border: 0;
 }
 
 .project-technology-filters legend {
-  padding: 0 6px;
-  font-size: 14px;
-  font-weight: 600;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .project-filter-buttons {
