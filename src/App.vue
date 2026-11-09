@@ -497,9 +497,7 @@ function scrollToTop() {
           <a
             class="header-cv"
             :class="{ 'header-cv-compact-label': language !== 'RU' }"
-            href="https://ekschedl.com/wp-content/uploads/2025/06/Lebenslauf_Juni2025.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/cv/Schedlberger_Lebenslauf_Softwareentwicklerin_12_26.pdf"
             :aria-label="t.cvDownload"
             :title="t.cvDownload"
           >
