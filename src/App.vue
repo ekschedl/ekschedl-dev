@@ -75,9 +75,9 @@ const translations = {
     navigationLabel: 'Hauptnavigation',
     languageLabel: 'Sprache',
     nav: ['Start', 'Portfolio', 'Technologien', 'Über mich'],
-    contact: 'KONTAKT',
+    contact: 'KONTAKT', cvDownload: 'Lebenslauf herunterladen',
     valueLabels: ['Programmieren', 'Gestalten', 'Lernen', 'Wiederholen'],
-    heroGreeting: 'HALLO, ICH BIN', whatIUse: 'WOMIT ICH ARBEITE', more: '+ weitere', aboutTile: 'EIN WENIG ÜBER MICH', footerMade: 'Mit Vue 3 und Neugier gemacht.',
+    logoHome: 'ek. – Zur Startseite oben', heroGreeting: 'HALLO, ICH BIN', whatIUse: 'WOMIT ICH ARBEITE', more: '+ weitere', aboutTile: 'EIN WENIG ÜBER MICH', footerMade: 'Mit Vue 3 und Neugier gemacht.',
     role: 'Softwareentwicklerin',
     location: 'Graz, Österreich',
     heroNote: 'Ideen verstehen. Lösungen entwickeln. Neues lernen.',
@@ -126,9 +126,9 @@ const translations = {
     navigationLabel: 'Main navigation',
     languageLabel: 'Language',
     nav: ['Home', 'Portfolio', 'Technologies', 'About'],
-    contact: "LET'S TALK",
+    contact: "LET'S TALK", cvDownload: 'Download CV',
     valueLabels: ['Code', 'Create', 'Learn', 'Repeat'],
-    heroGreeting: 'HELLO, I’M', whatIUse: 'WHAT I USE', more: '+ more', aboutTile: 'A LITTLE ABOUT ME', footerMade: 'Made with Vue 3 and curiosity.',
+    logoHome: 'ek. – Back to top of home page', heroGreeting: 'HELLO, I’M', whatIUse: 'WHAT I USE', more: '+ more', aboutTile: 'A LITTLE ABOUT ME', footerMade: 'Made with Vue 3 and curiosity.',
     role: 'Software Developer',
     location: 'Graz, Austria',
     heroNote: 'Explore ideas. Build solutions. Keep learning.',
@@ -177,9 +177,9 @@ const translations = {
     navigationLabel: 'Основная навигация',
     languageLabel: 'Язык',
     nav: ['Главная', 'Портфолио', 'Технологии', 'Обо мне'],
-    contact: 'КОНТАКТ',
+    contact: 'КОНТАКТ', cvDownload: 'Скачать резюме',
     valueLabels: ['Программировать', 'Создавать', 'Учиться', 'Повторять'],
-    heroGreeting: 'ПРИВЕТ, Я', whatIUse: 'МОИ ИНСТРУМЕНТЫ', more: 'и другие', aboutTile: 'НЕМНОГО ОБО МНЕ', footerMade: 'С любовью к коду и деталям.',
+    logoHome: 'ek. – На главную страницу', heroGreeting: 'ПРИВЕТ, Я', whatIUse: 'МОИ ИНСТРУМЕНТЫ', more: 'и другие', aboutTile: 'НЕМНОГО ОБО МНЕ', footerMade: 'С любовью к коду и деталям.',
     role: 'Разработчик ПО',
     location: 'Грац, Австрия',
     heroNote: 'Исследовать идеи. Находить решения. Учиться новому.',
@@ -422,7 +422,7 @@ function closeMenu() {
 <template>
   <div class="page">
     <header class="header">
-      <a :href="homeLink('#home')" class="logo" @click="closeMenu">
+      <a href="/#home" class="logo" :aria-label="t.logoHome" @click="closeMenu">
         ek<span>.</span>
       </a>
 
@@ -469,9 +469,19 @@ function closeMenu() {
           <span aria-hidden="true">{{ darkMode ? '☾' : '☼' }}</span>
         </button>
 
-        <a class="header-contact" :href="homeLink('#contact')">
-          {{ t.contact }} <span aria-hidden="true">↗</span>
-        </a>
+        <div class="header-ctas">
+          <a
+            class="header-cv"
+            href="https://ekschedl.com/wp-content/uploads/2025/06/Lebenslauf_Juni2025.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ t.cvDownload }} <span aria-hidden="true">↓</span>
+          </a>
+          <a class="header-contact" :href="homeLink('#contact')">
+            {{ t.contact }} <span aria-hidden="true">↗</span>
+          </a>
+        </div>
 
         <button
           class="menu-button"
@@ -497,7 +507,7 @@ function closeMenu() {
           <span class="portrait-spark" aria-hidden="true">✳</span>
 
           <img
-            src="/images/ekaterina-cutout.png"
+            src="/images/Objekt.png"
             alt="Ekaterina Schedlberger"
             class="portrait-image"
             fetchpriority="high"
