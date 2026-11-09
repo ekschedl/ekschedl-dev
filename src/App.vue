@@ -801,10 +801,10 @@ function closeMenu() {
 }
 
 .project-filter-mode {
-  padding: 4px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .project-filter-mode button {
@@ -977,9 +977,9 @@ function closeMenu() {
   width: 44px;
   height: 44px;
   padding: 0;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--ink);
   font-size: 22px;
 }
@@ -1061,10 +1061,10 @@ function closeMenu() {
   flex: 0 0 auto;
   height: 44px;
   gap: 1px;
-  padding: 4px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .languages button {
@@ -1073,14 +1073,14 @@ function closeMenu() {
   min-height: 34px;
   place-items: center;
   padding: 5px 7px;
-  border-radius: 7px;
+  border-radius: 0;
   font-size: 11px;
 }
 
 .languages button.active {
-  background: var(--ink);
-  color: var(--on-ink);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, .16);
+  background: transparent;
+  color: var(--accent);
+  box-shadow: inset 0 -2px 0 var(--accent);
 }
 
 @media (max-width: 1750px) {
@@ -1161,9 +1161,9 @@ function closeMenu() {
   .menu-button {
     width: 40px;
     min-width: 40px;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    background: var(--surface);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
     color: var(--ink);
   }
 
@@ -1172,9 +1172,9 @@ function closeMenu() {
     height: 40px;
     gap: 0;
     padding: 2px;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    background: var(--surface);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
   }
 
   .languages button {
@@ -1183,7 +1183,7 @@ function closeMenu() {
     height: 34px;
     min-height: 34px;
     padding: 0;
-    border-radius: 7px;
+    border-radius: 0;
     font-size: 10px;
   }
 
