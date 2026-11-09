@@ -74,7 +74,7 @@ const translations = {
     darkMode: 'Dunkelmodus',
     navigationLabel: 'Hauptnavigation',
     languageLabel: 'Sprache',
-    nav: ['Start', 'Projekte', 'Technologien', 'Über mich'],
+    nav: ['Start', 'Portfolio', 'Technologien', 'Über mich'],
     contact: 'KONTAKT',
     role: 'Softwareentwicklerin',
     location: 'Graz, Österreich',
@@ -83,6 +83,7 @@ const translations = {
     projectsIntro: 'Eine Auswahl meiner Projekte und Ideen.',
     technologiesTitle: 'Mein Tech-Stack.',
     technologiesIntro: 'Technologien, mit denen ich arbeite und weiterlerne.',
+    techGroups: ['Programmierung & Web', 'Apps & Daten', 'Werkzeuge', 'KI-Werkzeuge', 'Ausbildungsschwerpunkte'], projectUse: 'Im Projekt eingesetzt', studyUse: 'In der Ausbildung vertieft',
     about: 'Über mich',
     aboutShort: 'Mein Weg und was mich antreibt.',
     aboutTitle: 'Neugierig bleiben. Neues schaffen.',
@@ -117,7 +118,7 @@ const translations = {
     darkMode: 'Dark mode',
     navigationLabel: 'Main navigation',
     languageLabel: 'Language',
-    nav: ['Home', 'Projects', 'Technologies', 'About'],
+    nav: ['Home', 'Portfolio', 'Technologies', 'About'],
     contact: "LET'S TALK",
     role: 'Software Developer',
     location: 'Graz, Austria',
@@ -126,6 +127,7 @@ const translations = {
     projectsIntro: 'A selection of my projects and ideas.',
     technologiesTitle: 'My tech stack.',
     technologiesIntro: 'Technologies I use and continue to explore.',
+    techGroups: ['Programming & web', 'Apps & data', 'Tools', 'AI tools', 'Study topics'], projectUse: 'Used in projects', studyUse: 'Covered in training',
     about: 'About me',
     aboutShort: 'My journey and what motivates me.',
     aboutTitle: 'Stay curious. Keep creating.',
@@ -160,7 +162,7 @@ const translations = {
     darkMode: 'Тёмная тема',
     navigationLabel: 'Основная навигация',
     languageLabel: 'Язык',
-    nav: ['Главная', 'Проекты', 'Технологии', 'Обо мне'],
+    nav: ['Главная', 'Портфолио', 'Технологии', 'Обо мне'],
     contact: 'КОНТАКТ',
     role: 'Разработчик ПО',
     location: 'Грац, Австрия',
@@ -169,6 +171,7 @@ const translations = {
     projectsIntro: 'Некоторые из моих проектов и идей.',
     technologiesTitle: 'Мой стек технологий.',
     technologiesIntro: 'Технологии, с которыми я работаю и продолжаю развиваться.',
+    techGroups: ['Разработка и веб', 'Приложения и данные', 'Инструменты', 'ИИ-инструменты', 'Темы обучения'], projectUse: 'Использовала в проектах', studyUse: 'Изучала в рамках обучения',
     about: 'Обо мне',
     aboutShort: 'Мой путь и то, что меня вдохновляет.',
     aboutTitle: 'Оставаться любознательной. Создавать новое.',
@@ -308,15 +311,46 @@ async function openProject(event: MouseEvent, id: string) {
   }
 }
 
-const skills = [
-  { name: 'Vue 3', icon: 'vuedotjs', color: '42B883' },
-  { name: 'TypeScript', icon: 'typescript', color: '3178C6' },
-  { name: 'JavaScript', icon: 'javascript', color: 'B99B00' },
-  { name: 'PHP', icon: 'php', color: '777BB4' },
-  { name: 'SQL', icon: 'mysql', color: '4479A1' },
-  { name: 'Docker', icon: 'docker', color: '2496ED' },
-  { name: 'Git', icon: 'git', color: 'F05032' },
-  { name: 'SwiftUI', icon: 'swift', color: 'F05138' }
+const skillGroups = [
+  {
+    key: 'programming',
+    skills: [
+      { name: 'HTML', icon: 'html5', color: 'E34F26' },
+      { name: 'CSS', icon: 'css3', color: '1572B6' },
+      { name: 'JavaScript', icon: 'javascript', color: 'B99B00' },
+      { name: 'TypeScript', icon: 'typescript', color: '3178C6' },
+      { name: 'Vue 3', icon: 'vuedotjs', color: '42B883' },
+      { name: 'PHP', icon: 'php', color: '777BB4' },
+      { name: 'Java', icon: 'openjdk', color: '437291' }
+    ]
+  },
+  {
+    key: 'apps',
+    skills: [
+      { name: 'SwiftUI', icon: 'swift', color: 'F05138', note: 'project' },
+      { name: 'Supabase', icon: 'supabase', color: '3ECF8E', note: 'project' },
+      { name: 'SQL · MySQL', icon: 'mysql', color: '4479A1' },
+      { name: 'REST APIs', icon: 'fastapi', color: '009688' }
+    ]
+  },
+  {
+    key: 'tools',
+    skills: [
+      { name: 'Git', icon: 'git', color: 'F05032' },
+      { name: 'Docker', icon: 'docker', color: '2496ED' },
+      { name: 'Xcode', icon: 'xcode', color: '147EFB' },
+      { name: 'Xdebug', icon: 'php', color: '777BB4' },
+      { name: 'Jira Service Management', icon: 'atlassian', color: '0052CC' }
+    ]
+  },
+  {
+    key: 'ai',
+    skills: [{ name: 'ChatGPT', icon: 'openai', color: '412991' }]
+  },
+  {
+    key: 'study',
+    text: 'OOP · Algorithmen · Softwarearchitektur · Softwarequalitätssicherung'
+  }
 ]
 
 const values = [
@@ -595,9 +629,13 @@ function closeMenu() {
           <p>{{ t.technologiesIntro }}</p>
         </div>
 
-        <div class="tech-list">
+        <div class="tech-groups">
+          <section v-for="(group, index) in skillGroups" :key="group.key" class="tech-group">
+            <h3>{{ t.techGroups[index] }}</h3>
+            <p v-if="group.text" class="tech-study">{{ group.text }}</p>
+            <div v-else class="tech-list">
           <div
-            v-for="skill in skills"
+            v-for="skill in group.skills"
             :key="skill.name"
             class="tech-item"
           >
@@ -608,6 +646,8 @@ function closeMenu() {
             />
             <span>{{ skill.name }}</span>
           </div>
+            </div>
+          </section>
         </div>
       </section>
 
@@ -684,12 +724,13 @@ function closeMenu() {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .project-filter-header {
   flex: 1 1 100%;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 12px;
 }
 
 .project-filter-mode {
@@ -721,8 +762,8 @@ function closeMenu() {
 
 .project-sort button {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   place-items: center;
   border: 1px solid var(--control-line);
   border-radius: 8px;
@@ -737,8 +778,11 @@ function closeMenu() {
 }
 
 .project-filter-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .project-technology-filters {
@@ -766,7 +810,8 @@ function closeMenu() {
 }
 
 .project-filter-buttons button {
-  padding: 8px 12px;
+  padding: 6px 10px;
+  font-size: 14px;
   border: 1px solid var(--control-line);
   border-radius: 8px;
   background: var(--area-color, var(--surface));
@@ -805,5 +850,28 @@ function closeMenu() {
   padding: 4px 8px;
   border-radius: 4px;
   color: var(--ink);
+}
+
+.tech-groups {
+  display: grid;
+  gap: 28px;
+  margin-top: 38px;
+}
+
+.tech-group h3 {
+  margin: 0;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.tech-group .tech-list {
+  margin-top: 10px;
+}
+
+.tech-study {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.8;
 }
 </style>
