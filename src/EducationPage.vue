@@ -6,7 +6,7 @@ const props = defineProps<{ language: 'DE' | 'EN' | 'RU' }>()
 const copy = {
   DE: {
     reset: 'Zurücksetzen', sortLabel: 'Sortieren', newest: 'Neueste zuerst', oldest: 'Älteste zuerst',
-    filter: 'Nach Bereich filtern', categories: { all: 'Alle', degree: 'Schule, Studium & Abschlüsse', it: 'IT-Weiterbildungen', language: 'Sprachkurse' },
+    filter: 'Nach Bereich filtern', categories: { all: 'Alle', degree: 'Schule, Studium & Abschlüsse', it: 'IT-Weiterbildungen', language: 'Sprachen', hospitality: 'Hotellerie' },
     title: 'Ausbildung', label: 'Mein Bildungsweg',
     intro: 'Die Welt ist voller spannender Themen – und Lernen hört für mich nie auf. Mein Bildungsweg führte mich von Wirtschaft und Sprachen zur Softwareentwicklung. Heute sehe ich, was all diese Etappen verbindet: meine Neugier, die Freude am Lernen und der Wunsch, Zusammenhänge zu verstehen.',
     completed: 'Erfolgreich abgeschlossen im Oktober 2026',
@@ -17,16 +17,16 @@ const copy = {
       campus: 'Akademischer Hochschullehrgang Software Engineering',
       glo: 'Online-Schule für Programmierung und Webentwicklung',
       wifi: 'Institut für berufliche Aus- und Weiterbildung der Wirtschaftskammer Steiermark',
-      graz: 'Universität Graz; Karl-Franzens-Universität ist die historische Bezeichnung'
+      graz: ''
     },
     places: ['Graz, Österreich', 'Online', 'Irkutsk, Russland', 'Bratsk, Russland'],
-    titles: ['Akademisch geprüfte Softwareentwicklerin', 'Vue.js – Grundlagen und erstes Projekt', 'JavaScript', 'Ausbildung zur Web Developerin', 'Englisch B1', 'Englisch A2 und B1', 'Bachelorstudium Transkulturelle Kommunikation – Deutsch, Italienisch und Russisch', 'Deutsch C1', 'Ökonom – Manager', 'Bankwesen', 'Allgemeinbildende Schulbildung'],
+    titles: ['Akademisch geprüfte Softwareentwicklerin', 'Vue.js – Grundlagen und erstes Projekt', 'JavaScript', 'Web Developerin', 'Geprüfte Rezeptionistin', 'Englisch B1', 'Englisch A2 und B1', 'Bachelor of Arts (BA) – Transkulturelle Kommunikation, Deutsch, Italienisch und Russisch', 'Deutsch C1', 'Ökonom – Manager', 'Bankwesen', 'Allgemeinbildende Schulbildung'],
     banking: 'BMWfi – Anerkennung als Bankkauffrau (österreichischer Lehrberuf)'
   },
   EN: {
     reset: 'Reset',
     sortLabel: 'Sort', newest: 'Newest first', oldest: 'Oldest first',
-    filter: 'Filter by category', categories: { all: 'All', degree: 'School, university & qualifications', it: 'IT training', language: 'Language courses' },
+    filter: 'Filter by category', categories: { all: 'All', degree: 'School, university & qualifications', it: 'IT training', language: 'Languages', hospitality: 'Hospitality' },
     title: 'Education', label: 'My learning journey',
     intro: 'The world is full of fascinating subjects, and I never stop learning. My educational path led me from economics and languages to software development. I now see what connects all these stages: my curiosity, love of learning and desire to understand how things fit together.',
     completed: 'Successfully completed in October 2026',
@@ -40,13 +40,13 @@ const copy = {
       graz: 'University of Graz'
     },
     places: ['Graz, Austria', 'Online', 'Irkutsk, Russia', 'Bratsk, Russia'],
-    titles: ['Academically certified software developer', 'Vue.js – Fundamentals and first project', 'JavaScript', 'Web development training', 'English B1', 'English A2 and B1', 'Bachelor’s studies in Transcultural Communication – German, Italian and Russian', 'German C1', 'Economist and manager', 'Banking', 'School education'],
+    titles: ['Academically certified software developer', 'Vue.js – Fundamentals and first project', 'JavaScript', 'Web Developer', 'Certified Receptionist', 'English B1', 'English A2 and B1', 'Bachelor of Arts (BA) in Transcultural Communication – German, Italian and Russian', 'German C1', 'Economist and manager', 'Banking', 'School education'],
     banking: 'BMWfi – recognition as a bank clerk (Austrian apprenticeship qualification)'
   },
   RU: {
     reset: 'Сбросить',
     sortLabel: 'Сортировка', newest: 'Сначала новые', oldest: 'Сначала старые',
-    filter: 'Фильтр по категории', categories: { all: 'Все', degree: 'Школа, вуз и квалификации', it: 'Курсы по ИТ', language: 'Языковые курсы' },
+    filter: 'Фильтр по категории', categories: { all: 'Все', degree: 'Школа, вуз и квалификации', it: 'Курсы по ИТ', language: 'Языки', hospitality: 'Гостиничное дело' },
     title: 'Образование', label: 'Мой путь в образовании',
     intro: 'Мир полон интересного, и я продолжаю учиться всю жизнь. Мой образовательный путь привёл меня от экономики и языков к разработке ПО. Теперь я понимаю, что объединяет все эти этапы: любознательность, любовь к учёбе и желание разбираться в том, как всё устроено.',
     completed: 'Обучение успешно завершено в октябре 2026 года',
@@ -60,12 +60,12 @@ const copy = {
       graz: 'Университет Карла и Франца в Граце'
     },
     places: ['Грац, Австрия', 'Онлайн', 'Иркутск, Россия', 'Братск, Россия'],
-    titles: ['Разработчик программного обеспечения с академической квалификацией', 'Vue.js – основы и первый проект', 'JavaScript', 'Профессиональная подготовка по веб-разработке', 'Английский B1', 'Английский A2 и B1', 'Бакалавриат по транскультурной коммуникации – немецкий, итальянский и русский языки', 'Немецкий C1', 'Экономист-менеджер', 'Банковское дело', 'Среднее общее образование'],
+    titles: ['Разработчик программного обеспечения с академической квалификацией', 'Vue.js – основы и первый проект', 'JavaScript', 'Веб-разработчик (Web Developerin)', 'Администратор гостиницы (Geprüfte Rezeptionistin)', 'Английский B1', 'Английский A2 и B1', 'Бакалавр гуманитарных наук (Bachelor of Arts, BA) — транскультурная коммуникация, немецкий, итальянский и русский языки', 'Немецкий C1', 'Экономист-менеджер', 'Банковское дело', 'Среднее общее образование'],
     banking: 'BMWfi – признание квалификации банковского служащего в Австрии'
   }
 }
 
-const categories = ['all', 'degree', 'it', 'language'] as const
+const categories = ['all', 'degree', 'it', 'language', 'hospitality'] as const
 type Category = typeof categories[number]
 type InstitutionNoteKey = 'campus' | 'glo' | 'wifi' | 'graz'
 const selectedCategory = ref<Category>('all')
@@ -81,13 +81,15 @@ const entries: {
   institutionRu?: string
   institutionNote?: InstitutionNoteKey
   place: number
+  period?: { DE: string; EN: string; RU: string }
   recognition?: string
   recognitionRu?: string
 }[] = [
   { category: 'degree', start: '2025-02', end: '2026-10', institution: 'FH CAMPUS 02 – Fachhochschule der Wirtschaft', institutionEn: 'CAMPUS 02 University of Applied Sciences for Business and the Economy', institutionRu: 'FH CAMPUS 02 — высшее учебное заведение с прикладной подготовкой в сфере экономики', institutionNote: 'campus', place: 0 },
   { category: 'it', start: '2025-01', end: '2025-03', institution: 'Glo Academy', institutionNote: 'glo', place: 1 },
   { category: 'it', start: '2024-03', end: '2024-05', institution: 'Glo Academy', institutionNote: 'glo', place: 1 },
-  { category: 'it', start: '2022-11', end: '2023-03', institution: 'WIFI Steiermark', institutionNote: 'wifi', place: 0 },
+  { category: 'it', start: '2022-11', end: '2023-03', institution: 'WIFI Steiermark', institutionNote: 'wifi', place: 0, period: { DE: '14.11.2022 – 27.03.2023', EN: '14 November 2022 – 27 March 2023', RU: '14.11.2022–27.03.2023' } },
+  { category: 'hospitality', start: '2019-10', end: '2019-12', institution: 'WIFI Steiermark', institutionNote: 'wifi', place: 0, period: { DE: '11.10.2019 – 13.12.2019', EN: '11 October 2019 – 13 December 2019', RU: '11.10.2019–13.12.2019' } },
   { category: 'language', start: '2019-10', end: '2020-01', institution: 'Internationales Sprachzentrum an der Universität Graz', institutionEn: 'Internationales Sprachzentrum an der Universität Graz — International Language Centre at the University of Graz', institutionRu: 'Internationales Sprachzentrum an der Universität Graz — Международный языковой центр при Университете Граца', place: 0 },
   { category: 'language', start: '2016-11', end: '2017-07', institution: 'Internationales Sprachzentrum an der Universität Graz', institutionEn: 'Internationales Sprachzentrum an der Universität Graz — International Language Centre at the University of Graz', institutionRu: 'Internationales Sprachzentrum an der Universität Graz — Международный языковой центр при Университете Граца', place: 0 },
   { category: 'degree', additionalCategories: ['language'], start: '2010-09', end: '2015-09', institution: 'Karl-Franzens-Universität Graz', institutionNote: 'graz', place: 0 },
@@ -171,7 +173,7 @@ function formatMonth(value: string) {
     <ol class="projects-grid education-list" role="list">
       <li
         v-for="entry in visibleEntries"
-        :key="entry.start"
+        :key="entry.start + '-' + entry.index"
         :data-category="entry.category"
         class="tile project-card project-meta education-entry"
         :class="{ 'education-entry-featured': entry.index === 0 }"
@@ -185,16 +187,22 @@ function formatMonth(value: string) {
               :data-category="category"
             >{{ t.categories[category] }}</span>
           </span>
-          <time :datetime="entry.start">{{ formatMonth(entry.start) }}</time>
-          –
-          <time :datetime="entry.end">{{ formatMonth(entry.end) }}</time>
+          <span v-if="entry.period">{{ entry.period[props.language] }}</span>
+          <template v-else>
+            <time :datetime="entry.start">{{ formatMonth(entry.start) }}</time>
+            –
+            <time :datetime="entry.end">{{ formatMonth(entry.end) }}</time>
+          </template>
         </div>
         <h3>{{ t.titles[entry.index] }}</h3>
-        <div v-if="entry.index === 0" class="project-stack education-completed">{{ t.completed }}</div>
+        <div v-if="entry.index === 0" class="project-stack education-completed">
+          <span class="education-completed-check" aria-hidden="true">✓</span>
+          {{ t.completed }}
+        </div>
         <dl class="education-details">
           <div v-if="entry.institution">
             <dt>{{ t.institution }}</dt>
-            <dd>{{ props.language === 'RU' && entry.institutionRu ? entry.institutionRu : props.language === 'EN' && entry.institutionEn ? entry.institutionEn : entry.institution }}<template v-if="entry.institutionNote"> — {{ t.institutionNotes[entry.institutionNote] }}</template></dd>
+            <dd>{{ props.language === 'RU' && entry.institutionRu ? entry.institutionRu : props.language === 'EN' && entry.institutionEn ? entry.institutionEn : entry.institution }}<template v-if="entry.institutionNote && t.institutionNotes[entry.institutionNote]"> — {{ t.institutionNotes[entry.institutionNote] }}</template></dd>
           </div>
           <div>
             <dt>{{ t.location }}</dt>
@@ -230,6 +238,8 @@ function formatMonth(value: string) {
 
 .education-heading .eyebrow {
   color: var(--ink);
+  font-size: clamp(15px, 1.2vw, 18px);
+  font-weight: 600;
 }
 
 .education-heading h1 {
@@ -341,6 +351,7 @@ function formatMonth(value: string) {
 
 .education-entry {
   padding: clamp(18px, 3vw, 30px);
+  border: 1px solid var(--line);
   background: var(--category-color);
   overflow-wrap: anywhere;
 }
@@ -355,6 +366,10 @@ function formatMonth(value: string) {
 
 [data-category='language'] {
   --category-color: var(--slate);
+}
+
+[data-category='hospitality'] {
+  --category-color: var(--surface);
 }
 
 .education-filters {
@@ -432,11 +447,22 @@ function formatMonth(value: string) {
 
 .education-completed {
   justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   padding: 7px 12px;
   border-radius: 6px;
   background: var(--surface);
   color: var(--ink);
   line-height: 1.5;
+}
+
+.education-completed-check {
+  flex: 0 0 auto;
+  color: #278447;
+  font-size: 1.1em;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .education-notes {

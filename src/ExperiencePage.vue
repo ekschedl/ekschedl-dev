@@ -265,6 +265,8 @@ function formatMonth(value: string) {
 
 .experience-heading .eyebrow {
   color: var(--ink);
+  font-size: clamp(15px, 1.2vw, 18px);
+  font-weight: 600;
 }
 
 .experience-heading h1 {

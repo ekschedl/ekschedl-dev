@@ -113,7 +113,8 @@ const translations = {
       'Ein Webprojekt mit HTML, CSS und JavaScript.'
     ],
     menuOpen: 'Menü öffnen',
-    menuClose: 'Menü schließen'
+    menuClose: 'Menü schließen',
+    backToTop: 'Nach oben'
   },
   EN: {
     areaFilter: 'Project area',
@@ -165,7 +166,8 @@ const translations = {
       'A web project with HTML, CSS and JavaScript.'
     ],
     menuOpen: 'Open menu',
-    menuClose: 'Close menu'
+    menuClose: 'Close menu',
+    backToTop: 'Back to top'
   },
   RU: {
     areaFilter: 'Тип проекта',
@@ -217,7 +219,8 @@ const translations = {
       'Веб-проект на HTML, CSS и JavaScript.'
     ],
     menuOpen: 'Открыть меню',
-    menuClose: 'Закрыть меню'
+    menuClose: 'Закрыть меню',
+    backToTop: 'Наверх'
   }
 }
 
@@ -349,9 +352,7 @@ const skillGroups = [
       { name: 'JavaScript', icon: 'javascript', color: 'B99B00' },
       { name: 'TypeScript', icon: 'typescript', color: '3178C6' },
       { name: 'Vue 3', icon: 'vuedotjs', color: '42B883' },
-      { name: 'SwiftUI', icon: 'swift', color: 'F05138', note: 'project' },
-      { name: 'PHP', icon: 'php', color: '777BB4' },
-      { name: 'Java', icon: 'openjdk', color: '437291' }
+      { name: 'SwiftUI', icon: 'swift', color: 'F05138', note: 'project' }
     ]
   },
   {
@@ -359,7 +360,9 @@ const skillGroups = [
     skills: [
       { name: 'Supabase', icon: 'supabase', color: '3ECF8E', note: 'project' },
       { name: 'SQL · MySQL', icon: 'mysql', color: '4479A1' },
-      { name: 'REST APIs', icon: 'fastapi', color: '009688' }
+      { name: 'REST APIs', icon: 'fastapi', color: '009688' },
+      { name: 'PHP', icon: 'php', color: '777BB4' },
+      { name: 'Java', icon: 'openjdk', color: '437291' }
     ]
   },
   {
@@ -434,6 +437,10 @@ function changeLanguage(next: Language) {
 function closeMenu() {
   menuOpen.value = false
 }
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 </script>
 
 <template>
@@ -489,6 +496,7 @@ function closeMenu() {
         <div class="header-ctas">
           <a
             class="header-cv"
+            :class="{ 'header-cv-compact-label': language !== 'RU' }"
             href="https://ekschedl.com/wp-content/uploads/2025/06/Lebenslauf_Juni2025.pdf"
             target="_blank"
             rel="noopener noreferrer"
@@ -708,6 +716,7 @@ function closeMenu() {
             v-for="(key, index) in filterableSkillGroupKeys"
             :key="key"
             type="button"
+            :class="'tech-filter-' + key"
             :aria-pressed="selectedSkillGroups.includes(key)"
             @click="toggleSkillGroup(key)"
           >{{ t.techFilterGroups[index] }}</button>
@@ -719,7 +728,7 @@ function closeMenu() {
           >{{ t.techFilterReset }}</button>
         </div>
         <div class="tech-groups">
-          <section v-for="(group, index) in visibleSkillGroups" :key="group.key" class="tech-group" :class="{ 'tech-group-study': group.textKey }">
+          <section v-for="(group, index) in visibleSkillGroups" :key="group.key" class="tech-group" :class="['tech-group-' + group.key, { 'tech-group-study': group.textKey }]">
             <h3>{{ t.techGroups[group.key === 'study' ? 4 : filterableSkillGroupKeys.indexOf(group.key as SkillGroupKey)] }}</h3>
             <p v-if="group.textKey" class="tech-study">{{ t.studyTopics }}</p>
             <div v-else class="tech-list">
@@ -809,6 +818,12 @@ function closeMenu() {
       <span>{{ t.footerCopyright }}</span>
       <span>{{ t.footerMade }}</span>
     </footer>
+
+    <button class="back-to-top" type="button" :aria-label="t.backToTop" :title="t.backToTop" @click="scrollToTop">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+        <path d="M12 20V4m0 0 7 7m-7-7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
   </div>
 </template>
 
@@ -966,9 +981,18 @@ function closeMenu() {
 }
 
 .tech-group-filters button[aria-pressed='true'] {
-  border-color: var(--accent);
-  background: var(--mist);
+  border-color: var(--tech-group-color, var(--accent));
+  background: color-mix(in srgb, var(--tech-group-color, var(--mist)) 78%, var(--surface));
 }
+
+.tech-filter-programming,
+.tech-group-programming { --tech-group-color: var(--mist); }
+.tech-filter-apps,
+.tech-group-apps { --tech-group-color: var(--slate); }
+.tech-filter-tools,
+.tech-group-tools { --tech-group-color: var(--lilac); }
+.tech-filter-ai,
+.tech-group-ai { --tech-group-color: color-mix(in srgb, var(--accent) 22%, var(--paper)); }
 
 .tech-group-filters button:hover {
   border-color: var(--accent);
@@ -995,7 +1019,7 @@ function closeMenu() {
   padding: clamp(18px, 2.2vw, 28px);
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: var(--surface);
+  background: color-mix(in srgb, var(--tech-group-color, var(--surface)) 78%, var(--surface));
 }
 
 .tech-group-study {
@@ -1124,6 +1148,49 @@ function closeMenu() {
   display: none;
 }
 
+.header-cv-compact-label .cv-label-full {
+  display: none;
+}
+
+.header-cv-compact-label .cv-label-short {
+  display: inline;
+}
+
+.back-to-top {
+  position: fixed;
+  z-index: 40;
+  right: clamp(10px, 2vw, 24px);
+  bottom: clamp(10px, 2vw, 24px);
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  opacity: .82;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.back-to-top:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.back-to-top svg {
+  display: block;
+  width: 26px;
+  height: 26px;
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .languages {
   box-sizing: border-box;
   flex: 0 0 auto;
@@ -1136,6 +1203,7 @@ function closeMenu() {
 }
 
 .languages button {
+  position: relative;
   display: grid;
   min-width: 34px;
   min-height: 34px;
@@ -1148,7 +1216,17 @@ function closeMenu() {
 .languages button.active {
   background: transparent;
   color: var(--accent);
-  box-shadow: inset 0 -2px 0 var(--accent);
+  box-shadow: none;
+}
+
+.languages button.active::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  content: '';
 }
 
 .theme-button,
@@ -1164,11 +1242,6 @@ function closeMenu() {
 .theme-button:hover,
 .menu-button:hover {
   border-radius: 8px;
-}
-
-.languages button.active:hover {
-  border-radius: 0;
-  box-shadow: inset 0 -2px 0 var(--accent);
 }
 
 .header-cv:hover {
@@ -1364,9 +1437,26 @@ function closeMenu() {
   }
 }
 
+@media (max-width: 680px) {
+  .cv-label-full,
+  .cv-label-short,
+  .header-cv-compact-label .cv-label-short {
+    display: none;
+  }
+
+  .header-cv {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .header-cv,
-  .cv-arrow {
+  .cv-arrow,
+  .back-to-top {
     transition: none;
   }
 }
