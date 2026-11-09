@@ -84,6 +84,8 @@ const translations = {
     technologiesTitle: 'Mein Tech-Stack.',
     technologiesIntro: 'Technologien, mit denen ich arbeite und weiterlerne.',
     techGroups: ['Programmierung & Web', 'Apps & Daten', 'Werkzeuge', 'KI-Werkzeuge', 'Ausbildungsschwerpunkte'], projectUse: 'Im Projekt eingesetzt', studyUse: 'In der Ausbildung vertieft',
+    techFilterAll: "Alle Bereiche", techFilterGroups: ["Programmierung & Web", "Apps & Daten", "Werkzeuge", "KI-Werkzeuge"],
+    techFilterReset: 'Zurücksetzen',
     about: 'Über mich',
     aboutShort: 'Mein Weg und was mich antreibt.',
     aboutTitle: 'Neugierig bleiben. Neues schaffen.',
@@ -128,6 +130,8 @@ const translations = {
     technologiesTitle: 'My tech stack.',
     technologiesIntro: 'Technologies I use and continue to explore.',
     techGroups: ['Programming & web', 'Apps & data', 'Tools', 'AI tools', 'Study topics'], projectUse: 'Used in projects', studyUse: 'Covered in training',
+    techFilterAll: "All areas", techFilterGroups: ["Programming & web", "Apps & data", "Tools", "AI tools"],
+    techFilterReset: 'Reset',
     about: 'About me',
     aboutShort: 'My journey and what motivates me.',
     aboutTitle: 'Stay curious. Keep creating.',
@@ -172,6 +176,8 @@ const translations = {
     technologiesTitle: 'Мой стек технологий.',
     technologiesIntro: 'Технологии, с которыми я работаю и продолжаю развиваться.',
     techGroups: ['Разработка и веб', 'Приложения и данные', 'Инструменты', 'ИИ-инструменты', 'Темы обучения'], projectUse: 'Использовала в проектах', studyUse: 'Изучала в рамках обучения',
+    techFilterAll: "Все разделы", techFilterGroups: ["Разработка и веб", "Приложения и данные", "Инструменты", "ИИ-инструменты"],
+    techFilterReset: 'Сбросить',
     about: 'Обо мне',
     aboutShort: 'Мой путь и то, что меня вдохновляет.',
     aboutTitle: 'Оставаться любознательной. Создавать новое.',
@@ -353,6 +359,24 @@ const skillGroups = [
   }
 ]
 
+type SkillGroupKey = 'programming' | 'apps' | 'tools' | 'ai' | 'study'
+const selectedSkillGroups = ref<SkillGroupKey[]>([])
+const filterableSkillGroupKeys: SkillGroupKey[] = ['programming', 'apps', 'tools', 'ai']
+function toggleSkillGroup(key?: SkillGroupKey) {
+  if (!key) {
+    selectedSkillGroups.value = []
+    return
+  }
+
+  selectedSkillGroups.value = selectedSkillGroups.value.includes(key)
+    ? selectedSkillGroups.value.filter((selected) => selected !== key)
+    : [...selectedSkillGroups.value, key]
+}
+
+const visibleSkillGroups = computed(() => skillGroups.filter((group) =>
+  group.key === 'study' || selectedSkillGroups.value.length === 0 || selectedSkillGroups.value.includes(group.key as SkillGroupKey)
+))
+
 const values = [
   { symbol: '⌘', label: 'Code' },
   { symbol: '↗', label: 'Create' },
@@ -504,7 +528,7 @@ function closeMenu() {
           <span class="tile-type">WHAT I USE</span>
           <h3>{{ t.nav[2] }}</h3>
           <div class="expertise-preview">
-            <span>Vue 3</span>
+            <span>Vue </span>
             <span>TypeScript</span>
             <span>PHP</span>
             <span>+ more</span>
@@ -629,9 +653,25 @@ function closeMenu() {
           <p>{{ t.technologiesIntro }}</p>
         </div>
 
+        <div class="tech-group-filters" role="group" :aria-label="t.technologiesTitle">
+          <button type="button" :aria-pressed="!selectedSkillGroups.length" @click="toggleSkillGroup()">{{ t.techFilterAll }}</button>
+          <button
+            v-for="(key, index) in filterableSkillGroupKeys"
+            :key="key"
+            type="button"
+            :aria-pressed="selectedSkillGroups.includes(key)"
+            @click="toggleSkillGroup(key)"
+          >{{ t.techFilterGroups[index] }}</button>
+          <button
+            v-if="selectedSkillGroups.length"
+            type="button"
+            class="tech-filter-reset"
+            @click="toggleSkillGroup()"
+          >{{ t.techFilterReset }}</button>
+        </div>
         <div class="tech-groups">
-          <section v-for="(group, index) in skillGroups" :key="group.key" class="tech-group">
-            <h3>{{ t.techGroups[index] }}</h3>
+          <section v-for="(group, index) in visibleSkillGroups" :key="group.key" class="tech-group">
+            <h3>{{ t.techGroups[group.key === 'study' ? 4 : filterableSkillGroupKeys.indexOf(group.key as SkillGroupKey)] }}</h3>
             <p v-if="group.text" class="tech-study">{{ group.text }}</p>
             <div v-else class="tech-list">
           <div
@@ -850,6 +890,36 @@ function closeMenu() {
   padding: 4px 8px;
   border-radius: 4px;
   color: var(--ink);
+}
+
+.tech-group-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.tech-group-filters button {
+  padding: 7px 10px;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
+
+.tech-group-filters button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--mist);
+}
+
+.tech-group-filters .tech-filter-reset {
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .tech-groups {
