@@ -109,7 +109,7 @@ const translations = {
     github: 'Mein GitHub',
     email: 'E-Mail schreiben',
     projectDescriptions: [
-      'Eine iOS-App mit Yoga-Bibliothek, Kursbuchung und einem eigenen Bereich für Trainerinnen und Trainer.',
+      'YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team war ich für das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform zuständig.',
       'UNO als Konsolenspiel.',
       'Ein Webprojekt mit HTML, CSS und JavaScript.',
       'Konsolenbasiertes Prüfungsprojekt zur Verwaltung von Gästen, Zimmern, Buchungen und Zusatzleistungen. Mit Hibernate/JPA, CRUD-Funktionen, HQL-Abfragen, Transaktionen und XML-Mapping.'
@@ -165,7 +165,7 @@ const translations = {
     github: 'My GitHub',
     email: 'Send an email',
     projectDescriptions: [
-      'An iOS app with a yoga library, course booking and a dedicated area for instructors.',
+      'YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.',
       'UNO as a console game.',
       'A web project with HTML, CSS and JavaScript.',
       'A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.'
@@ -221,7 +221,7 @@ const translations = {
     github: 'Мой GitHub',
     email: 'Написать письмо',
     projectDescriptions: [
-      'Приложение для iOS с библиотекой йоги, записью на занятия и отдельным разделом для тренеров.',
+      'YogaNow Studio объединяет открытую библиотеку йоги и запись на занятия в студии. В команде я отвечала за дизайн, подключение базы данных Supabase и платформу записи на занятия.',
       'UNO в консольной версии.',
       'Веб-проект на HTML, CSS и JavaScript.',
       'Консольный экзаменационный проект для управления гостями, номерами, бронированиями и дополнительными услугами. Hibernate/JPA, операции CRUD, запросы HQL, транзакции и XML-маппинг.'
@@ -242,7 +242,7 @@ const projects = [
     createdAt: '2026-06',
     type: 'iOS APP',
     area: 'mobile',
-    image: '/images/yoganow.jpg',
+    image: '/images/yoganow-overview.png',
     url: 'https://github.com/ekschedl/YogaNowStudio',
     stack: 'Swift · SwiftUI · Supabase'
   },
@@ -283,9 +283,9 @@ const hotelSlides = [
   { image: '/images/hotelverwaltung-uml.png', caption: { DE: 'Vollständiges UML-Klassendiagramm mit Attributen, Methoden und Beziehungen', EN: 'Full UML class diagram with attributes, methods and relationships', RU: 'Полная диаграмма классов UML с атрибутами, методами и связями' } }
 ] as const
 const yogaSlides = [
-  { image: '/images/yoganow-slide-10.jpg', caption: { DE: 'Kursdetails und Buchung', EN: 'Course details and booking', RU: 'Информация о занятии и бронирование' } },
-  { image: '/images/yoganow-slide-09.jpg', caption: { DE: 'Yoga Library: Video zum Mitmachen', EN: 'Yoga Library: follow-along video', RU: 'Библиотека йоги: видео для занятий' } },
-  { image: '/images/yoganow-slide-08.jpg', caption: { DE: 'Startseite: Bibliothek und Kursplattform', EN: 'Home screen: library and course platform', RU: 'Главный экран: библиотека и платформа занятий' } }
+  { image: '/images/yoganow-overview.png', caption: { DE: 'Startseite: Bibliothek und Kursplattform', EN: 'Home screen: library and course platform', RU: 'Главный экран: библиотека и платформа занятий' } },
+  { image: '/images/yoganow-slide-09.png', caption: { DE: 'Yoga Library: Video zum Mitmachen', EN: 'Yoga Library: follow-along video', RU: 'Библиотека йоги: видео для занятий' } },
+  { image: '/images/yoganow-slide-10.png', caption: { DE: 'Kursdetails und Buchung', EN: 'Course details and booking', RU: 'Информация о занятии и бронирование' } }
 ] as const
 
 const projectGalleries = {
@@ -632,7 +632,8 @@ function scrollToTop() {
           <span class="tile-type tile-type-compact">{{ t.projectTypesShort[project.area] }}</span>
 
           <div class="tile-project-image">
-            <img v-if="project.image" :src="project.image" :alt="project.title" loading="lazy" />
+            <img v-if="project.id === 'yoganow'" class="yoga-tile-logo" src="/images/yoganow-logo.png" alt="" loading="lazy" />
+            <img v-else-if="project.image" :src="project.image" :alt="project.title" loading="lazy" />
           </div>
 
           <div class="tile-bottom">
@@ -1112,11 +1113,33 @@ function scrollToTop() {
   font-size: 18px;
 }
 
+.tile-yoganow .yoga-tile-logo {
+  width: min(100%, 160px);
+  object-fit: contain;
+}
+
 .yoga-cover {
   width: 100%;
   position: relative;
   border: 0;
   color: var(--ink);
+}
+
+.yoga-cover[data-area] {
+  height: auto;
+  display: block;
+  padding: 0;
+}
+
+.yoga-cover > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.project-card:hover .yoga-cover > img {
+  transform: none;
 }
 
 .yoga-cover > span {
