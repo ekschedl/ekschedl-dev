@@ -285,8 +285,15 @@ const hotelSlides = [
 const yogaSlides = [
   { image: '/images/yoganow-overview.png', caption: { DE: 'Startseite: Bibliothek und Kursplattform', EN: 'Home screen: library and course platform', RU: 'Главный экран: библиотека и платформа занятий' } },
   { image: '/images/yoganow-slide-09.png', caption: { DE: 'Yoga Library: Video zum Mitmachen', EN: 'Yoga Library: follow-along video', RU: 'Библиотека йоги: видео для занятий' } },
-  { image: '/images/yoganow-slide-10.png', caption: { DE: 'Kursdetails und Buchung', EN: 'Course details and booking', RU: 'Информация о занятии и бронирование' } }
+  { image: '/images/yoganow-slide-10.png', caption: { DE: 'Kursdetails und Buchung', EN: 'Course details and booking', RU: 'Информация о занятии и бронирование' } },
+  { video: '/videos/yoganow-demo.mp4', caption: { DE: 'Videodemo: Vom Kurskalender zur bestätigten Buchung', EN: 'Video demo: from the class calendar to the confirmed booking', RU: 'Видео: от календаря занятий до подтверждённой записи' } }
 ] as const
+
+const yogaDemoText = {
+  DE: { action: 'Buchungsdemo ansehen', access: 'Die Yoga Library ist ohne Anmeldung zugänglich. Zum selbstständigen Testen der Kursplattform ist ein Konto erforderlich.' },
+  EN: { action: 'View booking demo', access: 'The Yoga Library is open without signing in. To try the booking platform yourself, you need an account.' },
+  RU: { action: 'Посмотреть, как записаться на занятие', access: 'Библиотека йоги доступна без входа. Чтобы самостоятельно попробовать запись на занятия, нужна учётная запись.' }
+}
 
 const projectGalleries = {
   hotelverwaltung: { title: 'Hotelverwaltung', slides: hotelSlides },
@@ -300,13 +307,14 @@ const hotelGalleryLabels = {
   RU: { open: 'Открыть галерею проекта', close: 'Закрыть', prev: 'Предыдущее изображение', next: 'Следующее изображение', full: 'Изображение в полном размере' }
 }
 const hotelGallery = ref<HTMLDialogElement | null>(null)
+const galleryVideo = ref<HTMLVideoElement | null>(null)
 const hotelSlideIndex = ref(0)
 const hotelSlide = computed(() => activeGallery.value.slides[hotelSlideIndex.value] ?? activeGallery.value.slides[0])
 const galleryLabels = computed(() => hotelGalleryLabels[language.value])
 
-function openProjectGallery(project: keyof typeof projectGalleries) {
+function openProjectGallery(project: keyof typeof projectGalleries, startAt = 0) {
   galleryProject.value = project
-  hotelSlideIndex.value = 0
+  hotelSlideIndex.value = startAt
   hotelGallery.value?.showModal()
 }
 
@@ -775,6 +783,12 @@ function scrollToTop() {
                 <p class="project-created">{{ t.created }} · {{ new Intl.DateTimeFormat(language.toLowerCase(), { month: 'long', year: 'numeric' }).format(new Date(project.createdAt + '-01T00:00:00')) }}</p>
                 <p>{{ project.description }}</p>
                 <span class="project-stack">{{ project.stack }}</span>
+                <div v-if="project.id === 'yoganow'" class="yoga-demo">
+                  <button type="button" aria-haspopup="dialog" @click="openProjectGallery('yoganow', yogaSlides.length - 1)">
+                    {{ yogaDemoText[language].action }} <span aria-hidden="true">↗</span>
+                  </button>
+                  <p>{{ yogaDemoText[language].access }}</p>
+                </div>
               </div>
             </div>
           </article>
@@ -894,13 +908,16 @@ function scrollToTop() {
     </main>
 
     <dialog ref="hotelGallery" class="hotel-gallery" :aria-label="activeGallery.title"
+      @close="galleryVideo?.pause()"
       @keydown.left.prevent="changeHotelSlide(-1)" @keydown.right.prevent="changeHotelSlide(1)">
       <div class="hotel-gallery-header">
         <strong>{{ activeGallery.title }}</strong>
         <button type="button" autofocus :aria-label="galleryLabels.close" @click="hotelGallery?.close()">×</button>
       </div>
       <figure aria-live="polite">
-        <img :src="hotelSlide.image" :alt="hotelSlide.caption[language]" loading="lazy" />
+        <video v-if="'video' in hotelSlide" ref="galleryVideo" :src="hotelSlide.video"
+          :aria-label="hotelSlide.caption[language]" controls playsinline preload="none" @keydown.left.stop @keydown.right.stop />
+        <img v-else :src="hotelSlide.image" :alt="hotelSlide.caption[language]" loading="lazy" />
         <figcaption>{{ hotelSlide.caption[language] }}</figcaption>
       </figure>
       <div class="hotel-gallery-controls">
@@ -908,7 +925,7 @@ function scrollToTop() {
         <span>{{ hotelSlideIndex + 1 }} / {{ activeGallery.slides.length }}</span>
         <button type="button" :aria-label="galleryLabels.next" @click="changeHotelSlide(1)">→</button>
       </div>
-      <a :href="hotelSlide.image" target="_blank" rel="noopener">{{ galleryLabels.full }} ↗</a>
+      <a v-if="'image' in hotelSlide" :href="hotelSlide.image" target="_blank" rel="noopener">{{ galleryLabels.full }} ↗</a>
     </dialog>
 
     <footer class="footer">
@@ -1118,6 +1135,26 @@ function scrollToTop() {
   object-fit: contain;
 }
 
+.yoga-demo {
+  margin-top: 14px;
+}
+
+.yoga-demo button {
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--accent);
+  font-weight: 600;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+.yoga-demo p {
+  margin: 8px 0 0;
+}
+
 .yoga-cover {
   width: 100%;
   position: relative;
@@ -1189,7 +1226,8 @@ function scrollToTop() {
 }
 
 .hotel-gallery figure { margin: 12px 0 0; }
-.hotel-gallery img {
+.hotel-gallery img,
+.hotel-gallery video {
   display: block;
   width: 100%;
   height: auto;
