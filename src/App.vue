@@ -905,14 +905,17 @@ function scrollToTop() {
 
 <style scoped>
 .section-head .portfolio-status {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 6px 12px;
-  border: 1px solid var(--control-line);
-  border-radius: 8px;
-  background: var(--lilac);
-  color: var(--ink);
-  font-weight: 600;
+  display: block;
+  max-width: none;
+  margin: 16px 0 0;
+  padding: 14px clamp(12px, 3vw, 22px);
+  border-inline-start: 5px solid #dbad46;
+  border-radius: 10px;
+  background: #245c4b;
+  color: #fff;
+  font-size: clamp(17px, 2vw, 22px);
+  font-weight: 700;
+  line-height: 1.4;
   overflow-wrap: anywhere;
 }
 
