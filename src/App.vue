@@ -297,7 +297,9 @@ const yogaDemoText = {
 
 const projectGalleries = {
   hotelverwaltung: { title: 'Hotelverwaltung', slides: hotelSlides },
-  yoganow: { title: 'YogaNow Studio', slides: yogaSlides }
+  yoganow: { title: 'YogaNow Studio', slides: yogaSlides },
+  uno: { title: projects[1].title, slides: [{ image: projects[1].image, caption: { DE: 'UNO als Konsolenspiel', EN: 'UNO as a console game', RU: 'Консольная игра UNO' } }] },
+  kaffeehaus: { title: projects[2].title, slides: [{ image: projects[2].image, caption: { DE: 'Vorschau des Webprojekts', EN: 'Web project preview', RU: 'Предпросмотр веб-проекта' } }] }
 }
 const galleryProject = ref<keyof typeof projectGalleries>('hotelverwaltung')
 const activeGallery = computed(() => projectGalleries[galleryProject.value])
@@ -319,7 +321,8 @@ function openProjectGallery(project: keyof typeof projectGalleries, startAt = 0)
 }
 
 function changeHotelSlide(direction: number) {
-  hotelSlideIndex.value = (hotelSlideIndex.value + direction + activeGallery.value.slides.length) % activeGallery.value.slides.length
+  const count = activeGallery.value.slides.length
+  if (count > 1) hotelSlideIndex.value = (hotelSlideIndex.value + direction + count) % count
 }
 
 const featuredProjects = projects.filter((project) => project.id !== 'hotelverwaltung')
@@ -755,21 +758,17 @@ function scrollToTop() {
             :key="project.id"
             class="project-card"
           >
-            <button v-if="project.id === 'hotelverwaltung'" class="project-visual project-cover" :data-area="project.area"
-              type="button" aria-haspopup="dialog" :aria-label="galleryLabels.open" @click="openProjectGallery('hotelverwaltung')">
-              <span>JAVA · HIBERNATE</span>
-              <strong>{{ project.title }}</strong>
-              <span>JPA · HQL · SQLITE</span>
+            <button class="project-visual project-cover" :data-area="project.area"
+              type="button" aria-haspopup="dialog" :aria-label="project.title + ' · ' + galleryLabels.open"
+              @click="openProjectGallery(project.id)">
+              <img v-if="project.image" :src="project.image" alt="" loading="lazy" />
+              <div v-else class="project-cover-copy" aria-hidden="true">
+                <span>JAVA · HIBERNATE</span>
+                <strong>{{ project.title }}</strong>
+                <span>JPA · HQL · SQLITE</span>
+              </div>
               <span class="project-cover-expand" aria-hidden="true">↗</span>
             </button>
-            <button v-else-if="project.id === 'yoganow'" class="project-visual yoga-cover" :data-area="project.area"
-              type="button" aria-haspopup="dialog" :aria-label="project.title + ' · ' + galleryLabels.open" @click="openProjectGallery('yoganow')">
-              <img :src="project.image" alt="" loading="lazy" />
-              <span aria-hidden="true">↗</span>
-            </button>
-            <div v-else class="project-visual" :data-area="project.area">
-              <img :src="project.image" :alt="project.title" loading="lazy" />
-            </div>
 
             <div class="project-meta">
               <div class="project-details">
@@ -783,12 +782,13 @@ function scrollToTop() {
                 <p class="project-created">{{ t.created }} · {{ new Intl.DateTimeFormat(language.toLowerCase(), { month: 'long', year: 'numeric' }).format(new Date(project.createdAt + '-01T00:00:00')) }}</p>
                 <p>{{ project.description }}</p>
                 <span class="project-stack">{{ project.stack }}</span>
-                <div v-if="project.id === 'yoganow'" class="yoga-demo">
-                  <button type="button" aria-haspopup="dialog" @click="openProjectGallery('yoganow', yogaSlides.length - 1)">
-                    {{ yogaDemoText[language].action }} <span aria-hidden="true">↗</span>
-                  </button>
-                  <p>{{ yogaDemoText[language].access }}</p>
-                </div>
+              </div>
+              <div class="project-card-actions">
+                <button type="button" aria-haspopup="dialog"
+                  @click="openProjectGallery(project.id, project.id === 'yoganow' ? yogaSlides.length - 1 : 0)">
+                  {{ project.id === 'yoganow' ? yogaDemoText[language].action : galleryLabels.open }}
+                  <span aria-hidden="true">↗</span>
+                </button>
               </div>
             </div>
           </article>
@@ -917,16 +917,17 @@ function scrollToTop() {
       <figure aria-live="polite">
         <video v-if="'video' in hotelSlide" ref="galleryVideo" :src="hotelSlide.video"
           poster="/images/yoganow-video-poster.jpg"
-          :aria-label="hotelSlide.caption[language]" controls playsinline preload="none" @keydown.left.stop @keydown.right.stop />
+          :aria-label="hotelSlide.caption[language]" controls muted playsinline preload="none" @keydown.left.stop @keydown.right.stop />
         <img v-else :src="hotelSlide.image" :alt="hotelSlide.caption[language]" loading="lazy" />
         <figcaption>{{ hotelSlide.caption[language] }}</figcaption>
       </figure>
-      <div class="hotel-gallery-controls">
+      <div v-if="activeGallery.slides.length > 1" class="hotel-gallery-controls">
         <button type="button" :aria-label="galleryLabels.prev" @click="changeHotelSlide(-1)">←</button>
         <span>{{ hotelSlideIndex + 1 }} / {{ activeGallery.slides.length }}</span>
         <button type="button" :aria-label="galleryLabels.next" @click="changeHotelSlide(1)">→</button>
       </div>
       <a v-if="'image' in hotelSlide" :href="hotelSlide.image" target="_blank" rel="noopener">{{ galleryLabels.full }} ↗</a>
+      <p v-if="galleryProject === 'yoganow'" class="yoga-gallery-access">{{ yogaDemoText[language].access }}</p>
     </dialog>
 
     <footer class="footer">
@@ -1096,51 +1097,22 @@ function scrollToTop() {
   color: var(--ink);
 }
 
-.project-cover[data-area] {
-  position: relative;
-  width: 100%;
-  height: auto;
-  min-height: clamp(140px, 25vw, 290px);
-  align-content: center;
-  gap: 12px;
-  padding: 18px 10px;
-  border: 0;
-  color: var(--ink);
-  text-align: center;
-  overflow-wrap: anywhere;
+.project-card,
+.project-card .project-meta {
+  display: flex;
+  flex-direction: column;
 }
 
-.project-cover > span {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: clamp(10px, 1.1vw, 13px);
-  letter-spacing: .1em;
+.project-card .project-meta {
+  flex: 1;
+  gap: 16px;
 }
 
-.project-cover strong {
-  font-size: clamp(20px, 3.2vw, 38px);
-  line-height: 1.15;
+.project-card-actions {
+  margin-top: auto;
 }
 
-.project-cover .project-cover-expand {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  background: var(--surface);
-  font-size: 18px;
-}
-
-.tile-yoganow .yoga-tile-logo {
-  width: min(100%, 160px);
-  object-fit: contain;
-}
-
-.yoga-demo {
-  margin-top: 14px;
-}
-
-.yoga-demo button {
+.project-card-actions button {
   max-width: 100%;
   padding: 8px 12px;
   border: 1px solid var(--control-line);
@@ -1152,41 +1124,61 @@ function scrollToTop() {
   overflow-wrap: anywhere;
 }
 
-.yoga-demo p {
-  margin: 8px 0 0;
-}
-
-.yoga-cover {
-  width: 100%;
+.project-cover[data-area] {
   position: relative;
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  place-items: center;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  padding: clamp(5px, 1.4vw, 16px);
   border: 0;
   color: var(--ink);
 }
 
-.yoga-cover[data-area] {
-  height: auto;
-  display: block;
-  padding: 0;
-}
-
-.yoga-cover > img {
-  display: block;
+.project-cover > img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
 }
 
-.project-card:hover .yoga-cover > img {
-  transform: none;
+.project-cover-copy {
+  display: grid;
+  gap: clamp(3px, 1vw, 12px);
+  max-width: 100%;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 
-.yoga-cover > span {
+.project-cover-copy span {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: clamp(8px, 1.1vw, 13px);
+  letter-spacing: .08em;
+}
+
+.project-cover-copy strong {
+  font-size: clamp(13px, 2.4vw, 34px);
+  line-height: 1.15;
+}
+
+.project-cover-expand {
   position: absolute;
-  inset-block-start: 8px;
-  inset-inline-end: 8px;
-  padding: 4px 8px;
+  inset-block-start: 6px;
+  inset-inline-end: 6px;
+  padding: 3px 7px;
   border-radius: 6px;
   background: var(--surface);
+}
+
+.tile-yoganow .yoga-tile-logo {
+  width: min(100%, 160px);
+  object-fit: contain;
+}
+
+.yoga-gallery-access {
+  margin: 10px 0 0;
+  color: var(--muted);
 }
 
 .hotel-gallery {
