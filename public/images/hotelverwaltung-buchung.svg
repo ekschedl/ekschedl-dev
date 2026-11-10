@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 360" font-family="system-ui,sans-serif">
+  <rect width="840" height="360" rx="24" fill="#f7fcf7"/>
+  <text x="42" y="68" fill="#245c4b" font-size="24" font-weight="700">BuchungService · Hibernate</text>
+  <text x="42" y="114" fill="#382b2d" font-size="36" font-weight="700">gastBuchtZimmer()</text>
+  <g fill="#a8e1d8">
+    <rect x="42" y="158" width="224" height="75" rx="14"/>
+    <rect x="308" y="158" width="224" height="75" rx="14"/>
+    <rect x="574" y="158" width="224" height="75" rx="14"/>
+  </g>
+  <g fill="#382b2d" text-anchor="middle" font-size="19">
+    <text x="154" y="202">Gast &amp; Zimmer prüfen</text>
+    <text x="420" y="202">Buchung speichern</text>
+    <text x="686" y="202">Guthaben &amp; Status ändern</text>
+    <text x="287" y="202">→</text><text x="553" y="202">→</text>
+  </g>
+  <path d="M42 255v12h756v-12" fill="none" stroke="#245c4b" stroke-width="2"/>
+  <text x="420" y="313" fill="#245c4b" text-anchor="middle" font-size="22">Eine Transaktion · Commit oder Rollback</text>
+</svg>

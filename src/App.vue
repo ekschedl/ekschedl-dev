@@ -32,7 +32,7 @@ function updatePageLanguage() {
   }
 }
 const menuOpen = ref(false)
-const projectAreas = ['mobile', 'game', 'web'] as const
+const projectAreas = ['mobile', 'game', 'web', 'backend'] as const
 type ProjectArea = typeof projectAreas[number]
 type ProjectFilterMode = 'area' | 'technology'
 const projectFilterMode = ref<ProjectFilterMode>('area')
@@ -67,7 +67,7 @@ const translations = {
     areaFilter: 'Projektbereich',
     filterOptions: 'Projektfilter',
     allAreas: 'Alle Bereiche',
-    areas: { mobile: 'Mobile App', game: 'Spiel', web: 'Webentwicklung' },
+    areas: { mobile: 'Mobile App', game: 'Spiel', web: 'Webentwicklung', backend: 'Backend & Daten' },
     filter: 'Technologie filtern',
     allTechnologies: 'Alle Technologien',
     noResults: 'Keine passenden Projekte gefunden.',
@@ -88,12 +88,13 @@ const translations = {
     heroNote: 'Ideen verstehen. Lösungen entwickeln. Neues lernen.',
     projectsTitle: 'Dinge, die ich entwickle.',
     projectsIntro: 'Eine Auswahl meiner Projekte und Ideen.',
+    portfolioStatus: 'Derzeit in Bearbeitung',
     technologiesTitle: 'Mein Tech-Stack.',
     technologiesIntro: 'Technologien, mit denen ich arbeite und weiterlerne.',
     techGroups: ['Frontend & Apps', 'Backend & Daten', 'Werkzeuge', 'KI-Werkzeuge', 'Ausbildungsschwerpunkte'], projectUse: 'Im Projekt eingesetzt', studyUse: 'In der Ausbildung vertieft',
     sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIEN', sectionAbout: '03 / ÜBER MICH', sectionContact: '04 / KONTAKT',
-    projectTypes: { mobile: 'MOBILE APP', game: 'KONSOLENSPIEL', web: 'WEBPROJEKT' },
-    projectTypesShort: { mobile: 'APP', game: 'SPIEL', web: 'WEB' },
+    projectTypes: { mobile: 'MOBILE APP', game: 'KONSOLENSPIEL', web: 'WEBPROJEKT', backend: 'KONSOLENANWENDUNG' },
+    projectTypesShort: { mobile: 'APP', game: 'SPIEL', web: 'WEB', backend: 'JAVA' },
     studyTopics: 'Objektorientierte Programmierung · Algorithmen · Softwarearchitektur · Softwarequalitätssicherung',
     techFilterAll: "Alle Bereiche", techFilterGroups: ["Frontend & Apps", "Backend & Daten", "Werkzeuge", "KI-Werkzeuge"],
     techFilterReset: 'Zurücksetzen',
@@ -110,8 +111,10 @@ const translations = {
     projectDescriptions: [
       'Eine iOS-App mit SwiftUI und Supabase.',
       'UNO als Konsolenspiel.',
-      'Ein Webprojekt mit HTML, CSS und JavaScript.'
+      'Ein Webprojekt mit HTML, CSS und JavaScript.',
+      'Konsolenbasiertes Prüfungsprojekt zur Verwaltung von Gästen, Zimmern, Buchungen und Zusatzleistungen. Mit Hibernate/JPA, CRUD-Funktionen, HQL-Abfragen, Transaktionen und XML-Mapping.'
     ],
+    projectLink: 'Projekt auf GitHub ansehen',
     menuOpen: 'Menü öffnen',
     menuClose: 'Menü schließen',
     backToTop: 'Nach oben'
@@ -120,7 +123,7 @@ const translations = {
     areaFilter: 'Project area',
     filterOptions: 'Project filters',
     allAreas: 'All areas',
-    areas: { mobile: 'Mobile app', game: 'Game', web: 'Web development' },
+    areas: { mobile: 'Mobile app', game: 'Game', web: 'Web development', backend: 'Backend & data' },
     filter: 'Filter by technology',
     allTechnologies: 'All technologies',
     noResults: 'No matching projects found.',
@@ -141,12 +144,13 @@ const translations = {
     heroNote: 'Explore ideas. Build solutions. Keep learning.',
     projectsTitle: 'Things I build.',
     projectsIntro: 'A selection of my projects and ideas.',
+    portfolioStatus: 'Currently in progress',
     technologiesTitle: 'My tech stack.',
     technologiesIntro: 'Technologies I use and continue to explore.',
     techGroups: ['Frontend & apps', 'Backend & data', 'Tools', 'AI tools', 'Study topics'], projectUse: 'Used in projects', studyUse: 'Covered in training',
     sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIES', sectionAbout: '03 / ABOUT ME', sectionContact: '04 / CONTACT',
-    projectTypes: { mobile: 'MOBILE APP', game: 'CONSOLE GAME', web: 'WEB PROJECT' },
-    projectTypesShort: { mobile: 'APP', game: 'GAME', web: 'WEB' },
+    projectTypes: { mobile: 'MOBILE APP', game: 'CONSOLE GAME', web: 'WEB PROJECT', backend: 'CONSOLE APP' },
+    projectTypesShort: { mobile: 'APP', game: 'GAME', web: 'WEB', backend: 'JAVA' },
     studyTopics: 'Object-oriented programming · Algorithms · Software architecture · Software quality assurance',
     techFilterAll: "All areas", techFilterGroups: ["Frontend & apps", "Backend & data", "Tools", "AI tools"],
     techFilterReset: 'Reset',
@@ -163,8 +167,10 @@ const translations = {
     projectDescriptions: [
       'An iOS app built with SwiftUI and Supabase.',
       'UNO as a console game.',
-      'A web project with HTML, CSS and JavaScript.'
+      'A web project with HTML, CSS and JavaScript.',
+      'A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.'
     ],
+    projectLink: 'View project on GitHub',
     menuOpen: 'Open menu',
     menuClose: 'Close menu',
     backToTop: 'Back to top'
@@ -173,7 +179,7 @@ const translations = {
     areaFilter: 'Тип проекта',
     filterOptions: 'Фильтры проектов',
     allAreas: 'Все типы',
-    areas: { mobile: 'Мобильное приложение', game: 'Игра', web: 'Веб-разработка' },
+    areas: { mobile: 'Мобильное приложение', game: 'Игра', web: 'Веб-разработка', backend: 'Бэкенд и данные' },
     filter: 'Фильтр по технологии',
     allTechnologies: 'Все технологии',
     noResults: 'Подходящих проектов нет.',
@@ -194,12 +200,13 @@ const translations = {
     heroNote: 'Исследовать идеи. Находить решения. Учиться новому.',
     projectsTitle: 'То, что я создаю.',
     projectsIntro: 'Некоторые из моих проектов и идей.',
+    portfolioStatus: 'Раздел обновляется',
     technologiesTitle: 'Мой стек технологий.',
     technologiesIntro: 'Технологии, с которыми я работаю и продолжаю развиваться.',
     techGroups: ['Фронтенд и приложения', 'Бэкенд и данные', 'Инструменты', 'ИИ-инструменты', 'Темы обучения'], projectUse: 'Использовала в проектах', studyUse: 'Изучала в рамках обучения',
     sectionPortfolio: '01 / ПОРТФОЛИО', sectionTechnologies: '02 / ТЕХНОЛОГИИ', sectionAbout: '03 / ОБО МНЕ', sectionContact: '04 / КОНТАКТЫ',
-    projectTypes: { mobile: 'МОБИЛЬНОЕ ПРИЛОЖЕНИЕ', game: 'КОНСОЛЬНАЯ ИГРА', web: 'ВЕБ-ПРОЕКТ' },
-    projectTypesShort: { mobile: 'ПРИЛ.', game: 'ИГРА', web: 'ВЕБ' },
+    projectTypes: { mobile: 'МОБИЛЬНОЕ ПРИЛОЖЕНИЕ', game: 'КОНСОЛЬНАЯ ИГРА', web: 'ВЕБ-ПРОЕКТ', backend: 'КОНСОЛЬНОЕ ПРИЛОЖЕНИЕ' },
+    projectTypesShort: { mobile: 'ПРИЛ.', game: 'ИГРА', web: 'ВЕБ', backend: 'JAVA' },
     studyTopics: 'Объектно-ориентированное программирование · Алгоритмы · Архитектура ПО · Обеспечение качества ПО',
     techFilterAll: "Все разделы", techFilterGroups: ["Фронтенд и приложения", "Бэкенд и данные", "Инструменты", "ИИ-инструменты"],
     techFilterReset: 'Сбросить',
@@ -216,8 +223,10 @@ const translations = {
     projectDescriptions: [
       'iOS-приложение на SwiftUI и Supabase.',
       'UNO в консольной версии.',
-      'Веб-проект на HTML, CSS и JavaScript.'
+      'Веб-проект на HTML, CSS и JavaScript.',
+      'Консольный экзаменационный проект для управления гостями, номерами, бронированиями и дополнительными услугами. Hibernate/JPA, операции CRUD, запросы HQL, транзакции и XML-маппинг.'
     ],
+    projectLink: 'Открыть проект на GitHub',
     menuOpen: 'Открыть меню',
     menuClose: 'Закрыть меню',
     backToTop: 'Наверх'
@@ -253,8 +262,43 @@ const projects = [
     area: 'web',
     image: '/images/kaffeehaus.jpg',
     stack: 'HTML · CSS · JavaScript'
+  },
+  {
+    id: 'hotelverwaltung',
+    title: 'Hotelverwaltung',
+    createdAt: '2026-01',
+    type: 'CONSOLE APP',
+    area: 'backend',
+    image: '',
+    url: 'https://github.com/ekschedl/Datenbankenprogrammierung_02_hotel_pruefung',
+    stack: 'Java · Hibernate · JPA · HQL · SQLite · XML'
   }
 ] as const
+
+const hotelSlides = [
+  { image: '/images/hotelverwaltung-modell.svg', caption: { DE: 'Datenmodell: Gäste, Zimmer, Buchungen und Zusatzleistungen', EN: 'Data model: guests, rooms, bookings and additional services', RU: 'Модель данных: гости, номера, бронирования и дополнительные услуги' } },
+  { image: '/images/hotelverwaltung-buchung.svg', caption: { DE: 'Buchungsablauf: prüfen, speichern und Änderungen gemeinsam übernehmen', EN: 'Booking flow: validate, save and commit the changes together', RU: 'Бронирование: проверка, сохранение и фиксация всех изменений' } },
+  { image: '/images/hotelverwaltung-architektur.svg', caption: { DE: 'Architektur: Modelle, Datenzugriff, Abfragen und Services', EN: 'Architecture: models, data access, queries and services', RU: 'Архитектура: модели, доступ к данным, запросы и сервисы' } },
+  { image: '/images/hotelverwaltung-uml.png', caption: { DE: 'Vollständiges UML-Klassendiagramm mit Attributen, Methoden und Beziehungen', EN: 'Full UML class diagram with attributes, methods and relationships', RU: 'Полная диаграмма классов UML с атрибутами, методами и связями' } }
+] as const
+const hotelGalleryLabels = {
+  DE: { open: 'Projektgalerie öffnen', close: 'Schließen', prev: 'Vorheriges Bild', next: 'Nächstes Bild', full: 'Bild in voller Größe' },
+  EN: { open: 'Open project gallery', close: 'Close', prev: 'Previous image', next: 'Next image', full: 'Full-size image' },
+  RU: { open: 'Открыть галерею проекта', close: 'Закрыть', prev: 'Предыдущее изображение', next: 'Следующее изображение', full: 'Изображение в полном размере' }
+}
+const hotelGallery = ref<HTMLDialogElement | null>(null)
+const hotelSlideIndex = ref(0)
+const hotelSlide = computed(() => hotelSlides[hotelSlideIndex.value] ?? hotelSlides[0])
+const galleryLabels = computed(() => hotelGalleryLabels[language.value])
+
+function openHotelGallery() {
+  hotelSlideIndex.value = 0
+  hotelGallery.value?.showModal()
+}
+
+function changeHotelSlide(direction: number) {
+  hotelSlideIndex.value = (hotelSlideIndex.value + direction + hotelSlides.length) % hotelSlides.length
+}
 
 const projectTechnologies = [...new Set(projects.flatMap(({ stack }) => stack.split(' · ')))]
   .sort((first, second) => first.localeCompare(second))
@@ -498,6 +542,8 @@ function scrollToTop() {
             class="header-cv"
             :class="{ 'header-cv-compact-label': language !== 'RU' }"
             href="/cv/Schedlberger_Lebenslauf_Softwareentwicklerin_12_26.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             :aria-label="t.cvDownload"
             :title="t.cvDownload"
           >
@@ -570,7 +616,8 @@ function scrollToTop() {
           <span class="tile-type tile-type-compact">{{ t.projectTypesShort[project.area] }}</span>
 
           <div class="tile-project-image">
-            <img :src="project.image" :alt="project.title" loading="lazy" />
+            <img v-if="project.image" :src="project.image" :alt="project.title" loading="lazy" />
+            <span v-else class="tile-project-placeholder" aria-hidden="true">JAVA<br />HIBERNATE</span>
           </div>
 
           <div class="tile-bottom">
@@ -605,6 +652,7 @@ function scrollToTop() {
           <span class="section-number">{{ t.sectionPortfolio }}</span>
           <h2>{{ t.projectsTitle }}</h2>
           <p>{{ t.projectsIntro }}</p>
+          <p class="portfolio-status">{{ t.portfolioStatus }}</p>
         </div>
 
         <div class="project-controls" role="group" :aria-label="t.filterOptions">
@@ -683,14 +731,26 @@ function scrollToTop() {
             :key="project.id"
             class="project-card"
           >
-            <div class="project-visual" :data-area="project.area">
+            <button v-if="project.id === 'hotelverwaltung'" class="project-visual project-cover" :data-area="project.area"
+              type="button" aria-haspopup="dialog" :aria-label="galleryLabels.open" @click="openHotelGallery">
+              <span>JAVA · HIBERNATE</span>
+              <strong>{{ project.title }}</strong>
+              <span>JPA · HQL · SQLITE</span>
+              <span class="project-cover-expand" aria-hidden="true">↗</span>
+            </button>
+            <div v-else class="project-visual" :data-area="project.area">
               <img :src="project.image" :alt="project.title" loading="lazy" />
             </div>
 
             <div class="project-meta">
-              <div>
+              <div class="project-details">
                 <span class="project-type project-area" :data-area="project.area">{{ t.areas[project.area] }}</span>
-                <h3>{{ project.title }}</h3>
+                <div class="project-title-row">
+                  <h3>{{ project.title }}</h3>
+                  <a v-if="'url' in project" class="project-repository-link" :href="project.url" target="_blank" rel="noopener noreferrer">
+                    {{ t.projectLink }} <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
                 <p class="project-created">{{ t.created }} · {{ new Intl.DateTimeFormat(language.toLowerCase(), { month: 'long', year: 'numeric' }).format(new Date(project.createdAt + '-01T00:00:00')) }}</p>
                 <p>{{ project.description }}</p>
                 <span class="project-stack">{{ project.stack }}</span>
@@ -812,6 +872,24 @@ function scrollToTop() {
       </section>
     </main>
 
+    <dialog ref="hotelGallery" class="hotel-gallery" aria-label="Hotelverwaltung"
+      @keydown.left.prevent="changeHotelSlide(-1)" @keydown.right.prevent="changeHotelSlide(1)">
+      <div class="hotel-gallery-header">
+        <strong>Hotelverwaltung</strong>
+        <button type="button" autofocus :aria-label="galleryLabels.close" @click="hotelGallery?.close()">×</button>
+      </div>
+      <figure aria-live="polite">
+        <img :src="hotelSlide.image" :alt="hotelSlide.caption[language]" loading="lazy" />
+        <figcaption>{{ hotelSlide.caption[language] }}</figcaption>
+      </figure>
+      <div class="hotel-gallery-controls">
+        <button type="button" :aria-label="galleryLabels.prev" @click="changeHotelSlide(-1)">←</button>
+        <span>{{ hotelSlideIndex + 1 }} / {{ hotelSlides.length }}</span>
+        <button type="button" :aria-label="galleryLabels.next" @click="changeHotelSlide(1)">→</button>
+      </div>
+      <a :href="hotelSlide.image" target="_blank" rel="noopener">{{ galleryLabels.full }} ↗</a>
+    </dialog>
+
     <footer class="footer">
       <span>{{ t.footerCopyright }}</span>
       <span>{{ t.footerMade }}</span>
@@ -826,6 +904,18 @@ function scrollToTop() {
 </template>
 
 <style scoped>
+.section-head .portfolio-status {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 12px;
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--lilac);
+  color: var(--ink);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
 .project-filter-header,
 .project-filter-summary,
 .project-filter-mode {
@@ -947,6 +1037,10 @@ function scrollToTop() {
   --area-color: var(--slate);
 }
 
+[data-area='backend'] {
+  --area-color: var(--blue);
+}
+
 .project-tile[data-area],
 .project-visual[data-area],
 .project-area[data-area] {
@@ -958,6 +1052,115 @@ function scrollToTop() {
   padding: 4px 8px;
   border-radius: 4px;
   color: var(--ink);
+}
+
+.project-cover[data-area] {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: clamp(140px, 25vw, 290px);
+  align-content: center;
+  gap: 12px;
+  padding: 18px 10px;
+  border: 0;
+  color: var(--ink);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.project-cover > span {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: clamp(10px, 1.1vw, 13px);
+  letter-spacing: .1em;
+}
+
+.project-cover strong {
+  font-size: clamp(20px, 3.2vw, 38px);
+  line-height: 1.15;
+}
+
+.project-cover .project-cover-expand {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--surface);
+  font-size: 18px;
+}
+
+.hotel-gallery {
+  width: min(96vw, 1180px);
+  max-width: none;
+  max-height: 94vh;
+  padding: clamp(8px, 2vw, 20px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--ink);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.hotel-gallery::backdrop { background: #000b; }
+
+.hotel-gallery-header,
+.hotel-gallery-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.hotel-gallery-controls {
+  justify-content: center;
+  margin: 12px 0 8px;
+}
+
+.hotel-gallery button {
+  min-width: 40px;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.hotel-gallery figure { margin: 12px 0 0; }
+.hotel-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(65dvh, 680px);
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.hotel-gallery figcaption { margin-top: 8px; }
+.hotel-gallery a { text-decoration: underline; }
+
+.project-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 16px;
+}
+
+.project-repository-link {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  text-underline-offset: 4px;
+}
+
+.project-repository-link:hover {
+  text-decoration: underline;
 }
 
 .tech-group-filters {

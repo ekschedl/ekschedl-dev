@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 390" font-family="system-ui,sans-serif">
+  <rect width="800" height="390" rx="20" fill="#f4faf5"/>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#245c4b"/></marker></defs>
+  <g stroke="#245c4b" stroke-width="2.5" fill="none" marker-end="url(#arrow)">
+    <path d="M400 89V113H135V146"/><path d="M400 89V146"/><path d="M400 89V113H665V146"/>
+    <path d="M135 229V255H400V292"/><path d="M400 229V292"/><path d="M665 229V255H400V292"/>
+  </g>
+  <rect x="305" y="23" width="190" height="66" rx="15" fill="#a8e1d8"/>
+  <rect x="40" y="146" width="190" height="83" rx="15" fill="#c5e9ac"/>
+  <rect x="305" y="146" width="190" height="83" rx="15" fill="#c5e9ac"/>
+  <rect x="570" y="146" width="190" height="83" rx="15" fill="#c5e9ac"/>
+  <rect x="245" y="292" width="310" height="69" rx="15" fill="#f4dc92"/>
+  <g fill="#382b2d" text-anchor="middle" font-size="24" font-weight="650">
+    <text x="400" y="65">Main · Java</text><text x="135" y="196">Services</text><text x="400" y="196">DAOs · CRUD</text>
+    <text x="665" y="196">Queries · HQL</text><text x="400" y="335">Hibernate / JPA → SQLite</text>
+  </g>
+</svg>
