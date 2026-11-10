@@ -108,9 +108,10 @@ const translations = {
       'Ich freue mich über interessante Projekte, neue Herausforderungen und berufliche Möglichkeiten in der Softwareentwicklung.',
     github: 'Mein GitHub',
     email: 'E-Mail schreiben',
+    unoTitle: 'UNO-Kartenspiel',
     projectDescriptions: [
       'YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team war ich für das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform zuständig.',
-      'UNO als Konsolenspiel.',
+      'Im Team entwickeltes UNO-Kartenspiel für die Java-Konsole. Karten, Spieler und Spielrunden sind als Java-Klassen modelliert. Das Spiel prüft die Spielzüge und unterstützt Aktionskarten wie „Aussetzen“ und „Richtungswechsel“. Über JDBC speichert das Spiel die Punktestände in SQLite und ruft die Bestenliste per SQL ab.',
       'Website für das Kaffeehaus Mokka mit Speisekarte, Bildergalerie und Kontaktseite. Entstanden im Modul Webentwicklung an der FH CAMPUS 02.',
       'Konsolenbasiertes Prüfungsprojekt zur Verwaltung von Gästen, Zimmern, Buchungen und Zusatzleistungen. Mit Hibernate/JPA, CRUD-Funktionen, HQL-Abfragen, Transaktionen und XML-Mapping.',
       'Mit Feta begann mein Weg in die IT. Mein erstes Webprojekt war zugleich mein Diplomprojekt am WIFI und eine echte Kundenwebsite für einen Lutscherhersteller. Dafür erstellte ich ein eigenes responsives WordPress-Theme mit Produktkatalog, aufklappbaren Zutatenlisten und Kontaktformular. Die Kundenwebsite war online. Heute zeigt die Galerie eine lokale Vorschau.'
@@ -165,9 +166,10 @@ const translations = {
       'I am open to interesting projects, new challenges and career opportunities in software development.',
     github: 'My GitHub',
     email: 'Send an email',
+    unoTitle: 'UNO Card Game',
     projectDescriptions: [
       'YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.',
-      'UNO as a console game.',
+      'A Java console version of UNO developed as a team. Cards, players and rounds are modelled as Java classes. The game validates moves and supports action cards such as Skip and Reverse. The game stores scores in SQLite via JDBC and retrieves the leaderboard with SQL.',
       'Website for the Mokka coffee house with a menu, photo gallery and contact page. Created as part of the web development course at FH CAMPUS 02.',
       'A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.',
       'Feta marked the start of my career in tech. It was my first web project, my diploma project at WIFI and a website for a lollipop manufacturer. I built a custom responsive WordPress theme with a product catalog, expandable ingredient lists and a contact form. The client website was live. The gallery now shows a local preview.'
@@ -222,9 +224,10 @@ const translations = {
       'Я открыта к интересным проектам, новым задачам и профессиональным возможностям в разработке программного обеспечения.',
     github: 'Мой GitHub',
     email: 'Написать письмо',
+    unoTitle: 'Карточная игра UNO',
     projectDescriptions: [
       'YogaNow Studio объединяет открытую библиотеку йоги и запись на занятия в студии. В команде я отвечала за дизайн, подключение базы данных Supabase и платформу записи на занятия.',
-      'UNO в консольной версии.',
+      'Консольная версия UNO на Java, разработанная в команде. Карты, игроки и раунды представлены классами Java. Игра проверяет ходы и поддерживает карты действий, например «Пропуск хода» и «Смена направления». Игра сохраняет очки в SQLite через JDBC и загружает таблицу рекордов с помощью SQL-запроса.',
       'Сайт кофейни Mokka с меню, фотогалереей и страницей контактов. Создан в рамках курса по веб-разработке в FH CAMPUS 02.',
       'Консольный экзаменационный проект для управления гостями, номерами, бронированиями и дополнительными услугами. Hibernate/JPA, операции CRUD, запросы HQL, транзакции и XML-маппинг.',
       'С проекта Feta начался мой путь в ИТ. Моим первым веб-проектом и одновременно дипломной работой в WIFI стал сайт для производителя леденцов. Я разработала адаптивную тему WordPress с каталогом, раскрывающимися списками ингредиентов и контактной формой. Сайт компании был опубликован. Сейчас в галерее показана локальная версия.'
@@ -256,7 +259,8 @@ const projects = [
     type: 'CARD GAME',
     area: 'game',
     image: '/images/uno.jpg',
-    stack: 'Java · JavaScript'
+    url: 'https://github.com/ekschedl/UnoGame_inDerKonsole_Java_campusMe_2025',
+    stack: 'Java · OOP · JDBC · SQLite'
   },
   {
     id: 'kaffeehaus',
@@ -300,7 +304,7 @@ const yogaSlides = [
   { image: '/images/yoganow-overview.png', caption: { DE: 'Startseite: Bibliothek und Kursplattform', EN: 'Home screen: library and course platform', RU: 'Главный экран: библиотека и платформа занятий' } },
   { image: '/images/yoganow-slide-09.png', caption: { DE: 'Yoga Library: Video zum Mitmachen', EN: 'Yoga Library: follow-along video', RU: 'Библиотека йоги: видео для занятий' } },
   { image: '/images/yoganow-slide-10.png', caption: { DE: 'Kursdetails und Buchung', EN: 'Course details and booking', RU: 'Информация о занятии и бронирование' } },
-  { video: '/videos/yoganow-demo.mp4', caption: { DE: 'Videodemo: Vom Kurskalender zur bestätigten Buchung', EN: 'Video demo: from the class calendar to the confirmed booking', RU: 'Видео: от календаря занятий до подтверждённой записи' } }
+  { video: '/videos/yoganow-demo.mp4', poster: '/images/yoganow-video-poster.jpg', caption: { DE: 'Videodemo: Vom Kurskalender zur bestätigten Buchung', EN: 'Video demo: from the class calendar to the confirmed booking', RU: 'Видео: от календаря занятий до подтверждённой записи' } }
 ] as const
 
 const yogaDemoText = {
@@ -321,7 +325,15 @@ const projectGalleries = {
   feta: { title: 'Feta', slides: fetaSlides },
   hotelverwaltung: { title: 'Hotelverwaltung', slides: hotelSlides },
   yoganow: { title: 'YogaNow Studio', slides: yogaSlides },
-  uno: { title: projects[1].title, slides: [{ image: projects[1].image, caption: { DE: 'UNO als Konsolenspiel', EN: 'UNO as a console game', RU: 'Консольная игра UNO' } }] },
+  uno: {
+    title: projects[1].title,
+    slides: [
+      { image: projects[1].image, caption: { DE: 'Spielstart mit Bestenliste und Spielreihenfolge', EN: 'Game start with highscores and turn order', RU: 'Начало игры, рекорды и порядок ходов' } },
+      { image: '/images/uno_spiel.png', caption: { DE: 'Karten auf der Hand und Farbwahl', EN: 'Cards in hand and colour selection', RU: 'Карты на руках и выбор цвета' } },
+      { image: '/images/uno_sieger.png', caption: { DE: 'Glückwunsch zum Rundensieg und aktueller Punktestand', EN: 'Round winner and updated scores', RU: 'Поздравление победителя раунда и текущий счёт' } },
+      { video: '/videos/uno-console.mp4', poster: projects[1].image, caption: { DE: 'Videodemo des UNO-Konsolenspiels', EN: 'UNO console game demo', RU: 'Видеодемонстрация консольной игры UNO' } }
+    ]
+  },
   kaffeehaus: {
     title: projects[2].title,
     slides: [
@@ -332,7 +344,10 @@ const projectGalleries = {
   }
 }
 const galleryProject = ref<keyof typeof projectGalleries>('hotelverwaltung')
-const activeGallery = computed(() => projectGalleries[galleryProject.value])
+const activeGallery = computed(() => {
+  const gallery = projectGalleries[galleryProject.value]
+  return galleryProject.value === 'uno' ? { ...gallery, title: t.value.unoTitle } : gallery
+})
 const hotelGalleryLabels = {
   DE: { open: 'Projektgalerie öffnen', close: 'Schließen', prev: 'Vorheriges Bild', next: 'Nächstes Bild', full: 'Bild in voller Größe' },
   EN: { open: 'Open project gallery', close: 'Close', prev: 'Previous image', next: 'Next image', full: 'Full-size image' },
@@ -678,7 +693,7 @@ function scrollToTop() {
           </div>
 
           <div class="tile-bottom">
-            <h3>{{ project.title }}</h3>
+            <h3>{{ project.id === 'uno' ? t.unoTitle : project.title }}</h3>
             <span aria-hidden="true">↗</span>
           </div>
         </a>
@@ -804,7 +819,7 @@ function scrollToTop() {
               <div class="project-details">
                 <span class="project-type project-area" :data-area="project.area">{{ t.areas[project.area] }}</span>
                 <div class="project-title-row">
-                  <h3>{{ project.title }}</h3>
+                  <h3>{{ project.id === 'uno' ? t.unoTitle : project.title }}</h3>
                   <a v-if="'url' in project" class="project-repository-link" :href="project.url" target="_blank" rel="noopener noreferrer">
                     {{ t.projectLink }} <span aria-hidden="true">↗</span>
                   </a>
@@ -937,7 +952,7 @@ function scrollToTop() {
       </section>
     </main>
 
-    <dialog ref="hotelGallery" class="hotel-gallery" :class="{ 'hotel-gallery-video': 'video' in hotelSlide }" :aria-label="activeGallery.title"
+    <dialog ref="hotelGallery" class="hotel-gallery" :class="{ 'hotel-gallery-video': 'video' in hotelSlide, 'hotel-gallery-video-wide': galleryProject === 'uno' && 'video' in hotelSlide }" :aria-label="activeGallery.title"
       @close="galleryVideo?.pause()"
       @keydown.left.prevent="changeHotelSlide(-1)" @keydown.right.prevent="changeHotelSlide(1)">
       <div class="hotel-gallery-header">
@@ -946,7 +961,7 @@ function scrollToTop() {
       </div>
       <figure aria-live="polite">
         <video v-if="'video' in hotelSlide" ref="galleryVideo" :src="hotelSlide.video"
-          poster="/images/yoganow-video-poster.jpg"
+          :poster="hotelSlide.poster"
           :aria-label="hotelSlide.caption[language]" controls muted playsinline preload="none" @keydown.left.stop @keydown.right.stop />
         <img v-else :src="hotelSlide.image" :alt="hotelSlide.caption[language]" loading="lazy" />
         <figcaption>{{ hotelSlide.caption[language] }}</figcaption>
@@ -1270,6 +1285,15 @@ function scrollToTop() {
   border-radius: 8px;
   background: #171717;
   object-fit: contain;
+}
+
+.hotel-gallery.hotel-gallery-video-wide {
+  width: min(96vw, 1040px);
+}
+
+.hotel-gallery-video-wide video {
+  width: min(100%, 100dvh);
+  aspect-ratio: 1440 / 934;
 }
 
 .hotel-gallery figcaption { margin-top: 8px; }
