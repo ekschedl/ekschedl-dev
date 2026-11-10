@@ -907,7 +907,7 @@ function scrollToTop() {
       </section>
     </main>
 
-    <dialog ref="hotelGallery" class="hotel-gallery" :aria-label="activeGallery.title"
+    <dialog ref="hotelGallery" class="hotel-gallery" :class="{ 'hotel-gallery-video': 'video' in hotelSlide }" :aria-label="activeGallery.title"
       @close="galleryVideo?.pause()"
       @keydown.left.prevent="changeHotelSlide(-1)" @keydown.right.prevent="changeHotelSlide(1)">
       <div class="hotel-gallery-header">
@@ -916,6 +916,7 @@ function scrollToTop() {
       </div>
       <figure aria-live="polite">
         <video v-if="'video' in hotelSlide" ref="galleryVideo" :src="hotelSlide.video"
+          poster="/images/yoganow-video-poster.jpg"
           :aria-label="hotelSlide.caption[language]" controls playsinline preload="none" @keydown.left.stop @keydown.right.stop />
         <img v-else :src="hotelSlide.image" :alt="hotelSlide.caption[language]" loading="lazy" />
         <figcaption>{{ hotelSlide.caption[language] }}</figcaption>
@@ -1226,14 +1227,28 @@ function scrollToTop() {
 }
 
 .hotel-gallery figure { margin: 12px 0 0; }
-.hotel-gallery img,
-.hotel-gallery video {
+.hotel-gallery img {
   display: block;
   width: 100%;
   height: auto;
   max-height: min(65dvh, 680px);
   object-fit: contain;
   border-radius: 8px;
+}
+
+.hotel-gallery.hotel-gallery-video {
+  width: min(96vw, 560px);
+}
+
+.hotel-gallery-video video {
+  display: block;
+  width: min(100%, 41dvh, 420px);
+  height: auto;
+  aspect-ratio: 2 / 3;
+  margin-inline: auto;
+  border-radius: 8px;
+  background: #171717;
+  object-fit: contain;
 }
 
 .hotel-gallery figcaption { margin-top: 8px; }
