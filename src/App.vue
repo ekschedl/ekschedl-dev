@@ -112,7 +112,8 @@ const translations = {
       'YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team war ich für das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform zuständig.',
       'UNO als Konsolenspiel.',
       'Ein Webprojekt mit HTML, CSS und JavaScript.',
-      'Konsolenbasiertes Prüfungsprojekt zur Verwaltung von Gästen, Zimmern, Buchungen und Zusatzleistungen. Mit Hibernate/JPA, CRUD-Funktionen, HQL-Abfragen, Transaktionen und XML-Mapping.'
+      'Konsolenbasiertes Prüfungsprojekt zur Verwaltung von Gästen, Zimmern, Buchungen und Zusatzleistungen. Mit Hibernate/JPA, CRUD-Funktionen, HQL-Abfragen, Transaktionen und XML-Mapping.',
+      'Mit Feta begann mein Weg in die IT. Mein erstes Webprojekt war zugleich mein Diplomprojekt am WIFI und eine echte Kundenwebsite für einen Lutscherhersteller. Dafür erstellte ich ein eigenes responsives WordPress-Theme mit Produktkatalog, aufklappbaren Zutatenlisten und Kontaktformular. Die Kundenwebsite war online. Heute zeigt die Galerie eine lokale Vorschau.'
     ],
     projectLink: 'Projekt auf GitHub ansehen',
     menuOpen: 'Menü öffnen',
@@ -168,7 +169,8 @@ const translations = {
       'YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.',
       'UNO as a console game.',
       'A web project with HTML, CSS and JavaScript.',
-      'A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.'
+      'A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.',
+      'Feta marked the start of my career in tech. It was my first web project, my diploma project at WIFI and a website for a lollipop manufacturer. I built a custom responsive WordPress theme with a product catalog, expandable ingredient lists and a contact form. The client website was live. The gallery now shows a local preview.'
     ],
     projectLink: 'View project on GitHub',
     menuOpen: 'Open menu',
@@ -224,7 +226,8 @@ const translations = {
       'YogaNow Studio объединяет открытую библиотеку йоги и запись на занятия в студии. В команде я отвечала за дизайн, подключение базы данных Supabase и платформу записи на занятия.',
       'UNO в консольной версии.',
       'Веб-проект на HTML, CSS и JavaScript.',
-      'Консольный экзаменационный проект для управления гостями, номерами, бронированиями и дополнительными услугами. Hibernate/JPA, операции CRUD, запросы HQL, транзакции и XML-маппинг.'
+      'Консольный экзаменационный проект для управления гостями, номерами, бронированиями и дополнительными услугами. Hibernate/JPA, операции CRUD, запросы HQL, транзакции и XML-маппинг.',
+      'С проекта Feta начался мой путь в ИТ. Моим первым веб-проектом и одновременно дипломной работой в WIFI стал сайт для производителя леденцов. Я разработала адаптивную тему WordPress с каталогом, раскрывающимися списками ингредиентов и контактной формой. Сайт компании был опубликован. Сейчас в галерее показана локальная версия.'
     ],
     projectLink: 'Открыть проект на GitHub',
     menuOpen: 'Открыть меню',
@@ -273,6 +276,16 @@ const projects = [
     image: '',
     url: 'https://github.com/ekschedl/Datenbankenprogrammierung_02_hotel_pruefung',
     stack: 'Java · Hibernate · JPA · HQL · SQLite · XML'
+  },
+  {
+    id: 'feta',
+    title: 'Feta',
+    createdAt: '2023-03',
+    type: 'CLIENT WEBSITE',
+    area: 'web',
+    image: '/images/feta-katalog.png',
+    url: 'https://github.com/ekschedl/feta_new_2024/tree/main/feta-theme-new_server_08.2024',
+    stack: 'WordPress · PHP · HTML · CSS · JavaScript'
   }
 ] as const
 
@@ -295,7 +308,16 @@ const yogaDemoText = {
   RU: { action: 'Посмотреть, как записаться на занятие', access: 'Библиотека йоги доступна без входа. Чтобы самостоятельно попробовать запись на занятия, нужна учётная запись.' }
 }
 
+const fetaSlides = [
+  { image: '/images/feta-ueber-uns.png', caption: { DE: 'Startseite · Lokale Vorschau', EN: 'Home page · Local preview', RU: 'Главная страница · Локальная версия' } },
+  { image: '/images/feta-katalog.png', caption: { DE: 'Produktkatalog · Zutatenliste geschlossen', EN: 'Product catalog · Ingredients collapsed', RU: 'Каталог · Список ингредиентов свёрнут' } },
+  { image: '/images/feta-zutaten.png', caption: { DE: 'Produktkatalog mit aufgeklappter Zutatenliste', EN: 'Product catalog with the ingredients expanded', RU: 'Каталог с открытым списком ингредиентов' } },
+  { image: '/images/feta-mobil.png', caption: { DE: 'Produktkatalog · Mobile Ansicht', EN: 'Product catalog · Mobile view', RU: 'Каталог продукции · Мобильная версия' } },
+  { image: '/images/feta-kontakt.png', caption: { DE: 'Kontaktformular · Vorschau', EN: 'Contact form · Preview', RU: 'Контактная форма · Предпросмотр' } }
+] as const
+
 const projectGalleries = {
+  feta: { title: 'Feta', slides: fetaSlides },
   hotelverwaltung: { title: 'Hotelverwaltung', slides: hotelSlides },
   yoganow: { title: 'YogaNow Studio', slides: yogaSlides },
   uno: { title: projects[1].title, slides: [{ image: projects[1].image, caption: { DE: 'UNO als Konsolenspiel', EN: 'UNO as a console game', RU: 'Консольная игра UNO' } }] },
@@ -325,7 +347,7 @@ function changeHotelSlide(direction: number) {
   if (count > 1) hotelSlideIndex.value = (hotelSlideIndex.value + direction + count) % count
 }
 
-const featuredProjects = projects.filter((project) => project.id !== 'hotelverwaltung')
+const featuredProjects = projects.filter((project) => project.id !== 'hotelverwaltung' && project.id !== 'feta')
 
 const projectTechnologies = [...new Set(projects.flatMap(({ stack }) => stack.split(' · ')))]
   .sort((first, second) => first.localeCompare(second))
