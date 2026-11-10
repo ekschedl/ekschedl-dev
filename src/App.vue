@@ -111,7 +111,7 @@ const translations = {
     projectDescriptions: [
       'YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team war ich für das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform zuständig.',
       'UNO als Konsolenspiel.',
-      'Ein Webprojekt mit HTML, CSS und JavaScript.',
+      'Website für das Kaffeehaus Mokka mit Speisekarte, Bildergalerie und Kontaktseite. Entstanden im Modul Webentwicklung an der FH CAMPUS 02.',
       'Konsolenbasiertes Prüfungsprojekt zur Verwaltung von Gästen, Zimmern, Buchungen und Zusatzleistungen. Mit Hibernate/JPA, CRUD-Funktionen, HQL-Abfragen, Transaktionen und XML-Mapping.',
       'Mit Feta begann mein Weg in die IT. Mein erstes Webprojekt war zugleich mein Diplomprojekt am WIFI und eine echte Kundenwebsite für einen Lutscherhersteller. Dafür erstellte ich ein eigenes responsives WordPress-Theme mit Produktkatalog, aufklappbaren Zutatenlisten und Kontaktformular. Die Kundenwebsite war online. Heute zeigt die Galerie eine lokale Vorschau.'
     ],
@@ -168,7 +168,7 @@ const translations = {
     projectDescriptions: [
       'YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.',
       'UNO as a console game.',
-      'A web project with HTML, CSS and JavaScript.',
+      'Website for the Mokka coffee house with a menu, photo gallery and contact page. Created as part of the web development course at FH CAMPUS 02.',
       'A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.',
       'Feta marked the start of my career in tech. It was my first web project, my diploma project at WIFI and a website for a lollipop manufacturer. I built a custom responsive WordPress theme with a product catalog, expandable ingredient lists and a contact form. The client website was live. The gallery now shows a local preview.'
     ],
@@ -225,7 +225,7 @@ const translations = {
     projectDescriptions: [
       'YogaNow Studio объединяет открытую библиотеку йоги и запись на занятия в студии. В команде я отвечала за дизайн, подключение базы данных Supabase и платформу записи на занятия.',
       'UNO в консольной версии.',
-      'Веб-проект на HTML, CSS и JavaScript.',
+      'Сайт кофейни Mokka с меню, фотогалереей и страницей контактов. Создан в рамках курса по веб-разработке в FH CAMPUS 02.',
       'Консольный экзаменационный проект для управления гостями, номерами, бронированиями и дополнительными услугами. Hibernate/JPA, операции CRUD, запросы HQL, транзакции и XML-маппинг.',
       'С проекта Feta начался мой путь в ИТ. Моим первым веб-проектом и одновременно дипломной работой в WIFI стал сайт для производителя леденцов. Я разработала адаптивную тему WordPress с каталогом, раскрывающимися списками ингредиентов и контактной формой. Сайт компании был опубликован. Сейчас в галерее показана локальная версия.'
     ],
@@ -260,11 +260,12 @@ const projects = [
   },
   {
     id: 'kaffeehaus',
-    title: 'Kaffeehaus',
+    title: 'Kaffeehaus Mokka',
     createdAt: '2025-06',
     type: 'WEB PROJECT',
     area: 'web',
-    image: '/images/kaffeehaus.jpg',
+    image: '/images/mokka-start.png',
+    url: 'https://github.com/ekschedl/web1_hausaufgabe01_Mokka',
     stack: 'HTML · CSS · JavaScript'
   },
   {
@@ -321,7 +322,14 @@ const projectGalleries = {
   hotelverwaltung: { title: 'Hotelverwaltung', slides: hotelSlides },
   yoganow: { title: 'YogaNow Studio', slides: yogaSlides },
   uno: { title: projects[1].title, slides: [{ image: projects[1].image, caption: { DE: 'UNO als Konsolenspiel', EN: 'UNO as a console game', RU: 'Консольная игра UNO' } }] },
-  kaffeehaus: { title: projects[2].title, slides: [{ image: projects[2].image, caption: { DE: 'Vorschau des Webprojekts', EN: 'Web project preview', RU: 'Предпросмотр веб-проекта' } }] }
+  kaffeehaus: {
+    title: projects[2].title,
+    slides: [
+      { image: '/images/mokka-start.png', caption: { DE: 'Startseite', EN: 'Home page', RU: 'Главная страница' } },
+      { image: '/images/mokka-menu.png', caption: { DE: 'Speisekarte', EN: 'Menu', RU: 'Меню' } },
+      { image: '/images/mokka-galerie-detail.png', caption: { DE: 'Bildergalerie', EN: 'Photo gallery', RU: 'Фотогалерея' } }
+    ]
+  }
 }
 const galleryProject = ref<keyof typeof projectGalleries>('hotelverwaltung')
 const activeGallery = computed(() => projectGalleries[galleryProject.value])
@@ -1244,8 +1252,7 @@ function scrollToTop() {
 .hotel-gallery img {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: min(65dvh, 680px);
+  height: min(65dvh, 680px);
   object-fit: contain;
   border-radius: 8px;
 }
