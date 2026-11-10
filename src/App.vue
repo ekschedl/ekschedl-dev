@@ -109,7 +109,7 @@ const translations = {
     github: 'Mein GitHub',
     email: 'E-Mail schreiben',
     projectDescriptions: [
-      'Eine iOS-App mit SwiftUI und Supabase.',
+      'Eine iOS-App mit Yoga-Bibliothek, Kursbuchung und einem eigenen Bereich für Trainerinnen und Trainer.',
       'UNO als Konsolenspiel.',
       'Ein Webprojekt mit HTML, CSS und JavaScript.',
       'Konsolenbasiertes Prüfungsprojekt zur Verwaltung von Gästen, Zimmern, Buchungen und Zusatzleistungen. Mit Hibernate/JPA, CRUD-Funktionen, HQL-Abfragen, Transaktionen und XML-Mapping.'
@@ -165,7 +165,7 @@ const translations = {
     github: 'My GitHub',
     email: 'Send an email',
     projectDescriptions: [
-      'An iOS app built with SwiftUI and Supabase.',
+      'An iOS app with a yoga library, course booking and a dedicated area for instructors.',
       'UNO as a console game.',
       'A web project with HTML, CSS and JavaScript.',
       'A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.'
@@ -221,7 +221,7 @@ const translations = {
     github: 'Мой GitHub',
     email: 'Написать письмо',
     projectDescriptions: [
-      'iOS-приложение на SwiftUI и Supabase.',
+      'Приложение для iOS с библиотекой йоги, записью на занятия и отдельным разделом для тренеров.',
       'UNO в консольной версии.',
       'Веб-проект на HTML, CSS и JavaScript.',
       'Консольный экзаменационный проект для управления гостями, номерами, бронированиями и дополнительными услугами. Hibernate/JPA, операции CRUD, запросы HQL, транзакции и XML-маппинг.'
@@ -243,6 +243,7 @@ const projects = [
     type: 'iOS APP',
     area: 'mobile',
     image: '/images/yoganow.jpg',
+    url: 'https://github.com/ekschedl/YogaNowStudio',
     stack: 'Swift · SwiftUI · Supabase'
   },
   {
@@ -281,6 +282,18 @@ const hotelSlides = [
   { image: '/images/hotelverwaltung-architektur.svg', caption: { DE: 'Architektur: Modelle, Datenzugriff, Abfragen und Services', EN: 'Architecture: models, data access, queries and services', RU: 'Архитектура: модели, доступ к данным, запросы и сервисы' } },
   { image: '/images/hotelverwaltung-uml.png', caption: { DE: 'Vollständiges UML-Klassendiagramm mit Attributen, Methoden und Beziehungen', EN: 'Full UML class diagram with attributes, methods and relationships', RU: 'Полная диаграмма классов UML с атрибутами, методами и связями' } }
 ] as const
+const yogaSlides = [
+  { image: '/images/yoganow-slide-10.jpg', caption: { DE: 'Kursdetails und Buchung', EN: 'Course details and booking', RU: 'Информация о занятии и бронирование' } },
+  { image: '/images/yoganow-slide-09.jpg', caption: { DE: 'Yoga Library: Video zum Mitmachen', EN: 'Yoga Library: follow-along video', RU: 'Библиотека йоги: видео для занятий' } },
+  { image: '/images/yoganow-slide-08.jpg', caption: { DE: 'Startseite: Bibliothek und Kursplattform', EN: 'Home screen: library and course platform', RU: 'Главный экран: библиотека и платформа занятий' } }
+] as const
+
+const projectGalleries = {
+  hotelverwaltung: { title: 'Hotelverwaltung', slides: hotelSlides },
+  yoganow: { title: 'YogaNow Studio', slides: yogaSlides }
+}
+const galleryProject = ref<keyof typeof projectGalleries>('hotelverwaltung')
+const activeGallery = computed(() => projectGalleries[galleryProject.value])
 const hotelGalleryLabels = {
   DE: { open: 'Projektgalerie öffnen', close: 'Schließen', prev: 'Vorheriges Bild', next: 'Nächstes Bild', full: 'Bild in voller Größe' },
   EN: { open: 'Open project gallery', close: 'Close', prev: 'Previous image', next: 'Next image', full: 'Full-size image' },
@@ -288,17 +301,20 @@ const hotelGalleryLabels = {
 }
 const hotelGallery = ref<HTMLDialogElement | null>(null)
 const hotelSlideIndex = ref(0)
-const hotelSlide = computed(() => hotelSlides[hotelSlideIndex.value] ?? hotelSlides[0])
+const hotelSlide = computed(() => activeGallery.value.slides[hotelSlideIndex.value] ?? activeGallery.value.slides[0])
 const galleryLabels = computed(() => hotelGalleryLabels[language.value])
 
-function openHotelGallery() {
+function openProjectGallery(project: keyof typeof projectGalleries) {
+  galleryProject.value = project
   hotelSlideIndex.value = 0
   hotelGallery.value?.showModal()
 }
 
 function changeHotelSlide(direction: number) {
-  hotelSlideIndex.value = (hotelSlideIndex.value + direction + hotelSlides.length) % hotelSlides.length
+  hotelSlideIndex.value = (hotelSlideIndex.value + direction + activeGallery.value.slides.length) % activeGallery.value.slides.length
 }
+
+const featuredProjects = projects.filter((project) => project.id !== 'hotelverwaltung')
 
 const projectTechnologies = [...new Set(projects.flatMap(({ stack }) => stack.split(' · ')))]
   .sort((first, second) => first.localeCompare(second))
@@ -604,7 +620,7 @@ function scrollToTop() {
         </a>
 
         <a
-          v-for="project in projects"
+          v-for="project in featuredProjects"
           :key="project.id"
           :href="'#' + project.id"
           @click="openProject($event, project.id)"
@@ -617,7 +633,6 @@ function scrollToTop() {
 
           <div class="tile-project-image">
             <img v-if="project.image" :src="project.image" :alt="project.title" loading="lazy" />
-            <span v-else class="tile-project-placeholder" aria-hidden="true">JAVA<br />HIBERNATE</span>
           </div>
 
           <div class="tile-bottom">
@@ -732,11 +747,16 @@ function scrollToTop() {
             class="project-card"
           >
             <button v-if="project.id === 'hotelverwaltung'" class="project-visual project-cover" :data-area="project.area"
-              type="button" aria-haspopup="dialog" :aria-label="galleryLabels.open" @click="openHotelGallery">
+              type="button" aria-haspopup="dialog" :aria-label="galleryLabels.open" @click="openProjectGallery('hotelverwaltung')">
               <span>JAVA · HIBERNATE</span>
               <strong>{{ project.title }}</strong>
               <span>JPA · HQL · SQLITE</span>
               <span class="project-cover-expand" aria-hidden="true">↗</span>
+            </button>
+            <button v-else-if="project.id === 'yoganow'" class="project-visual yoga-cover" :data-area="project.area"
+              type="button" aria-haspopup="dialog" :aria-label="project.title + ' · ' + galleryLabels.open" @click="openProjectGallery('yoganow')">
+              <img :src="project.image" alt="" loading="lazy" />
+              <span aria-hidden="true">↗</span>
             </button>
             <div v-else class="project-visual" :data-area="project.area">
               <img :src="project.image" :alt="project.title" loading="lazy" />
@@ -872,10 +892,10 @@ function scrollToTop() {
       </section>
     </main>
 
-    <dialog ref="hotelGallery" class="hotel-gallery" aria-label="Hotelverwaltung"
+    <dialog ref="hotelGallery" class="hotel-gallery" :aria-label="activeGallery.title"
       @keydown.left.prevent="changeHotelSlide(-1)" @keydown.right.prevent="changeHotelSlide(1)">
       <div class="hotel-gallery-header">
-        <strong>Hotelverwaltung</strong>
+        <strong>{{ activeGallery.title }}</strong>
         <button type="button" autofocus :aria-label="galleryLabels.close" @click="hotelGallery?.close()">×</button>
       </div>
       <figure aria-live="polite">
@@ -884,7 +904,7 @@ function scrollToTop() {
       </figure>
       <div class="hotel-gallery-controls">
         <button type="button" :aria-label="galleryLabels.prev" @click="changeHotelSlide(-1)">←</button>
-        <span>{{ hotelSlideIndex + 1 }} / {{ hotelSlides.length }}</span>
+        <span>{{ hotelSlideIndex + 1 }} / {{ activeGallery.slides.length }}</span>
         <button type="button" :aria-label="galleryLabels.next" @click="changeHotelSlide(1)">→</button>
       </div>
       <a :href="hotelSlide.image" target="_blank" rel="noopener">{{ galleryLabels.full }} ↗</a>
@@ -1090,6 +1110,22 @@ function scrollToTop() {
   border-radius: 6px;
   background: var(--surface);
   font-size: 18px;
+}
+
+.yoga-cover {
+  width: 100%;
+  position: relative;
+  border: 0;
+  color: var(--ink);
+}
+
+.yoga-cover > span {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-end: 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--surface);
 }
 
 .hotel-gallery {
