@@ -112,10 +112,15 @@ const translations = {
     projectDescriptions: [
       'YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team war ich für das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform zuständig.',
       'Im Team entwickeltes UNO-Kartenspiel für die Java-Konsole. Karten, Spieler und Spielrunden sind als Java-Klassen modelliert. Das Spiel prüft die Spielzüge und unterstützt Aktionskarten wie „Aussetzen“ und „Richtungswechsel“. Über JDBC speichert das Spiel die Punktestände in SQLite und ruft die Bestenliste per SQL ab.',
-      'Website für das Kaffeehaus Mokka mit Speisekarte, Bildergalerie und Kontaktseite. Entstanden im Modul Webentwicklung an der FH CAMPUS 02.',
+      'Kaffeehaus-Website mit Speisekarte, Bildergalerie und Kontaktformular, entstanden als Übungsprojekt an der FH CAMPUS 02. Der überschaubare Umfang ließ Raum für die Grundlagen der Webentwicklung: Seiten mit HTML strukturieren, Layouts mit CSS Grid und Flexbox an verschiedene Bildschirmgrößen anpassen und eine Bildergalerie mit JavaScript und Swiper einbinden.',
       'Konsolenbasiertes Prüfungsprojekt zur Verwaltung von Gästen, Zimmern, Buchungen und Zusatzleistungen. Mit Hibernate/JPA, CRUD-Funktionen, HQL-Abfragen, Transaktionen und XML-Mapping.',
       'Mit Feta begann mein Weg in die IT. Mein erstes Webprojekt war zugleich mein Diplomprojekt am WIFI und eine echte Kundenwebsite für einen Lutscherhersteller. Dafür erstellte ich ein eigenes responsives WordPress-Theme mit Produktkatalog, aufklappbaren Zutatenlisten und Kontaktformular. Die Kundenwebsite war online. Heute zeigt die Galerie eine lokale Vorschau.'
     ],
+    todoTitle: 'To-do-App',
+    todoDescription: 'Aufgaben hinzufügen, abhaken und löschen. Pinia verwaltet den Zustand und speichert die Aufgaben im Browser.',
+    shopDescription: 'Shop-Demo mit Produktdaten und Kategorien aus der Platzi Fake Store API. Produkte lassen sich suchen, filtern, als Favoriten markieren und in den Warenkorb legen.',
+    liveDemo: 'Im neuen Tab öffnen',
+    inlineDemo: 'Demo hier testen',
     projectLink: 'Projekt auf GitHub ansehen',
     menuOpen: 'Menü öffnen',
     menuClose: 'Menü schließen',
@@ -170,10 +175,15 @@ const translations = {
     projectDescriptions: [
       'YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.',
       'A Java console version of UNO developed as a team. Cards, players and rounds are modelled as Java classes. The game validates moves and supports action cards such as Skip and Reverse. The game stores scores in SQLite via JDBC and retrieves the leaderboard with SQL.',
-      'Website for the Mokka coffee house with a menu, photo gallery and contact page. Created as part of the web development course at FH CAMPUS 02.',
+      'A coffee house website with a menu, photo gallery and contact form, built as a coursework project at FH CAMPUS 02. The small scope left room to practise the fundamentals: structuring pages with HTML, adapting layouts to different screen sizes with CSS Grid and Flexbox, and integrating an image gallery with JavaScript and Swiper.',
       'A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.',
       'Feta marked the start of my career in tech. It was my first web project, my diploma project at WIFI and a website for a lollipop manufacturer. I built a custom responsive WordPress theme with a product catalog, expandable ingredient lists and a contact form. The client website was live. The gallery now shows a local preview.'
     ],
+    todoTitle: 'To-do App',
+    todoDescription: 'Add, complete and delete tasks. Pinia manages the app state and saves tasks in the browser.',
+    shopDescription: 'A shop demo that loads products and categories from the Platzi Fake Store API. Search and filter products, save favourites and add items to the cart.',
+    liveDemo: 'Open in a new tab',
+    inlineDemo: 'Try the demo here',
     projectLink: 'View project on GitHub',
     menuOpen: 'Open menu',
     menuClose: 'Close menu',
@@ -228,10 +238,15 @@ const translations = {
     projectDescriptions: [
       'YogaNow Studio объединяет открытую библиотеку йоги и запись на занятия в студии. В команде я отвечала за дизайн, подключение базы данных Supabase и платформу записи на занятия.',
       'Консольная версия UNO на Java, разработанная в команде. Карты, игроки и раунды представлены классами Java. Игра проверяет ходы и поддерживает карты действий, например «Пропуск хода» и «Смена направления». Игра сохраняет очки в SQLite через JDBC и загружает таблицу рекордов с помощью SQL-запроса.',
-      'Сайт кофейни Mokka с меню, фотогалереей и страницей контактов. Создан в рамках курса по веб-разработке в FH CAMPUS 02.',
+      'Учебный проект в FH CAMPUS 02: сайт кофейни с меню, фотогалереей и контактной формой. Небольшой объём проекта позволил сосредоточиться на основах веб-разработки: структуре страниц на HTML, адаптивной вёрстке с CSS Grid и Flexbox и подключении фотогалереи с помощью JavaScript и Swiper.',
       'Консольный экзаменационный проект для управления гостями, номерами, бронированиями и дополнительными услугами. Hibernate/JPA, операции CRUD, запросы HQL, транзакции и XML-маппинг.',
       'С проекта Feta начался мой путь в ИТ. Моим первым веб-проектом и одновременно дипломной работой в WIFI стал сайт для производителя леденцов. Я разработала адаптивную тему WordPress с каталогом, раскрывающимися списками ингредиентов и контактной формой. Сайт компании был опубликован. Сейчас в галерее показана локальная версия.'
     ],
+    todoTitle: 'Список задач',
+    todoDescription: 'Задачи можно добавлять, отмечать как выполненные и удалять. Pinia управляет состоянием приложения и сохраняет задачи в браузере.',
+    shopDescription: 'Демонстрационный магазин загружает товары и категории через Platzi Fake Store API. Товары можно искать, фильтровать, добавлять в избранное и в корзину.',
+    liveDemo: 'Открыть в новой вкладке',
+    inlineDemo: 'Попробовать демоверсию здесь',
     projectLink: 'Открыть проект на GitHub',
     menuOpen: 'Открыть меню',
     menuClose: 'Закрыть меню',
@@ -240,6 +255,9 @@ const translations = {
 }
 
 const t = computed(() => translations[language.value])
+
+const todoDemoUrl = 'https://ekschedl.github.io/jawa_todo/todo/'
+const shopDemoUrl = 'https://ekschedl.github.io/jawa_todo/shopplatzi/'
 
 const projects = [
   {
@@ -291,6 +309,26 @@ const projects = [
     image: '/images/feta-katalog.png',
     url: 'https://github.com/ekschedl/feta_new_2024/tree/main/feta-theme-new_server_08.2024',
     stack: 'WordPress · PHP · HTML · CSS · JavaScript'
+  },
+  {
+    id: 'todo',
+    title: 'To-do-App',
+    createdAt: '2025-07',
+    area: 'web',
+    image: '/images/todo-aufgaben.jpg',
+    url: 'https://github.com/ekschedl/jawa_todo',
+    demoUrl: todoDemoUrl,
+    stack: 'Vue 3 · TypeScript · Vuetify · Pinia'
+  },
+  {
+    id: 'shopplatzi',
+    title: 'ShopPlatzi',
+    createdAt: '2025-07',
+    area: 'web',
+    image: '/images/todo-shopplatzi.jpg',
+    url: 'https://github.com/ekschedl/jawa_todo',
+    demoUrl: shopDemoUrl,
+    stack: 'Vue 3 · TypeScript · Vuetify · Pinia · Axios · REST-APIs'
   }
 ] as const
 
@@ -322,6 +360,21 @@ const fetaSlides = [
 ] as const
 
 const projectGalleries = {
+  todo: {
+    title: 'To-do-App',
+    slides: [
+      { image: '/images/todo-start.jpg', caption: { DE: 'Startseite mit Aufgabenliste und zwei Shop-Demos', EN: 'Home screen with the task list and two shop demos', RU: 'Главная страница со списком задач и двумя демоверсиями магазинов' } },
+      { image: '/images/todo-aufgaben.jpg', caption: { DE: 'Aufgabenliste mit offenen und erledigten Beispielaufgaben', EN: 'Task list with open and completed sample tasks', RU: 'Список с открытыми и выполненными примерами задач' } },
+      { embed: todoDemoUrl, caption: { DE: 'Live-Demo', EN: 'Live demo', RU: 'Интерактивная демоверсия' } }
+    ]
+  },
+  shopplatzi: {
+    title: 'ShopPlatzi',
+    slides: [
+      { image: '/images/todo-shopplatzi.jpg', caption: { DE: 'Produktübersicht mit Suche, Kategorien und Favoriten', EN: 'Product catalogue with search, categories and favourites', RU: 'Каталог товаров с поиском, категориями и избранным' } },
+      { embed: shopDemoUrl, caption: { DE: 'Live-Demo', EN: 'Live demo', RU: 'Интерактивная демоверсия' } }
+    ]
+  },
   feta: { title: 'Feta', slides: fetaSlides },
   hotelverwaltung: { title: 'Hotelverwaltung', slides: hotelSlides },
   yoganow: { title: 'YogaNow Studio', slides: yogaSlides },
@@ -346,6 +399,7 @@ const projectGalleries = {
 const galleryProject = ref<keyof typeof projectGalleries>('hotelverwaltung')
 const activeGallery = computed(() => {
   const gallery = projectGalleries[galleryProject.value]
+  if (galleryProject.value === 'todo') return { ...gallery, title: t.value.todoTitle }
   return galleryProject.value === 'uno' ? { ...gallery, title: t.value.unoTitle } : gallery
 })
 const hotelGalleryLabels = {
@@ -370,7 +424,7 @@ function changeHotelSlide(direction: number) {
   if (count > 1) hotelSlideIndex.value = (hotelSlideIndex.value + direction + count) % count
 }
 
-const featuredProjects = projects.filter((project) => project.id !== 'hotelverwaltung' && project.id !== 'feta')
+const featuredProjects = projects.filter((project) => project.id !== 'hotelverwaltung' && project.id !== 'feta' && !('demoUrl' in project))
 
 const projectTechnologies = [...new Set(projects.flatMap(({ stack }) => stack.split(' · ')))]
   .sort((first, second) => first.localeCompare(second))
@@ -385,7 +439,8 @@ const technologyAreas = new Map(projectTechnologies.map((technology) => {
 
 const visibleProjects = computed(() => {
   return projects
-    .map((project, index) => ({ ...project, description: t.value.projectDescriptions[index] }))
+    .map((project, index) => ({ ...project, description: project.id === 'todo' ? t.value.todoDescription
+      : project.id === 'shopplatzi' ? t.value.shopDescription : t.value.projectDescriptions[index] }))
     .filter((project) => {
       const stack = project.stack.split(' · ')
       const matchesTechnology = selectedTechnologies.value.length === 0
@@ -394,6 +449,7 @@ const visibleProjects = computed(() => {
       return matchesArea && matchesTechnology
     })
     .sort((first, second) => {
+      if (!first.createdAt || !second.createdAt) return Number(!first.createdAt) - Number(!second.createdAt)
       const order = first.createdAt.localeCompare(second.createdAt)
       return projectSort.value === 'newest' ? -order : order
     })
@@ -804,7 +860,7 @@ function scrollToTop() {
             class="project-card"
           >
             <button class="project-visual project-cover" :data-area="project.area"
-              type="button" aria-haspopup="dialog" :aria-label="project.title + ' · ' + galleryLabels.open"
+              type="button" aria-haspopup="dialog" :aria-label="(project.id === 'todo' ? t.todoTitle : project.title) + ' · ' + galleryLabels.open"
               @click="openProjectGallery(project.id)">
               <img v-if="project.image" :src="project.image" alt="" loading="lazy" />
               <div v-else class="project-cover-copy" aria-hidden="true">
@@ -819,16 +875,25 @@ function scrollToTop() {
               <div class="project-details">
                 <span class="project-type project-area" :data-area="project.area">{{ t.areas[project.area] }}</span>
                 <div class="project-title-row">
-                  <h3>{{ project.id === 'uno' ? t.unoTitle : project.title }}</h3>
+                  <h3>{{ project.id === 'todo' ? t.todoTitle : project.id === 'uno' ? t.unoTitle : project.title }}</h3>
                   <a v-if="'url' in project" class="project-repository-link" :href="project.url" target="_blank" rel="noopener noreferrer">
                     {{ t.projectLink }} <span aria-hidden="true">↗</span>
                   </a>
                 </div>
-                <p class="project-created">{{ t.created }} · {{ new Intl.DateTimeFormat(language.toLowerCase(), { month: 'long', year: 'numeric' }).format(new Date(project.createdAt + '-01T00:00:00')) }}</p>
+                <p v-if="project.createdAt" class="project-created">{{ t.created }} · {{ new Intl.DateTimeFormat(language.toLowerCase(), { month: 'long', year: 'numeric' }).format(new Date(project.createdAt + '-01T00:00:00')) }}</p>
                 <p>{{ project.description }}</p>
                 <span class="project-stack">{{ project.stack }}</span>
               </div>
-              <div class="project-card-actions">
+              <div v-if="'demoUrl' in project" class="project-card-actions">
+                <button type="button" aria-haspopup="dialog"
+                  @click="openProjectGallery(project.id, projectGalleries[project.id].slides.length - 1)">
+                  {{ t.inlineDemo }}
+                </button>
+                <a :href="project.demoUrl" target="_blank" rel="noopener noreferrer">
+                  {{ t.liveDemo }} <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+              <div v-else class="project-card-actions">
                 <button type="button" aria-haspopup="dialog"
                   @click="openProjectGallery(project.id, project.id === 'yoganow' ? yogaSlides.length - 1 : 0)">
                   {{ project.id === 'yoganow' ? yogaDemoText[language].action : galleryLabels.open }}
@@ -953,7 +1018,7 @@ function scrollToTop() {
     </main>
 
     <dialog ref="hotelGallery" class="hotel-gallery" :class="{ 'hotel-gallery-video': 'video' in hotelSlide, 'hotel-gallery-video-wide': galleryProject === 'uno' && 'video' in hotelSlide }" :aria-label="activeGallery.title"
-      @close="galleryVideo?.pause()"
+      @close="galleryVideo?.pause(); if ('embed' in hotelSlide) hotelSlideIndex = 0"
       @keydown.left.prevent="changeHotelSlide(-1)" @keydown.right.prevent="changeHotelSlide(1)">
       <div class="hotel-gallery-header">
         <strong>{{ activeGallery.title }}</strong>
@@ -963,13 +1028,17 @@ function scrollToTop() {
         <video v-if="'video' in hotelSlide" ref="galleryVideo" :src="hotelSlide.video"
           :poster="hotelSlide.poster"
           :aria-label="hotelSlide.caption[language]" controls muted playsinline preload="none" @keydown.left.stop @keydown.right.stop />
+        <iframe v-else-if="'embed' in hotelSlide" class="todo-demo-frame" :src="hotelSlide.embed"
+          :title="activeGallery.title" sandbox="allow-scripts allow-same-origin" />
         <img v-else :src="hotelSlide.image" :alt="hotelSlide.caption[language]" loading="lazy" />
         <figcaption>{{ hotelSlide.caption[language] }}</figcaption>
       </figure>
       <div v-if="activeGallery.slides.length > 1" class="hotel-gallery-controls">
         <button type="button" :aria-label="galleryLabels.prev" @click="changeHotelSlide(-1)">←</button>
         <span>{{ hotelSlideIndex + 1 }} / {{ activeGallery.slides.length }}</span>
-        <button type="button" :aria-label="galleryLabels.next" @click="changeHotelSlide(1)">→</button>
+        <button v-if="'embed' in (activeGallery.slides[hotelSlideIndex + 1] ?? {})"
+          type="button" @click="changeHotelSlide(1)">{{ t.inlineDemo }} →</button>
+        <button v-else type="button" :aria-label="galleryLabels.next" @click="changeHotelSlide(1)">→</button>
       </div>
       <a v-if="'image' in hotelSlide" :href="hotelSlide.image" target="_blank" rel="noopener">{{ galleryLabels.full }} ↗</a>
       <p v-if="galleryProject === 'yoganow'" class="yoga-gallery-access">{{ yogaDemoText[language].access }}</p>
@@ -1154,16 +1223,30 @@ function scrollToTop() {
 }
 
 .project-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
   margin-top: auto;
 }
 
-.project-card-actions button {
+.todo-demo-frame {
+  display: block;
+  width: 100%;
+  height: clamp(360px, 70dvh, 680px);
+  border: 1px solid var(--control-line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.project-card-actions :is(button, a) {
   max-width: 100%;
   padding: 8px 12px;
   border: 1px solid var(--control-line);
   border-radius: 8px;
   background: var(--surface);
   color: var(--accent);
+  font: inherit;
   font-weight: 600;
   text-align: start;
   overflow-wrap: anywhere;
