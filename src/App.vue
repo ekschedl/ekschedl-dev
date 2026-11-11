@@ -92,8 +92,6 @@ const translations = {
     educationMilestone: 'Abgeschlossen im Oktober 2026',
     educationNext: 'Nächster Schritt',
     educationNextCourse: 'Python-Kurs in Hagen · geplant für Ende November 2026',
-    educationCourse: 'Akademischer Hochschullehrgang Software Engineering',
-    educationAction: 'Mein Bildungsweg',
     projectsTitle: 'Dinge, die ich entwickle.',
     projectsIntro: 'Eine Auswahl meiner Projekte und Ideen.',
     portfolioStatus: 'Derzeit in Bearbeitung',
@@ -163,8 +161,6 @@ const translations = {
     educationMilestone: 'Completed in October 2026',
     educationNext: 'Next step',
     educationNextCourse: 'Python course in Hagen · planned for late November 2026',
-    educationCourse: 'Academic Programme in Software Engineering',
-    educationAction: 'My education',
     projectsTitle: 'Things I build.',
     projectsIntro: 'A selection of my projects and ideas.',
     portfolioStatus: 'Currently in progress',
@@ -234,8 +230,6 @@ const translations = {
     educationMilestone: 'Завершено в октябре 2026 года',
     educationNext: 'Следующий шаг',
     educationNextCourse: 'Курс Python в Хагене · запланирован на конец ноября 2026 года',
-    educationCourse: 'Академическая программа по инженерной разработке ПО',
-    educationAction: 'Мой образовательный путь',
     projectsTitle: 'То, что я создаю.',
     projectsIntro: 'Некоторые из моих проектов и идей.',
     portfolioStatus: 'Раздел обновляется',
@@ -733,16 +727,13 @@ function scrollToTop() {
         </div>
         <div class="education-milestone-copy">
           <strong class="education-milestone-heading">{{ t.educationHeading }}</strong>
-          <span class="education-milestone-detail">FH CAMPUS 02 · {{ t.educationCourse }}</span>
+          <span class="education-milestone-detail">FH CAMPUS 02</span>
           <span class="education-milestone-detail">{{ t.educationMilestone }}</span>
         </div>
         <div class="education-milestone-next">
           <strong class="education-milestone-label">{{ t.educationNext }}</strong>
           <span>{{ t.educationNextCourse }}</span>
         </div>
-        <span class="education-milestone-action">
-          {{ t.educationAction }} <span aria-hidden="true">↗</span>
-        </span>
       </a>
 
       <!-- HERO BENTO -->
@@ -1104,7 +1095,7 @@ function scrollToTop() {
   --education-python-color: #f6bb9d;
   --education-news-color: #ffc0a7;
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
   align-items: center;
   gap: 14px clamp(10px, 1.6vw, 22px);
   margin-bottom: clamp(16px, 2vw, 26px);
@@ -1186,14 +1177,6 @@ function scrollToTop() {
   .education-milestone-news::before {
     animation: education-news-pulse 1.3s ease-out 2;
   }
-
-  .education-milestone-action > span {
-    transition: transform .18s ease;
-  }
-
-  .education-milestone:is(:hover, :focus-visible) .education-milestone-action > span {
-    transform: translate(2px, -2px);
-  }
 }
 
 @keyframes education-news-pulse {
@@ -1214,28 +1197,6 @@ function scrollToTop() {
 
 .education-milestone-next {
   background: linear-gradient(115deg, var(--education-python-color), var(--lilac));
-}
-
-.education-milestone-action {
-  display: inline-flex;
-  align-items: center;
-  justify-self: start;
-  flex-wrap: wrap;
-  min-width: 0;
-  max-width: 100%;
-  overflow-wrap: anywhere;
-  gap: 8px;
-  padding: 9px 13px;
-  border: 1px solid color-mix(in srgb, var(--accent) 46%, transparent);
-  border-radius: 6px;
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.education-milestone:hover .education-milestone-action,
-.education-milestone:focus-visible .education-milestone-action {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
 }
 
 @media (max-width: 800px) {
