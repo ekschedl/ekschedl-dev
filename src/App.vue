@@ -744,8 +744,7 @@ function scrollToTop() {
           <span class="tile-type tile-type-compact">{{ t.projectTypesShort[project.area] }}</span>
 
           <div class="tile-project-image">
-            <img v-if="project.id === 'yoganow'" class="yoga-tile-logo" src="/images/yoganow-logo.png" alt="" loading="lazy" />
-            <img v-else-if="project.image" :src="project.image" :alt="project.title" loading="lazy" />
+            <img v-if="project.image" :src="project.image" :alt="project.title" loading="lazy" />
           </div>
 
           <div class="tile-bottom">
@@ -1297,11 +1296,6 @@ function scrollToTop() {
   padding: 3px 7px;
   border-radius: 6px;
   background: var(--surface);
-}
-
-.tile-yoganow .yoga-tile-logo {
-  width: min(100%, 160px);
-  object-fit: contain;
 }
 
 .yoga-gallery-access {
