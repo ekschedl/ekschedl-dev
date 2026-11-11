@@ -701,9 +701,22 @@ select:focus-visible {
   gap: 70px;
 }
 
-.about-content > p {
+.about-topics {
+  display: grid;
+  gap: 24px;
   max-width: 600px;
   margin: 5px 0 38px;
+}
+
+.about-topic > h3 {
+  margin: 0 0 6px;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.about-topic > p {
+  margin: 0;
   color: var(--muted);
   font-size: 17px;
   line-height: 1.95;
@@ -1231,7 +1244,7 @@ select:focus-visible {
   }
 
   .section-head > p,
-  .about-content > p,
+  .about-topic > p,
   .contact-copy > p {
     overflow-wrap: anywhere;
   }

@@ -106,9 +106,12 @@ const translations = {
     techFilterReset: 'Zurücksetzen',
     about: 'Über mich',
     aboutShort: 'Mein Weg und was mich antreibt.',
-    aboutTitle: 'Neugierig bleiben. Neues schaffen.',
-    aboutText:
-      'Ich habe den akademischen Lehrgang Software-Entwicklung an der FH CAMPUS 02 abgeschlossen und bei JAWA praktische Erfahrung in der Webentwicklung gesammelt. Ich mag es, Zusammenhänge zu verstehen, Lösungen zu finden und Neues auszuprobieren.',
+    aboutTitle: 'Neugierig bleiben.',
+    aboutSections: [
+      { heading: 'Was reizt mich am Code?', text: 'Wenn Code hakt, gehe ich der Ursache auf den Grund. Das hat mich im Lehrgang Software-Entwicklung an der FH CAMPUS 02 genauso angetrieben wie in der Webentwicklung bei JAWA. Ich habe mir mein Wissen mit Zeit und Übung erarbeitet. Jetzt will ich wissen, was ich damit noch entwickeln kann.' },
+      { heading: 'Ich über KI', text: 'Ein Streichholz spart Zeit beim Feuermachen. KI spart mir Zeit beim Entwickeln. So kann ich mehr Ideen testen und Fehler gezielter eingrenzen. Ich gebe die Richtung vor, prüfe die Vorschläge am Code und entscheide, welchen Ansatz ich weiterentwickle.' },
+      { heading: 'Warum jetzt Python?', text: 'Wie lernt ein Modell aus Daten? Und woran erkenne ich, ob ich seinem Ergebnis trauen kann? Das will ich selbst ausprobieren. Mein Einstieg ist der Python-Kurs in Hagen.' },
+    ],
     helloTitle: 'Lass uns etwas bewegen.',
     helloText:
       'Ich freue mich über interessante Projekte, neue Herausforderungen und berufliche Möglichkeiten in der Softwareentwicklung.',
@@ -177,9 +180,12 @@ const translations = {
     techFilterReset: 'Reset',
     about: 'About me',
     aboutShort: 'My journey and what motivates me.',
-    aboutTitle: 'Stay curious. Keep creating.',
-    aboutText:
-      'I completed an academic Software Development programme at FH CAMPUS 02 and gained practical web development experience at JAWA. I enjoy understanding how things work, finding solutions and exploring new ideas.',
+    aboutTitle: 'Stay curious.',
+    aboutSections: [
+      { heading: 'What draws me to code?', text: 'When code breaks, I want to get to the root of the problem. That drove me throughout my Software Development programme at FH CAMPUS 02 and in my web development work at JAWA. I built up my knowledge through time and practice. Now I want to see what else I can build with it.' },
+      { heading: 'My take on AI', text: 'A match saves time when lighting a fire. AI saves me time when developing software. It lets me test more ideas and pinpoint errors more quickly. I set the direction, test suggestions against the code and decide which approach to develop further.' },
+      { heading: 'Why Python now?', text: 'How does a model learn from data? How can I tell whether I can trust its results? I want to find out for myself. My starting point is a Python course in Hagen.' },
+    ],
     helloTitle: "Let's make something happen.",
     helloText:
       'I am open to interesting projects, new challenges and career opportunities in software development.',
@@ -248,9 +254,12 @@ const translations = {
     techFilterReset: 'Сбросить',
     about: 'Обо мне',
     aboutShort: 'Мой путь и то, что меня вдохновляет.',
-    aboutTitle: 'С интересом к жизни. С радостью — к новому.',
-    aboutText:
-      'Я люблю жизнь, свою семью, движение и танцы. Люблю смеяться, узнавать новое и постоянно учиться. Эту энергию и любознательность я привношу и в разработку программного обеспечения: мне нравится разбираться в задачах и создавать продуманные решения.',
+    aboutTitle: 'Сохранять любопытство.',
+    aboutSections: [
+      { heading: 'Что меня увлекает в коде?', text: 'Когда код даёт сбой, я ищу причину. Это стремление помогало мне и на программе по разработке ПО в FH CAMPUS 02, и в работе над веб-приложениями в JAWA. Я много практиковалась и шаг за шагом накапливала знания. Теперь хочу узнать, что ещё могу с их помощью создать.' },
+      { heading: 'Мой взгляд на ИИ', text: 'Спичка помогает быстрее разжечь огонь. ИИ экономит мне время при разработке. С ним я могу проверить больше идей и точнее определить причину ошибки. Я задаю направление, проверяю предложения на практике и решаю, какой подход развивать дальше.' },
+      { heading: 'Почему именно сейчас Python?', text: 'Как модель учится на данных? Как понять, можно ли доверять её результатам? Я хочу проверить это сама. Начну с курса Python в Хагене.' },
+    ],
     helloTitle: 'Давайте создавать вместе.',
     helloText:
       'Я открыта к интересным проектам, новым задачам и профессиональным возможностям в разработке программного обеспечения.',
@@ -282,6 +291,8 @@ const t = computed(() => translations[language.value])
 
 const todoDemoUrl = 'https://ekschedl.github.io/jawa_todo/todo/'
 const shopDemoUrl = 'https://ekschedl.github.io/jawa_todo/shopplatzi/'
+
+const hotelConsoleImage = '/images/hotelverwaltung-konsole.png'
 
 const projects = [
   {
@@ -320,7 +331,7 @@ const projects = [
     createdAt: '2026-01',
     type: 'CONSOLE APP',
     area: 'backend',
-    image: '',
+    image: hotelConsoleImage,
     url: 'https://github.com/ekschedl/Datenbankenprogrammierung_02_hotel_pruefung',
     stack: 'Java · Hibernate · JPA · HQL · SQLite · XML'
   },
@@ -366,6 +377,15 @@ const projects = [
 ] as const
 
 const hotelSlides = [
+  { image: hotelConsoleImage, caption: { DE: 'Konsolenausgabe · Zimmerübersicht mit Kategorie, Preis und Verfügbarkeit', EN: 'Console output · Room overview with categories, prices and availability', RU: 'Вывод консоли · Номера, категории, цены и доступность' } },
+  {
+    image: '/images/hotelverwaltung-zimmerpreise.png',
+    caption: { DE: 'Zimmer nach Preis', EN: 'Rooms by price', RU: 'Номера по цене' }
+  },
+  {
+    image: '/images/hotelverwaltung-buchungsdemo.png',
+    caption: { DE: 'Erfolgreiche Buchung', EN: 'Successful booking', RU: 'Успешное бронирование' }
+  },
   { image: '/images/hotelverwaltung-modell.svg', caption: { DE: 'Datenmodell: Gäste, Zimmer, Buchungen und Zusatzleistungen', EN: 'Data model: guests, rooms, bookings and additional services', RU: 'Модель данных: гости, номера, бронирования и дополнительные услуги' } },
   { image: '/images/hotelverwaltung-buchung.svg', caption: { DE: 'Buchungsablauf: prüfen, speichern und Änderungen gemeinsam übernehmen', EN: 'Booking flow: validate, save and commit the changes together', RU: 'Бронирование: проверка, сохранение и фиксация всех изменений' } },
   { image: '/images/hotelverwaltung-architektur.svg', caption: { DE: 'Architektur: Modelle, Datenzugriff, Abfragen und Services', EN: 'Architecture: models, data access, queries and services', RU: 'Архитектура: модели, доступ к данным, запросы и сервисы' } },
@@ -922,12 +942,7 @@ function scrollToTop() {
             <button class="project-visual project-cover" :data-area="project.area"
               type="button" aria-haspopup="dialog" :aria-label="(project.id === 'todo' ? t.todoTitle : project.title) + ' · ' + galleryLabels.open"
               @click="openProjectGallery(project.id)">
-              <img v-if="project.image" :src="project.image" alt="" loading="lazy" />
-              <div v-else class="project-cover-copy" aria-hidden="true">
-                <span>JAVA · HIBERNATE</span>
-                <strong>{{ project.title }}</strong>
-                <span>JPA · HQL · SQLITE</span>
-              </div>
+              <img :src="project.image" alt="" loading="lazy" />
               <span class="project-cover-expand" aria-hidden="true">↗</span>
             </button>
 
@@ -942,8 +957,8 @@ function scrollToTop() {
                 </div>
                 <p v-if="project.createdAt" class="project-created">{{ t.created }} · {{ new Intl.DateTimeFormat(language === 'DE' ? 'de-AT' : language.toLowerCase(), { month: 'long', year: 'numeric' }).format(new Date(project.createdAt + '-01T00:00:00')) }}</p>
                 <p>{{ project.description }}</p>
-                <span class="project-stack">{{ project.stack }}</span>
               </div>
+              <span class="project-stack">{{ project.stack }}</span>
               <div v-if="'demoUrl' in project" class="project-card-actions">
                 <button type="button" aria-haspopup="dialog"
                   @click="openProjectGallery(project.id, projectGalleries[project.id].slides.length - 1)">
@@ -1027,7 +1042,12 @@ function scrollToTop() {
           </div>
 
           <div class="about-content">
-            <p>{{ t.aboutText }}</p>
+            <div class="about-topics">
+              <div v-for="topic in t.aboutSections" :key="topic.heading" class="about-topic">
+                <h3>{{ topic.heading }}</h3>
+                <p>{{ topic.text }}</p>
+              </div>
+            </div>
 
             <div class="values-line">
               <div
@@ -1077,7 +1097,11 @@ function scrollToTop() {
       </section>
     </main>
 
-    <dialog ref="hotelGallery" class="hotel-gallery" :class="{ 'hotel-gallery-video': 'video' in hotelSlide, 'hotel-gallery-video-wide': galleryProject === 'uno' && 'video' in hotelSlide }" :aria-label="activeGallery.title"
+    <dialog ref="hotelGallery" class="hotel-gallery" :class="{
+      'hotel-gallery--hotel': galleryProject === 'hotelverwaltung',
+      'hotel-gallery-video': 'video' in hotelSlide,
+      'hotel-gallery-video-wide': galleryProject === 'uno' && 'video' in hotelSlide
+    }" :aria-label="activeGallery.title"
       @click.self="hotelGallery?.close()"
       @close="galleryVideo?.pause(); if ('embed' in hotelSlide) hotelSlideIndex = 0"
       @keydown.left.prevent="changeHotelSlide(-1)" @keydown.right.prevent="changeHotelSlide(1)">
@@ -1093,9 +1117,9 @@ function scrollToTop() {
           :title="activeGallery.title" sandbox="allow-scripts allow-same-origin" />
         <button v-else-if="activeGallery.slides.length > 1" type="button" class="hotel-gallery-image"
           :aria-label="galleryLabels.next" @click="changeHotelSlide(1)">
-          <img :src="hotelSlide.image" alt="" loading="lazy" />
+          <img :src="hotelSlide.image" alt="" />
         </button>
-        <img v-else :src="hotelSlide.image" :alt="hotelSlide.caption[language]" loading="lazy" />
+        <img v-else :src="hotelSlide.image" :alt="hotelSlide.caption[language]" />
         <figcaption>{{ hotelSlide.caption[language] }}</figcaption>
       </figure>
       <div v-if="activeGallery.slides.length > 1" class="hotel-gallery-controls">
@@ -1400,15 +1424,23 @@ function scrollToTop() {
   color: var(--ink);
 }
 
-.project-card,
-.project-card .project-meta {
-  display: flex;
-  flex-direction: column;
+.projects-grid .project-card {
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  row-gap: 0;
 }
 
 .project-card .project-meta {
-  flex: 1;
-  gap: 16px;
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  min-width: 0;
+}
+
+.project-card .project-stack {
+  align-self: start;
 }
 
 .project-card-actions {
@@ -1416,7 +1448,7 @@ function scrollToTop() {
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 8px;
-  margin-top: auto;
+  margin-top: 16px;
 }
 
 .todo-demo-frame {
@@ -1458,25 +1490,6 @@ function scrollToTop() {
   width: 100%;
   height: 100%;
   object-fit: contain;
-}
-
-.project-cover-copy {
-  display: grid;
-  gap: clamp(3px, 1vw, 12px);
-  max-width: 100%;
-  text-align: center;
-  overflow-wrap: anywhere;
-}
-
-.project-cover-copy span {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: clamp(8px, 1.1vw, 13px);
-  letter-spacing: .08em;
-}
-
-.project-cover-copy strong {
-  font-size: clamp(13px, 2.4vw, 34px);
-  line-height: 1.15;
 }
 
 .project-cover-expand {
@@ -1550,6 +1563,41 @@ function scrollToTop() {
   background: transparent;
   cursor: pointer;
   vertical-align: top;
+}
+
+.hotel-gallery-image:has(img[src$=".svg"]) {
+  width: min(100%, 840px);
+}
+
+.hotel-gallery-image img[src$=".svg"] {
+  width: 100%;
+  object-fit: contain;
+}
+
+.hotel-gallery--hotel {
+  --hotel-image-height: min(58dvh, 72vw, 640px);
+}
+
+.hotel-gallery--hotel figure {
+  display: grid;
+  grid-template-rows: var(--hotel-image-height) auto;
+  justify-items: center;
+  align-items: center;
+}
+
+.hotel-gallery--hotel .hotel-gallery-image img {
+  max-height: var(--hotel-image-height);
+}
+
+.hotel-gallery--hotel figcaption {
+  align-self: start;
+  min-height: 2lh;
+}
+
+@media (max-width: 600px) {
+  .hotel-gallery--hotel figcaption {
+    min-height: 3lh;
+  }
 }
 
 .hotel-gallery.hotel-gallery-video {
