@@ -86,6 +86,14 @@ const translations = {
     role: 'Softwareentwicklerin',
     location: 'Graz, Österreich',
     heroNote: 'Ideen verstehen. Lösungen entwickeln. Neues lernen.',
+    educationNews: 'Aktuell',
+    educationFocus: 'Softwareentwicklung im Fokus',
+    educationHeading: 'Akademisch geprüfte Softwareentwicklerin',
+    educationMilestone: 'Abgeschlossen im Oktober 2026',
+    educationNext: 'Nächster Schritt',
+    educationNextCourse: 'Python-Kurs in Hagen · geplant für Ende November 2026',
+    educationCourse: 'Akademischer Hochschullehrgang Software Engineering',
+    educationAction: 'Mein Bildungsweg',
     projectsTitle: 'Dinge, die ich entwickle.',
     projectsIntro: 'Eine Auswahl meiner Projekte und Ideen.',
     portfolioStatus: 'Derzeit in Bearbeitung',
@@ -149,6 +157,14 @@ const translations = {
     role: 'Software Developer',
     location: 'Graz, Austria',
     heroNote: 'Explore ideas. Build solutions. Keep learning.',
+    educationNews: 'Updates',
+    educationFocus: 'Software development in focus',
+    educationHeading: 'Academically qualified software developer',
+    educationMilestone: 'Completed in October 2026',
+    educationNext: 'Next step',
+    educationNextCourse: 'Python course in Hagen · planned for late November 2026',
+    educationCourse: 'Academic Programme in Software Engineering',
+    educationAction: 'My education',
     projectsTitle: 'Things I build.',
     projectsIntro: 'A selection of my projects and ideas.',
     portfolioStatus: 'Currently in progress',
@@ -212,6 +228,14 @@ const translations = {
     role: 'Разработчик программного обеспечения',
     location: 'Грац, Австрия',
     heroNote: 'Исследовать идеи. Находить решения. Учиться новому.',
+    educationNews: 'Новости',
+    educationFocus: 'В фокусе — разработка ПО',
+    educationHeading: 'Разработчик программного обеспечения с академической квалификацией',
+    educationMilestone: 'Завершено в октябре 2026 года',
+    educationNext: 'Следующий шаг',
+    educationNextCourse: 'Курс Python в Хагене · запланирован на конец ноября 2026 года',
+    educationCourse: 'Академическая программа по инженерной разработке ПО',
+    educationAction: 'Мой образовательный путь',
     projectsTitle: 'То, что я создаю.',
     projectsIntro: 'Некоторые из моих проектов и идей.',
     portfolioStatus: 'Раздел обновляется',
@@ -702,6 +726,25 @@ function scrollToTop() {
     <EducationPage v-if="isEducation" :language="language" />
     <ExperiencePage v-else-if="isExperience" :language="language" />
     <main v-else>
+      <a class="education-milestone" :href="educationPath">
+        <div class="education-milestone-headline">
+          <span class="education-milestone-news">{{ t.educationNews }}</span>
+          <span class="education-milestone-focus">{{ t.educationFocus }}</span>
+        </div>
+        <div class="education-milestone-copy">
+          <strong class="education-milestone-heading">{{ t.educationHeading }}</strong>
+          <span class="education-milestone-detail">FH CAMPUS 02 · {{ t.educationCourse }}</span>
+          <span class="education-milestone-detail">{{ t.educationMilestone }}</span>
+        </div>
+        <div class="education-milestone-next">
+          <strong class="education-milestone-label">{{ t.educationNext }}</strong>
+          <span>{{ t.educationNextCourse }}</span>
+        </div>
+        <span class="education-milestone-action">
+          {{ t.educationAction }} <span aria-hidden="true">↗</span>
+        </span>
+      </a>
+
       <!-- HERO BENTO -->
       <section id="home" class="hero-grid">
         <div class="tile portrait-tile">
@@ -1057,6 +1100,143 @@ function scrollToTop() {
 </template>
 
 <style scoped>
+.education-milestone {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px clamp(10px, 1.6vw, 22px);
+  margin-bottom: clamp(16px, 2vw, 26px);
+  padding: clamp(18px, 2.4vw, 30px);
+  border: 1px solid var(--line);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.education-milestone-copy,
+.education-milestone-next {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  align-self: stretch;
+  align-content: center;
+  padding: clamp(14px, 1.7vw, 22px);
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  border-radius: 8px;
+}
+
+.education-milestone-copy {
+  background: color-mix(in srgb, var(--blue) 56%, var(--surface));
+}
+
+.education-milestone-heading {
+  font-size: clamp(1.25rem, 2.15vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -.025em;
+  font-weight: 600;
+}
+
+.education-milestone-headline {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-width: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.education-milestone-focus {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.education-milestone-news {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 9px;
+  border-radius: 5px;
+  background: var(--accent);
+  color: var(--paper);
+  font: 500 .75rem 'IBM Plex Mono', ui-monospace, monospace;
+  letter-spacing: .035em;
+}
+
+.education-milestone-news::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .education-milestone-news::before {
+    animation: education-news-pulse 1.3s ease-out 2;
+  }
+
+  .education-milestone-action > span {
+    transition: transform .18s ease;
+  }
+
+  .education-milestone:is(:hover, :focus-visible) .education-milestone-action > span {
+    transform: translate(2px, -2px);
+  }
+}
+
+@keyframes education-news-pulse {
+  from { box-shadow: 0 0 0 0 currentColor; }
+  to { box-shadow: 0 0 0 5px transparent; }
+}
+
+.education-milestone-focus,
+.education-milestone-label {
+  color: var(--accent);
+  font-size: .875rem;
+  font-weight: 600;
+}
+
+.education-milestone-detail {
+  color: var(--muted);
+}
+
+.education-milestone-next {
+  background: color-mix(in srgb, var(--lilac) 62%, var(--surface));
+}
+
+.education-milestone-action {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  gap: 8px;
+  padding: 9px 13px;
+  border: 1px solid color-mix(in srgb, var(--accent) 46%, transparent);
+  border-radius: 6px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.education-milestone:hover .education-milestone-action,
+.education-milestone:focus-visible .education-milestone-action {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+}
+
+@media (max-width: 800px) {
+  .education-milestone {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .section-head .portfolio-status {
   display: block;
   max-width: none;
