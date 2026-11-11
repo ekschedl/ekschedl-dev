@@ -32,7 +32,7 @@ function updatePageLanguage() {
   }
 }
 const menuOpen = ref(false)
-const projectAreas = ['mobile', 'game', 'web', 'backend'] as const
+const projectAreas = ['mobile', 'game', 'web', 'backend', 'desktop'] as const
 type ProjectArea = typeof projectAreas[number]
 type ProjectFilterMode = 'area' | 'technology'
 const projectFilterMode = ref<ProjectFilterMode>('area')
@@ -67,7 +67,7 @@ const translations = {
     areaFilter: 'Projektbereich',
     filterOptions: 'Projektfilter',
     allAreas: 'Alle Bereiche',
-    areas: { mobile: 'Mobile App', game: 'Spiel', web: 'Webentwicklung', backend: 'Backend & Daten' },
+    areas: { mobile: 'Mobile App', game: 'Spiel', web: 'Webentwicklung', backend: 'Backend & Daten', desktop: 'Desktop-App' },
     filter: 'Technologie filtern',
     allTechnologies: 'Alle Technologien',
     noResults: 'Keine passenden Projekte gefunden.',
@@ -99,8 +99,8 @@ const translations = {
     technologiesIntro: 'Technologien, mit denen ich arbeite und weiterlerne.',
     techGroups: ['Frontend & Apps', 'Backend & Daten', 'Werkzeuge', 'KI-Werkzeuge', 'Ausbildungsschwerpunkte'], projectUse: 'Im Projekt eingesetzt', studyUse: 'In der Ausbildung vertieft',
     sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIEN', sectionAbout: '03 / ÜBER MICH', sectionContact: '04 / KONTAKT',
-    projectTypes: { mobile: 'MOBILE APP', game: 'KONSOLENSPIEL', web: 'WEBPROJEKT', backend: 'KONSOLENANWENDUNG' },
-    projectTypesShort: { mobile: 'APP', game: 'SPIEL', web: 'WEB', backend: 'JAVA' },
+    projectTypes: { mobile: 'MOBILE APP', game: 'KONSOLENSPIEL', web: 'WEBPROJEKT', backend: 'KONSOLENANWENDUNG', desktop: 'DESKTOP-APP' },
+    projectTypesShort: { mobile: 'APP', game: 'SPIEL', web: 'WEB', backend: 'JAVA', desktop: 'DESKTOP' },
     studyTopics: 'Objektorientierte Programmierung · Algorithmen · Softwarearchitektur · Softwarequalitätssicherung',
     techFilterAll: "Alle Bereiche", techFilterGroups: ["Frontend & Apps", "Backend & Daten", "Werkzeuge", "KI-Werkzeuge"],
     techFilterReset: 'Zurücksetzen',
@@ -120,8 +120,10 @@ const translations = {
       'Im Team entwickeltes UNO-Kartenspiel für die Java-Konsole. Karten, Spieler und Spielrunden sind als Java-Klassen modelliert. Das Spiel prüft die Spielzüge und unterstützt Aktionskarten wie „Aussetzen“ und „Richtungswechsel“. Über JDBC speichert das Spiel die Punktestände in SQLite und ruft die Bestenliste per SQL ab.',
       'Kaffeehaus-Website mit Speisekarte, Bildergalerie und Kontaktformular, entstanden als Übungsprojekt an der FH CAMPUS 02. Der überschaubare Umfang ließ Raum für die Grundlagen der Webentwicklung: Seiten mit HTML strukturieren, Layouts mit CSS Grid und Flexbox an verschiedene Bildschirmgrößen anpassen und eine Bildergalerie mit JavaScript und Swiper einbinden.',
       'Konsolenbasiertes Prüfungsprojekt zur Verwaltung von Gästen, Zimmern, Buchungen und Zusatzleistungen. Mit Hibernate/JPA, CRUD-Funktionen, HQL-Abfragen, Transaktionen und XML-Mapping.',
-      'Mit Feta begann mein Weg in die IT. Mein erstes Webprojekt war zugleich mein Diplomprojekt am WIFI und eine echte Kundenwebsite für einen Lutscherhersteller. Dafür erstellte ich ein eigenes responsives WordPress-Theme mit Produktkatalog, aufklappbaren Zutatenlisten und Kontaktformular. Die Kundenwebsite war online. Heute zeigt die Galerie eine lokale Vorschau.'
+      'Mit Feta begann mein Weg in die IT. Mein erstes Webprojekt war zugleich mein Diplomprojekt am WIFI und eine echte Kundenwebsite für einen Lutscherhersteller. Dafür erstellte ich ein eigenes responsives WordPress-Theme mit Produktkatalog, aufklappbaren Zutatenlisten und Kontaktformular. Die Kundenwebsite war online. Heute zeigt die Galerie eine lokale Vorschau.',
+      'Windows-Desktop-App zum Anlegen, Bearbeiten, Kopieren und Filtern von Geschenken. So funktioniert MVVM beim Löschen: Die Oberfläche löst den Löschbefehl aus, das ViewModel prüft die Auswahl und das Repository löscht das Geschenk über Entity Framework in SQL Server LocalDB. Anschließend aktualisiert WPF die Liste und die Statusleiste per Datenbindung.'
     ],
+    giftsTitle: 'Geschenkeverwaltung',
     todoTitle: 'To-do-App',
     todoDescription: 'Aufgaben hinzufügen, abhaken und löschen. Pinia verwaltet den Zustand und speichert die Aufgaben im Browser.',
     shopDescription: 'Shop-Demo mit Produktdaten und Kategorien aus der Platzi Fake Store API. Produkte lassen sich suchen, filtern, als Favoriten markieren und in den Warenkorb legen.',
@@ -136,7 +138,7 @@ const translations = {
     areaFilter: 'Project area',
     filterOptions: 'Project filters',
     allAreas: 'All areas',
-    areas: { mobile: 'Mobile app', game: 'Game', web: 'Web development', backend: 'Backend & data' },
+    areas: { mobile: 'Mobile app', game: 'Game', web: 'Web development', backend: 'Backend & data', desktop: 'Desktop app' },
     filter: 'Filter by technology',
     allTechnologies: 'All technologies',
     noResults: 'No matching projects found.',
@@ -168,8 +170,8 @@ const translations = {
     technologiesIntro: 'Technologies I use and continue to explore.',
     techGroups: ['Frontend & apps', 'Backend & data', 'Tools', 'AI tools', 'Study topics'], projectUse: 'Used in projects', studyUse: 'Covered in training',
     sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIES', sectionAbout: '03 / ABOUT ME', sectionContact: '04 / CONTACT',
-    projectTypes: { mobile: 'MOBILE APP', game: 'CONSOLE GAME', web: 'WEB PROJECT', backend: 'CONSOLE APP' },
-    projectTypesShort: { mobile: 'APP', game: 'GAME', web: 'WEB', backend: 'JAVA' },
+    projectTypes: { mobile: 'MOBILE APP', game: 'CONSOLE GAME', web: 'WEB PROJECT', backend: 'CONSOLE APP', desktop: 'DESKTOP APP' },
+    projectTypesShort: { mobile: 'APP', game: 'GAME', web: 'WEB', backend: 'JAVA', desktop: 'DESKTOP' },
     studyTopics: 'Object-oriented programming · Algorithms · Software architecture · Software quality assurance',
     techFilterAll: "All areas", techFilterGroups: ["Frontend & apps", "Backend & data", "Tools", "AI tools"],
     techFilterReset: 'Reset',
@@ -189,8 +191,10 @@ const translations = {
       'A Java console version of UNO developed as a team. Cards, players and rounds are modelled as Java classes. The game validates moves and supports action cards such as Skip and Reverse. The game stores scores in SQLite via JDBC and retrieves the leaderboard with SQL.',
       'A coffee house website with a menu, photo gallery and contact form, built as a coursework project at FH CAMPUS 02. The small scope left room to practise the fundamentals: structuring pages with HTML, adapting layouts to different screen sizes with CSS Grid and Flexbox, and integrating an image gallery with JavaScript and Swiper.',
       'A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.',
-      'Feta marked the start of my career in tech. It was my first web project, my diploma project at WIFI and a website for a lollipop manufacturer. I built a custom responsive WordPress theme with a product catalog, expandable ingredient lists and a contact form. The client website was live. The gallery now shows a local preview.'
+      'Feta marked the start of my career in tech. It was my first web project, my diploma project at WIFI and a website for a lollipop manufacturer. I built a custom responsive WordPress theme with a product catalog, expandable ingredient lists and a contact form. The client website was live. The gallery now shows a local preview.',
+      'Windows desktop app for adding, editing, copying and filtering gifts. Here is how MVVM handles deletion: the view triggers the delete command, the ViewModel checks the selection and the repository deletes the gift from SQL Server LocalDB through Entity Framework. WPF data binding then updates the list and status bar.'
     ],
+    giftsTitle: 'Gift Manager',
     todoTitle: 'To-do App',
     todoDescription: 'Add, complete and delete tasks. Pinia manages the app state and saves tasks in the browser.',
     shopDescription: 'A shop demo that loads products and categories from the Platzi Fake Store API. Search and filter products, save favourites and add items to the cart.',
@@ -205,7 +209,7 @@ const translations = {
     areaFilter: 'Тип проекта',
     filterOptions: 'Фильтры проектов',
     allAreas: 'Все типы',
-    areas: { mobile: 'Мобильное приложение', game: 'Игра', web: 'Веб-разработка', backend: 'Бэкенд и данные' },
+    areas: { mobile: 'Мобильное приложение', game: 'Игра', web: 'Веб-разработка', backend: 'Бэкенд и данные', desktop: 'Десктопное приложение' },
     filter: 'Фильтр по технологии',
     allTechnologies: 'Все технологии',
     noResults: 'Подходящих проектов нет.',
@@ -237,8 +241,8 @@ const translations = {
     technologiesIntro: 'Технологии, с которыми я работаю и продолжаю развиваться.',
     techGroups: ['Фронтенд и приложения', 'Бэкенд и данные', 'Инструменты', 'ИИ-инструменты', 'Темы обучения'], projectUse: 'Использовала в проектах', studyUse: 'Изучала в рамках обучения',
     sectionPortfolio: '01 / ПОРТФОЛИО', sectionTechnologies: '02 / ТЕХНОЛОГИИ', sectionAbout: '03 / ОБО МНЕ', sectionContact: '04 / КОНТАКТЫ',
-    projectTypes: { mobile: 'МОБИЛЬНОЕ ПРИЛОЖЕНИЕ', game: 'КОНСОЛЬНАЯ ИГРА', web: 'ВЕБ-ПРОЕКТ', backend: 'КОНСОЛЬНОЕ ПРИЛОЖЕНИЕ' },
-    projectTypesShort: { mobile: 'ПРИЛ.', game: 'ИГРА', web: 'ВЕБ', backend: 'JAVA' },
+    projectTypes: { mobile: 'МОБИЛЬНОЕ ПРИЛОЖЕНИЕ', game: 'КОНСОЛЬНАЯ ИГРА', web: 'ВЕБ-ПРОЕКТ', backend: 'КОНСОЛЬНОЕ ПРИЛОЖЕНИЕ', desktop: 'ПРИЛОЖЕНИЕ ДЛЯ ПК' },
+    projectTypesShort: { mobile: 'ПРИЛ.', game: 'ИГРА', web: 'ВЕБ', backend: 'JAVA', desktop: 'ДЕСКТОП' },
     studyTopics: 'Объектно-ориентированное программирование · Алгоритмы · Архитектура ПО · Обеспечение качества ПО',
     techFilterAll: "Все разделы", techFilterGroups: ["Фронтенд и приложения", "Бэкенд и данные", "Инструменты", "ИИ-инструменты"],
     techFilterReset: 'Сбросить',
@@ -258,8 +262,10 @@ const translations = {
       'Консольная версия UNO на Java, разработанная в команде. Карты, игроки и раунды представлены классами Java. Игра проверяет ходы и поддерживает карты действий, например «Пропуск хода» и «Смена направления». Игра сохраняет очки в SQLite через JDBC и загружает таблицу рекордов с помощью SQL-запроса.',
       'Учебный проект в FH CAMPUS 02: сайт кофейни с меню, фотогалереей и контактной формой. Небольшой объём проекта позволил сосредоточиться на основах веб-разработки: структуре страниц на HTML, адаптивной вёрстке с CSS Grid и Flexbox и подключении фотогалереи с помощью JavaScript и Swiper.',
       'Консольный экзаменационный проект для управления гостями, номерами, бронированиями и дополнительными услугами. Hibernate/JPA, операции CRUD, запросы HQL, транзакции и XML-маппинг.',
-      'С проекта Feta начался мой путь в ИТ. Моим первым веб-проектом и одновременно дипломной работой в WIFI стал сайт для производителя леденцов. Я разработала адаптивную тему WordPress с каталогом, раскрывающимися списками ингредиентов и контактной формой. Сайт компании был опубликован. Сейчас в галерее показана локальная версия.'
+      'С проекта Feta начался мой путь в ИТ. Моим первым веб-проектом и одновременно дипломной работой в WIFI стал сайт для производителя леденцов. Я разработала адаптивную тему WordPress с каталогом, раскрывающимися списками ингредиентов и контактной формой. Сайт компании был опубликован. Сейчас в галерее показана локальная версия.',
+      'Приложение для Windows, в котором можно добавлять, редактировать, копировать и фильтровать подарки. При удалении интерфейс запускает команду, ViewModel проверяет выбранный подарок, а репозиторий удаляет его из SQL Server LocalDB через Entity Framework. Затем привязка данных WPF обновляет список и строку состояния.'
     ],
+    giftsTitle: 'Управление подарками',
     todoTitle: 'Список задач',
     todoDescription: 'Задачи можно добавлять, отмечать как выполненные и удалять. Pinia управляет состоянием приложения и сохраняет задачи в браузере.',
     shopDescription: 'Демонстрационный магазин загружает товары и категории через Platzi Fake Store API. Товары можно искать, фильтровать, добавлять в избранное и в корзину.',
@@ -329,6 +335,15 @@ const projects = [
     stack: 'WordPress · PHP · HTML · CSS · JavaScript'
   },
   {
+    id: 'geschenkeverwaltung',
+    title: 'Geschenkeverwaltung',
+    createdAt: '2026-01',
+    area: 'desktop',
+    image: '/images/geschenkeverwaltung-vorschau.png',
+    url: 'https://github.com/ekschedl/ISY_GeschenkeManager',
+    stack: 'C# · WPF · XAML · MVVM · Entity Framework · SQL Server LocalDB'
+  },
+  {
     id: 'todo',
     title: 'To-do-App',
     createdAt: '2025-07',
@@ -378,6 +393,14 @@ const fetaSlides = [
 ] as const
 
 const projectGalleries = {
+  geschenkeverwaltung: {
+    title: 'Geschenkeverwaltung',
+    slides: [
+      { image: '/images/geschenkeverwaltung-vorschau.png', caption: { DE: 'Vorschau nach XAML · Wunschzettel und Geschenkdetails', EN: 'XAML-based preview · Wish list and gift details', RU: 'Визуализация по XAML · Список желаний и сведения о подарке' } },
+      { image: '/images/geschenkeverwaltung-startfenster.png', caption: { DE: 'Vorschau nach XAML · Startfenster mit geöffneter Menüleiste', EN: 'XAML-based preview · Start window with the menu open', RU: 'Визуализация по XAML · Стартовое окно с открытым меню' } },
+      { image: '/images/geschenkeverwaltung-rechner.png', caption: { DE: 'Vorschau nach XAML · Geschenke-Rechner mit Notenskala', EN: 'XAML-based preview · Gift calculator with grade scale', RU: 'Визуализация по XAML · Калькулятор подарков со шкалой оценок' } }
+    ]
+  },
   todo: {
     title: 'To-do-App',
     slides: [
@@ -418,6 +441,7 @@ const galleryProject = ref<keyof typeof projectGalleries>('hotelverwaltung')
 const activeGallery = computed(() => {
   const gallery = projectGalleries[galleryProject.value]
   if (galleryProject.value === 'todo') return { ...gallery, title: t.value.todoTitle }
+  if (galleryProject.value === 'geschenkeverwaltung') return { ...gallery, title: t.value.giftsTitle }
   return galleryProject.value === 'uno' ? { ...gallery, title: t.value.unoTitle } : gallery
 })
 const hotelGalleryLabels = {
@@ -442,7 +466,7 @@ function changeHotelSlide(direction: number) {
   if (count > 1) hotelSlideIndex.value = (hotelSlideIndex.value + direction + count) % count
 }
 
-const featuredProjects = projects.filter((project) => project.id !== 'hotelverwaltung' && project.id !== 'feta' && !('demoUrl' in project))
+const featuredProjects = projects.filter((project) => project.id !== 'hotelverwaltung' && project.id !== 'feta' && project.id !== 'geschenkeverwaltung' && !('demoUrl' in project))
 
 const projectTechnologies = [...new Set(projects.flatMap(({ stack }) => stack.split(' · ')))]
   .sort((first, second) => first.localeCompare(second))
@@ -457,7 +481,10 @@ const technologyAreas = new Map(projectTechnologies.map((technology) => {
 
 const visibleProjects = computed(() => {
   return projects
-    .map((project, index) => ({ ...project, description: project.id === 'todo' ? t.value.todoDescription
+    .map((project, index) => ({
+      ...project,
+      title: project.id === 'geschenkeverwaltung' ? t.value.giftsTitle : project.title,
+      description: project.id === 'todo' ? t.value.todoDescription
       : project.id === 'shopplatzi' ? t.value.shopDescription : t.value.projectDescriptions[index] }))
     .filter((project) => {
       const stack = project.stack.split(' · ')
@@ -719,7 +746,7 @@ function scrollToTop() {
 
     <EducationPage v-if="isEducation" :language="language" />
     <ExperiencePage v-else-if="isExperience" :language="language" />
-    <main v-else>
+    <main v-else class="portfolio-home">
       <a class="education-milestone" :href="educationPath">
         <div class="education-milestone-headline">
           <span class="education-milestone-news">{{ t.educationNews }}</span>
@@ -909,11 +936,11 @@ function scrollToTop() {
                 <span class="project-type project-area" :data-area="project.area">{{ t.areas[project.area] }}</span>
                 <div class="project-title-row">
                   <h3>{{ project.id === 'todo' ? t.todoTitle : project.id === 'uno' ? t.unoTitle : project.title }}</h3>
-                  <a v-if="'url' in project" class="project-repository-link" :href="project.url" target="_blank" rel="noopener noreferrer">
-                    {{ t.projectLink }} <span aria-hidden="true">↗</span>
+                  <a v-if="'url' in project" class="project-repository-link" :href="project.url" :aria-label="t.projectLink" target="_blank" rel="noopener noreferrer">
+                    GitHub <span aria-hidden="true">↗</span>
                   </a>
                 </div>
-                <p v-if="project.createdAt" class="project-created">{{ t.created }} · {{ new Intl.DateTimeFormat(language.toLowerCase(), { month: 'long', year: 'numeric' }).format(new Date(project.createdAt + '-01T00:00:00')) }}</p>
+                <p v-if="project.createdAt" class="project-created">{{ t.created }} · {{ new Intl.DateTimeFormat(language === 'DE' ? 'de-AT' : language.toLowerCase(), { month: 'long', year: 'numeric' }).format(new Date(project.createdAt + '-01T00:00:00')) }}</p>
                 <p>{{ project.description }}</p>
                 <span class="project-stack">{{ project.stack }}</span>
               </div>
@@ -1051,18 +1078,23 @@ function scrollToTop() {
     </main>
 
     <dialog ref="hotelGallery" class="hotel-gallery" :class="{ 'hotel-gallery-video': 'video' in hotelSlide, 'hotel-gallery-video-wide': galleryProject === 'uno' && 'video' in hotelSlide }" :aria-label="activeGallery.title"
+      @click.self="hotelGallery?.close()"
       @close="galleryVideo?.pause(); if ('embed' in hotelSlide) hotelSlideIndex = 0"
       @keydown.left.prevent="changeHotelSlide(-1)" @keydown.right.prevent="changeHotelSlide(1)">
       <div class="hotel-gallery-header">
         <strong>{{ activeGallery.title }}</strong>
         <button type="button" autofocus :aria-label="galleryLabels.close" @click="hotelGallery?.close()">×</button>
       </div>
-      <figure aria-live="polite">
+      <figure aria-live="polite" @click.self="hotelGallery?.close()">
         <video v-if="'video' in hotelSlide" ref="galleryVideo" :src="hotelSlide.video"
           :poster="hotelSlide.poster"
           :aria-label="hotelSlide.caption[language]" controls muted playsinline preload="none" @keydown.left.stop @keydown.right.stop />
         <iframe v-else-if="'embed' in hotelSlide" class="todo-demo-frame" :src="hotelSlide.embed"
           :title="activeGallery.title" sandbox="allow-scripts allow-same-origin" />
+        <button v-else-if="activeGallery.slides.length > 1" type="button" class="hotel-gallery-image"
+          :aria-label="galleryLabels.next" @click="changeHotelSlide(1)">
+          <img :src="hotelSlide.image" alt="" loading="lazy" />
+        </button>
         <img v-else :src="hotelSlide.image" :alt="hotelSlide.caption[language]" loading="lazy" />
         <figcaption>{{ hotelSlide.caption[language] }}</figcaption>
       </figure>
@@ -1091,6 +1123,14 @@ function scrollToTop() {
 </template>
 
 <style scoped>
+.portfolio-home {
+  --hero-section-gap: clamp(16px, 2vw, 26px);
+}
+
+.portfolio-home > .projects-section {
+  padding-block-start: calc(var(--hero-section-gap) + 12px);
+}
+
 .education-milestone {
   --education-python-color: #f6bb9d;
   --education-news-color: #ffc0a7;
@@ -1098,7 +1138,7 @@ function scrollToTop() {
   grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
   align-items: center;
   gap: 14px clamp(10px, 1.6vw, 22px);
-  margin-bottom: clamp(16px, 2vw, 26px);
+  margin-bottom: var(--hero-section-gap);
   padding-block: clamp(18px, 2.4vw, 30px);
   border-radius: 12px;
   background: var(--surface);
@@ -1343,6 +1383,10 @@ function scrollToTop() {
   --area-color: var(--blue);
 }
 
+[data-area='desktop'] {
+  --area-color: color-mix(in srgb, var(--blue), var(--mist));
+}
+
 .project-tile[data-area],
 .project-visual[data-area],
 .project-area[data-area] {
@@ -1477,7 +1521,7 @@ function scrollToTop() {
   margin: 12px 0 8px;
 }
 
-.hotel-gallery button {
+.hotel-gallery button:not(.hotel-gallery-image) {
   min-width: 40px;
   min-height: 40px;
   border: 1px solid var(--line);
@@ -1489,10 +1533,23 @@ function scrollToTop() {
 .hotel-gallery figure { margin: 12px 0 0; }
 .hotel-gallery img {
   display: block;
-  width: 100%;
-  height: min(65dvh, 680px);
-  object-fit: contain;
+  max-width: 100%;
+  max-height: min(65dvh, 680px);
+  width: auto;
+  height: auto;
+  margin-inline: auto;
   border-radius: 8px;
+}
+
+.hotel-gallery-image {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  vertical-align: top;
 }
 
 .hotel-gallery.hotel-gallery-video {
@@ -1524,16 +1581,20 @@ function scrollToTop() {
 
 .project-title-row {
   display: flex;
-  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 0 16px;
+  gap: 12px;
+}
+
+.project-title-row h3 {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .project-repository-link {
   display: flex;
-  width: fit-content;
-  max-width: 100%;
+  flex-shrink: 0;
+  white-space: nowrap;
   align-items: center;
   gap: 7px;
   color: var(--accent);
