@@ -1099,9 +1099,7 @@ function scrollToTop() {
   align-items: center;
   gap: 14px clamp(10px, 1.6vw, 22px);
   margin-bottom: clamp(16px, 2vw, 26px);
-  padding: clamp(18px, 2.4vw, 30px);
-  border: 1px solid var(--line);
-  border-inline-start: 3px solid var(--accent);
+  padding-block: clamp(18px, 2.4vw, 30px);
   border-radius: 12px;
   background: var(--surface);
   color: var(--ink);
