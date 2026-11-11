@@ -365,14 +365,14 @@ const projectGalleries = {
     slides: [
       { image: '/images/todo-start.jpg', caption: { DE: 'Startseite mit Aufgabenliste und zwei Shop-Demos', EN: 'Home screen with the task list and two shop demos', RU: 'Главная страница со списком задач и двумя демоверсиями магазинов' } },
       { image: '/images/todo-aufgaben.jpg', caption: { DE: 'Aufgabenliste mit offenen und erledigten Beispielaufgaben', EN: 'Task list with open and completed sample tasks', RU: 'Список с открытыми и выполненными примерами задач' } },
-      { embed: todoDemoUrl, caption: { DE: 'Live-Demo', EN: 'Live demo', RU: 'Интерактивная демоверсия' } }
+      { embed: `${todoDemoUrl}?v=91f0b77`, caption: { DE: 'Live-Demo', EN: 'Live demo', RU: 'Интерактивная демоверсия' } }
     ]
   },
   shopplatzi: {
     title: 'ShopPlatzi',
     slides: [
       { image: '/images/todo-shopplatzi.jpg', caption: { DE: 'Produktübersicht mit Suche, Kategorien und Favoriten', EN: 'Product catalogue with search, categories and favourites', RU: 'Каталог товаров с поиском, категориями и избранным' } },
-      { embed: shopDemoUrl, caption: { DE: 'Live-Demo', EN: 'Live demo', RU: 'Интерактивная демоверсия' } }
+      { embed: `${shopDemoUrl}?v=91f0b77`, caption: { DE: 'Live-Demo', EN: 'Live demo', RU: 'Интерактивная демоверсия' } }
     ]
   },
   feta: { title: 'Feta', slides: fetaSlides },
