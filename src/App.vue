@@ -1101,6 +1101,8 @@ function scrollToTop() {
 
 <style scoped>
 .education-milestone {
+  --education-python-color: #f6bb9d;
+  --education-news-color: #ffc0a7;
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
   align-items: center;
@@ -1112,6 +1114,10 @@ function scrollToTop() {
   border-radius: 12px;
   background: var(--surface);
   color: var(--ink);
+}
+
+:global(:root[data-theme='dark']) .education-milestone {
+  --education-python-color: #78433c;
 }
 
 .education-milestone-copy,
@@ -1128,7 +1134,7 @@ function scrollToTop() {
 }
 
 .education-milestone-copy {
-  background: color-mix(in srgb, var(--blue) 56%, var(--surface));
+  background: linear-gradient(115deg, var(--blue), var(--slate));
 }
 
 .education-milestone-heading {
@@ -1147,6 +1153,7 @@ function scrollToTop() {
   min-width: 0;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--blue), var(--lilac), var(--education-news-color)) bottom / 100% 2px no-repeat;
 }
 
 .education-milestone-focus {
@@ -1160,8 +1167,8 @@ function scrollToTop() {
   gap: 8px;
   padding: 4px 9px;
   border-radius: 5px;
-  background: var(--accent);
-  color: var(--paper);
+  background: var(--education-news-color);
+  color: #4a2729;
   font: 500 .75rem 'IBM Plex Mono', ui-monospace, monospace;
   letter-spacing: .035em;
 }
@@ -1206,7 +1213,7 @@ function scrollToTop() {
 }
 
 .education-milestone-next {
-  background: color-mix(in srgb, var(--lilac) 62%, var(--surface));
+  background: linear-gradient(115deg, var(--education-python-color), var(--lilac));
 }
 
 .education-milestone-action {
