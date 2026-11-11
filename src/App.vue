@@ -108,9 +108,24 @@ const translations = {
     aboutShort: 'Mein Weg und was mich antreibt.',
     aboutTitle: 'Neugierig bleiben.',
     aboutSections: [
-      { heading: 'Was reizt mich am Code?', text: 'Wenn Code hakt, gehe ich der Ursache auf den Grund. Das hat mich im Lehrgang Software-Entwicklung an der FH CAMPUS 02 genauso angetrieben wie in der Webentwicklung bei JAWA. Ich habe mir mein Wissen mit Zeit und Übung erarbeitet. Jetzt will ich wissen, was ich damit noch entwickeln kann.' },
-      { heading: 'Ich über KI', text: 'Ein Streichholz spart Zeit beim Feuermachen. KI spart mir Zeit beim Entwickeln. So kann ich mehr Ideen testen und Fehler gezielter eingrenzen. Ich gebe die Richtung vor, prüfe die Vorschläge am Code und entscheide, welchen Ansatz ich weiterentwickle.' },
-      { heading: 'Warum jetzt Python?', text: 'Wie lernt ein Modell aus Daten? Und woran erkenne ich, ob ich seinem Ergebnis trauen kann? Das will ich selbst ausprobieren. Mein Einstieg ist der Python-Kurs in Hagen.' },
+      {
+        heading: 'Was reizt mich am Code?',
+        before: '',
+        emphasis: 'Wenn Code hakt, gehe ich der Ursache auf den Grund.',
+        after: ' Das hat mich im Lehrgang Software-Entwicklung an der FH CAMPUS 02 genauso angetrieben wie in der Webentwicklung bei JAWA. Ich habe mir mein Wissen mit Zeit und Übung erarbeitet. Jetzt will ich wissen, was ich damit noch entwickeln kann.'
+      },
+      {
+        heading: 'Ich über KI',
+        before: 'Ein Streichholz spart Zeit beim Feuermachen. KI spart mir Zeit beim Entwickeln. So kann ich mehr Ideen testen und Fehler gezielter eingrenzen. ',
+        emphasis: 'Ich gebe die Richtung vor, prüfe die Vorschläge am Code und entscheide, welchen Ansatz ich weiterentwickle.',
+        after: ''
+      },
+      {
+        heading: 'Warum jetzt Python?',
+        before: '',
+        emphasis: 'Wie lernt ein Modell aus Daten?',
+        after: ' Und woran erkenne ich, ob ich seinem Ergebnis trauen kann? Das will ich selbst ausprobieren. Mein Einstieg ist der Python-Kurs in Hagen.'
+      },
     ],
     helloTitle: 'Lass uns etwas bewegen.',
     helloText:
@@ -182,9 +197,24 @@ const translations = {
     aboutShort: 'My journey and what motivates me.',
     aboutTitle: 'Stay curious.',
     aboutSections: [
-      { heading: 'What draws me to code?', text: 'When code breaks, I want to get to the root of the problem. That drove me throughout my Software Development programme at FH CAMPUS 02 and in my web development work at JAWA. I built up my knowledge through time and practice. Now I want to see what else I can build with it.' },
-      { heading: 'My take on AI', text: 'A match saves time when lighting a fire. AI saves me time when developing software. It lets me test more ideas and pinpoint errors more quickly. I set the direction, test suggestions against the code and decide which approach to develop further.' },
-      { heading: 'Why Python now?', text: 'How does a model learn from data? How can I tell whether I can trust its results? I want to find out for myself. My starting point is a Python course in Hagen.' },
+      {
+        heading: 'What draws me to code?',
+        before: '',
+        emphasis: 'When code breaks, I want to get to the root of the problem.',
+        after: ' That drove me throughout my Software Development programme at FH CAMPUS 02 and in my web development work at JAWA. I built up my knowledge through time and practice. Now I want to see what else I can build with it.'
+      },
+      {
+        heading: 'My take on AI',
+        before: 'A match saves time when lighting a fire. AI saves me time when developing software. It lets me test more ideas and pinpoint errors more quickly. ',
+        emphasis: 'I set the direction, test suggestions against the code and decide which approach to develop further.',
+        after: ''
+      },
+      {
+        heading: 'Why Python now?',
+        before: '',
+        emphasis: 'How does a model learn from data?',
+        after: ' How can I tell whether I can trust its results? I want to find out for myself. My starting point is a Python course in Hagen.'
+      },
     ],
     helloTitle: "Let's make something happen.",
     helloText:
@@ -256,9 +286,24 @@ const translations = {
     aboutShort: 'Мой путь и то, что меня вдохновляет.',
     aboutTitle: 'Сохранять любопытство.',
     aboutSections: [
-      { heading: 'Что меня увлекает в коде?', text: 'Когда код даёт сбой, я ищу причину. Это стремление помогало мне и на программе по разработке ПО в FH CAMPUS 02, и в работе над веб-приложениями в JAWA. Я много практиковалась и шаг за шагом накапливала знания. Теперь хочу узнать, что ещё могу с их помощью создать.' },
-      { heading: 'Мой взгляд на ИИ', text: 'Спичка помогает быстрее разжечь огонь. ИИ экономит мне время при разработке. С ним я могу проверить больше идей и точнее определить причину ошибки. Я задаю направление, проверяю предложения на практике и решаю, какой подход развивать дальше.' },
-      { heading: 'Почему именно сейчас Python?', text: 'Как модель учится на данных? Как понять, можно ли доверять её результатам? Я хочу проверить это сама. Начну с курса Python в Хагене.' },
+      {
+        heading: 'Что меня увлекает в коде?',
+        before: '',
+        emphasis: 'Когда код даёт сбой, я ищу причину.',
+        after: ' Это стремление помогало мне и на программе по разработке ПО в FH CAMPUS 02, и в работе над веб-приложениями в JAWA. Я много практиковалась и шаг за шагом накапливала знания. Теперь хочу узнать, что ещё могу с их помощью создать.'
+      },
+      {
+        heading: 'Мой взгляд на ИИ',
+        before: 'Спичка помогает быстрее разжечь огонь. ИИ экономит мне время при разработке. С ним я могу проверить больше идей и точнее определить причину ошибки. ',
+        emphasis: 'Я задаю направление, проверяю предложения на практике и решаю, какой подход развивать дальше.',
+        after: ''
+      },
+      {
+        heading: 'Почему именно сейчас Python?',
+        before: '',
+        emphasis: 'Как модель учится на данных?',
+        after: ' Как понять, можно ли доверять её результатам? Я хочу проверить это сама. Начну с курса Python в Хагене.'
+      },
     ],
     helloTitle: 'Давайте создавать вместе.',
     helloText:
@@ -1045,7 +1090,7 @@ function scrollToTop() {
             <div class="about-topics">
               <div v-for="topic in t.aboutSections" :key="topic.heading" class="about-topic">
                 <h3>{{ topic.heading }}</h3>
-                <p>{{ topic.text }}</p>
+                <p>{{ topic.before }}<strong>{{ topic.emphasis }}</strong>{{ topic.after }}</p>
               </div>
             </div>
 

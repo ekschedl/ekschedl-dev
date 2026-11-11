@@ -722,6 +722,36 @@ select:focus-visible {
   line-height: 1.95;
 }
 
+.about-topic,
+.value-item {
+  --about-accent: var(--blue);
+}
+
+.about-topic:nth-child(2),
+.value-item:nth-child(2) {
+  --about-accent: var(--lilac);
+}
+
+.about-topic:nth-child(3),
+.value-item:nth-child(3) {
+  --about-accent: var(--mist);
+}
+
+.value-item:nth-child(4) {
+  --about-accent: var(--slate);
+}
+
+.about-topic > p > strong {
+  color: var(--ink);
+  font-weight: 600;
+  background: linear-gradient(transparent 76%, color-mix(in srgb, var(--about-accent) 65%, transparent) 76%);
+  box-decoration-break: clone;
+}
+
+:root[data-theme='dark'] .about-topic > p > strong {
+  background: linear-gradient(transparent 76%, color-mix(in srgb, var(--about-accent) 70%, var(--ink)) 76%);
+}
+
 .values-line {
   display: flex;
   flex-wrap: wrap;
@@ -737,7 +767,7 @@ select:focus-visible {
 }
 
 .value-item > span {
-  color: var(--accent);
+  color: color-mix(in srgb, var(--about-accent) 55%, var(--ink));
   font-size: 23px;
 }
 
