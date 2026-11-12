@@ -358,7 +358,7 @@ const projects = [
   {
     id: 'uno',
     title: 'UNO',
-    createdAt: '2025-12',
+    createdAt: '2025-06',
     type: 'CARD GAME',
     area: 'game',
     image: '/images/uno.jpg',
@@ -427,7 +427,7 @@ const projects = [
   {
     id: 'uno-web',
     title: 'UNO',
-    createdAt: '2025-10',
+    createdAt: '2025-12',
     area: 'game',
     image: unoWebCover,
     url: 'https://github.com/ekschedl/NowaUno',
@@ -586,6 +586,17 @@ const visibleProjects = computed(() => {
       return projectSort.value === 'newest' ? -order : order
     })
 })
+
+const projectDateFormatter = computed(() =>
+  new Intl.DateTimeFormat(language.value === 'DE' ? 'de-AT' : language.value.toLowerCase(), {
+    month: 'long',
+    year: 'numeric'
+  })
+)
+
+function formatProjectDate(month: string) {
+  return projectDateFormatter.value.format(new Date(month + '-01T00:00:00'))
+}
 
 const hasProjectFilters = computed(() => selectedAreas.value.length > 0 || selectedTechnologies.value.length > 0)
 const projectCount = computed(() => t.value.projectCount
@@ -1022,7 +1033,7 @@ function scrollToTop() {
                     GitHub <span aria-hidden="true">↗</span>
                   </a>
                 </div>
-                <p v-if="project.createdAt" class="project-created">{{ t.created }} · {{ new Intl.DateTimeFormat(language === 'DE' ? 'de-AT' : language.toLowerCase(), { month: 'long', year: 'numeric' }).format(new Date(project.createdAt + '-01T00:00:00')) }}</p>
+                <p v-if="project.createdAt" class="project-created">{{ t.created }} · {{ formatProjectDate(project.createdAt) }}</p>
                 <p>{{ project.description }}</p>
               </div>
               <span class="project-stack">{{ project.stack }}</span>
