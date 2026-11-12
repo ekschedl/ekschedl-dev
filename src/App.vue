@@ -133,7 +133,7 @@ const translations = {
     github: 'Mein GitHub',
     email: 'E-Mail schreiben',
     unoTitle: 'UNO-Kartenspiel',
-    unoWebDescription: 'Vier Personen, ein Bildschirm. Karten ablegen, die Farbe wechseln und über mehrere Runden Punkte sammeln. Die Spieloberfläche entstand im Team an der FH CAMPUS 02. Für meine Weiterentwicklung habe ich ein eigenes Node.js-Backend mit Express gebaut, das die Karten austeilt, Spielzüge prüft und die Punkte verwaltet. Dazu kommen eigene Karten und ein Wintermodus. Die Demo läuft im kostenlosen Render-Tarif. Nach einer Pause kann das Laden etwa eine Minute dauern. Das ist normal.',
+    unoWebDescription: 'CAMPUS02 ColorSpiel ist ein webbasiertes Kartenspiel für vier Personen an einem Bildschirm. Karten ablegen, Farben wechseln und über mehrere Runden Punkte sammeln. Die Spieloberfläche entstand im Team an der FH CAMPUS 02. Für meine Weiterentwicklung habe ich ein eigenes Node.js-Backend mit Express gebaut, das Karten austeilt, Spielzüge prüft und Punkte verwaltet. Dazu kommen eigene Kartendesigns und ein Wintermodus. Die Demo läuft im kostenlosen Render-Tarif. Nach einer Pause kann das Laden etwa eine Minute dauern.',  
     projectDescriptions: [
       'YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team war ich für das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform zuständig.',
       'Im Team entwickeltes UNO-Kartenspiel für die Java-Konsole. Karten, Spieler und Spielrunden sind als Java-Klassen modelliert. Das Spiel prüft die Spielzüge und unterstützt Aktionskarten wie „Aussetzen“ und „Richtungswechsel“. Über JDBC speichert das Spiel die Punktestände in SQLite und ruft die Bestenliste per SQL ab.',
@@ -223,7 +223,7 @@ const translations = {
     github: 'My GitHub',
     email: 'Send an email',
     unoTitle: 'UNO Card Game',
-    unoWebDescription: 'Four players share one screen. Play cards, change colours and collect points over several rounds. We built the interface as a team at FH CAMPUS 02. I later built my own Node.js and Express backend to deal cards, validate moves and keep score. I also added my own card designs and a winter theme. The demo runs on Render’s free plan. After a period of inactivity, it may take about a minute to load. This is normal.',
+    unoWebDescription: 'CAMPUS02 ColorSpiel is a browser-based card game for four players sharing one screen. Play cards, change colours and collect points across several rounds. The interface was developed as a team at FH CAMPUS 02. I later built my own Node.js and Express backend to deal cards, validate moves and manage scores. I also added custom card designs and a winter theme. The demo runs on Render’s free plan and may take about a minute to load after inactivity.',   
     projectDescriptions: [
       'YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.',
       'A Java console version of UNO developed as a team. Cards, players and rounds are modelled as Java classes. The game validates moves and supports action cards such as Skip and Reverse. The game stores scores in SQLite via JDBC and retrieves the leaderboard with SQL.',
@@ -313,8 +313,8 @@ const translations = {
     github: 'Мой GitHub',
     email: 'Написать письмо',
     unoTitle: 'Карточная игра UNO',
-    unoWebDescription: 'Четыре игрока за одним экраном. Сбрасывайте карты, меняйте цвет и набирайте очки за несколько раундов. Мы разработали интерфейс командой в FH CAMPUS 02. Затем я написала собственный сервер на Node.js и Express, который раздаёт карты, проверяет ходы и ведёт счёт. Также я добавила свой дизайн карт и зимнюю тему. Демо работает на бесплатном тарифе Render. После простоя загрузка может занять около минуты. Это нормально.',
-    projectDescriptions: [
+    unoWebDescription: 'CAMPUS02 ColorSpiel — браузерная карточная игра для четырёх игроков за одним экраном. Игроки выкладывают карты, меняют цвета и набирают очки в нескольких раундах. Интерфейс был разработан в команде FH CAMPUS 02. Позже я создала собственный сервер на Node.js и Express для раздачи карт, проверки ходов и подсчёта очков. Также я добавила собственный дизайн карт и зимнюю тему. Демоверсия работает на бесплатном тарифе Render и после простоя может загружаться около минуты.',
+  projectDescriptions: [
       'YogaNow Studio объединяет открытую библиотеку йоги и запись на занятия в студии. В команде я отвечала за дизайн, подключение базы данных Supabase и платформу записи на занятия.',
       'Консольная версия UNO на Java, разработанная в команде. Карты, игроки и раунды представлены классами Java. Игра проверяет ходы и поддерживает карты действий, например «Пропуск хода» и «Смена направления». Игра сохраняет очки в SQLite через JDBC и загружает таблицу рекордов с помощью SQL-запроса.',
       'Учебный проект в FH CAMPUS 02: сайт кофейни с меню, фотогалереей и контактной формой. Небольшой объём проекта позволил сосредоточиться на основах веб-разработки: структуре страниц на HTML, адаптивной вёрстке с CSS Grid и Flexbox и подключении фотогалереи с помощью JavaScript и Swiper.',
@@ -343,7 +343,7 @@ const shopDemoUrl = 'https://ekschedl.github.io/jawa_todo/shopplatzi/'
 const hotelConsoleImage = '/images/hotelverwaltung-konsole.png'
 
 const unoWebDemoUrl = import.meta.env.VITE_CAMPUS02_DEMO_URL?.trim() || 'https://campus-kartenspiel.onrender.com/'
-const unoWebTitle = 'Farbwechsel'
+const unoWebTitle = 'CAMPUS02 ColorSpiel'
 const unoWebCover = '/images/uno-web-spieltisch.png'
 
 const projects = [
