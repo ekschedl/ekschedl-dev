@@ -133,7 +133,7 @@ const translations = {
     github: 'Mein GitHub',
     email: 'E-Mail schreiben',
     unoTitle: 'UNO-Kartenspiel',
-    unoWebDescription: 'Browser-Version des Kartenspiels UNO für vier Personen. Das Frontend erfasst die Spielernamen, zeigt Karten, Punkte und den aktiven Spieler an und kommuniziert per REST-API mit der vorgegebenen Spiellogik auf dem Server. Kartenanimationen und visuelles Feedback zeigen, ob ein Zug möglich ist.',
+    unoWebDescription: 'Browser-Version des Kartenspiels UNO für vier Personen. Das Frontend erfasst die Spielernamen, zeigt Karten, Punkte und den aktiven Spieler an und kommuniziert per REST-API mit meinem neu entwickelten Node.js-Backend. Die Spieloberfläche entstand im Team an der FH CAMPUS 02. Kartenanimationen und visuelles Feedback zeigen, ob ein Zug möglich ist.',
     projectDescriptions: [
       'YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team war ich für das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform zuständig.',
       'Im Team entwickeltes UNO-Kartenspiel für die Java-Konsole. Karten, Spieler und Spielrunden sind als Java-Klassen modelliert. Das Spiel prüft die Spielzüge und unterstützt Aktionskarten wie „Aussetzen“ und „Richtungswechsel“. Über JDBC speichert das Spiel die Punktestände in SQLite und ruft die Bestenliste per SQL ab.',
@@ -223,7 +223,7 @@ const translations = {
     github: 'My GitHub',
     email: 'Send an email',
     unoTitle: 'UNO Card Game',
-    unoWebDescription: 'A browser version of UNO for four players. The frontend collects player names, displays cards, scores and the active player, and talks to the supplied server-side game logic through a REST API. Card animations and visual feedback indicate whether a move is valid.',
+    unoWebDescription: 'A browser version of UNO for four players. The frontend collects player names, displays cards, scores and the active player, and connects to my own Node.js backend through a REST API. The team built the interface at FH CAMPUS 02. Card animations and visual feedback indicate whether a move is valid.',
     projectDescriptions: [
       'YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.',
       'A Java console version of UNO developed as a team. Cards, players and rounds are modelled as Java classes. The game validates moves and supports action cards such as Skip and Reverse. The game stores scores in SQLite via JDBC and retrieves the leaderboard with SQL.',
@@ -313,7 +313,7 @@ const translations = {
     github: 'Мой GitHub',
     email: 'Написать письмо',
     unoTitle: 'Карточная игра UNO',
-    unoWebDescription: 'Браузерная версия UNO для четырёх игроков. Интерфейс принимает имена, показывает карты, очки и текущего игрока и взаимодействует с готовой серверной логикой через REST API. Анимации карт и визуальные подсказки помогают понять, допустим ли ход.',
+    unoWebDescription: 'Браузерная версия UNO для четырёх игроков. Интерфейс принимает имена, показывает карты, очки и текущего игрока и взаимодействует с моим сервером на Node.js через REST API. Интерфейс мы разработали командой в FH CAMPUS 02. Анимации карт и визуальные подсказки помогают понять, допустим ли ход.',
     projectDescriptions: [
       'YogaNow Studio объединяет открытую библиотеку йоги и запись на занятия в студии. В команде я отвечала за дизайн, подключение базы данных Supabase и платформу записи на занятия.',
       'Консольная версия UNO на Java, разработанная в команде. Карты, игроки и раунды представлены классами Java. Игра проверяет ходы и поддерживает карты действий, например «Пропуск хода» и «Смена направления». Игра сохраняет очки в SQLite через JDBC и загружает таблицу рекордов с помощью SQL-запроса.',
@@ -342,6 +342,7 @@ const shopDemoUrl = 'https://ekschedl.github.io/jawa_todo/shopplatzi/'
 
 const hotelConsoleImage = '/images/hotelverwaltung-konsole.png'
 
+const unoWebDemoUrl = import.meta.env.VITE_CAMPUS02_DEMO_URL?.trim() || 'https://campus-kartenspiel.onrender.com/'
 const unoWebCover = '/images/uno-web-spieltisch.png'
 
 const projects = [
@@ -431,7 +432,8 @@ const projects = [
     area: 'game',
     image: unoWebCover,
     url: 'https://github.com/ekschedl/NowaUno',
-    stack: 'HTML · CSS · JavaScript · REST-API'
+    demoUrl: unoWebDemoUrl,
+    stack: 'HTML · CSS · JavaScript · Node.js · Express · REST-API'
   }
 ] as const
 
@@ -512,6 +514,14 @@ const projectGalleries = {
     slides: [
       { image: unoWebCover, caption: { DE: 'Spieltisch · Lokale Vorschau mit Beispieldaten', EN: 'Game table · Local preview with sample data', RU: 'Игровой стол · Локальный предпросмотр с тестовыми данными' } },
       { image: '/images/uno-web.png', caption: { DE: 'Startbildschirm · Namen für vier Spieler eingeben', EN: 'Start screen · Enter names for four players', RU: 'Стартовый экран · Ввод имён четырёх игроков' } },
+      {
+        embed: unoWebDemoUrl,
+        caption: {
+          DE: 'Vier Personen spielen an einem Bildschirm. Der erste Start kann etwa eine Minute dauern.',
+          EN: 'Four players share one screen. The first launch may take about a minute.',
+          RU: 'Четыре игрока играют на одном экране. Первый запуск может занять около минуты.'
+        }
+      }
     ]
   },
   kaffeehaus: {
@@ -1192,7 +1202,10 @@ function scrollToTop() {
           :poster="hotelSlide.poster"
           :aria-label="hotelSlide.caption[language]" controls muted playsinline preload="none" @keydown.left.stop @keydown.right.stop />
         <iframe v-else-if="'embed' in hotelSlide" class="todo-demo-frame" :src="hotelSlide.embed"
-          :title="activeGallery.title" sandbox="allow-scripts allow-same-origin" />
+          :title="activeGallery.title"
+          :sandbox="galleryProject === 'uno-web'
+            ? 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox'
+            : 'allow-scripts allow-same-origin'" />
         <button v-else-if="activeGallery.slides.length > 1" type="button" class="hotel-gallery-image"
           :aria-label="galleryLabels.next" @click="changeHotelSlide(1)">
           <img :src="hotelSlide.image" alt="" />
