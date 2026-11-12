@@ -133,6 +133,7 @@ const translations = {
     github: 'Mein GitHub',
     email: 'E-Mail schreiben',
     unoTitle: 'UNO-Kartenspiel',
+    unoWebDescription: 'Browser-Version des Kartenspiels UNO für vier Personen. Das Frontend erfasst die Spielernamen, zeigt Karten, Punkte und den aktiven Spieler an und kommuniziert per REST-API mit der vorgegebenen Spiellogik auf dem Server. Kartenanimationen und visuelles Feedback zeigen, ob ein Zug möglich ist.',
     projectDescriptions: [
       'YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team war ich für das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform zuständig.',
       'Im Team entwickeltes UNO-Kartenspiel für die Java-Konsole. Karten, Spieler und Spielrunden sind als Java-Klassen modelliert. Das Spiel prüft die Spielzüge und unterstützt Aktionskarten wie „Aussetzen“ und „Richtungswechsel“. Über JDBC speichert das Spiel die Punktestände in SQLite und ruft die Bestenliste per SQL ab.',
@@ -222,6 +223,7 @@ const translations = {
     github: 'My GitHub',
     email: 'Send an email',
     unoTitle: 'UNO Card Game',
+    unoWebDescription: 'A browser version of UNO for four players. The frontend collects player names, displays cards, scores and the active player, and talks to the supplied server-side game logic through a REST API. Card animations and visual feedback indicate whether a move is valid.',
     projectDescriptions: [
       'YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.',
       'A Java console version of UNO developed as a team. Cards, players and rounds are modelled as Java classes. The game validates moves and supports action cards such as Skip and Reverse. The game stores scores in SQLite via JDBC and retrieves the leaderboard with SQL.',
@@ -311,6 +313,7 @@ const translations = {
     github: 'Мой GitHub',
     email: 'Написать письмо',
     unoTitle: 'Карточная игра UNO',
+    unoWebDescription: 'Браузерная версия UNO для четырёх игроков. Интерфейс принимает имена, показывает карты, очки и текущего игрока и взаимодействует с готовой серверной логикой через REST API. Анимации карт и визуальные подсказки помогают понять, допустим ли ход.',
     projectDescriptions: [
       'YogaNow Studio объединяет открытую библиотеку йоги и запись на занятия в студии. В команде я отвечала за дизайн, подключение базы данных Supabase и платформу записи на занятия.',
       'Консольная версия UNO на Java, разработанная в команде. Карты, игроки и раунды представлены классами Java. Игра проверяет ходы и поддерживает карты действий, например «Пропуск хода» и «Смена направления». Игра сохраняет очки в SQLite через JDBC и загружает таблицу рекордов с помощью SQL-запроса.',
@@ -338,6 +341,8 @@ const todoDemoUrl = 'https://ekschedl.github.io/jawa_todo/todo/'
 const shopDemoUrl = 'https://ekschedl.github.io/jawa_todo/shopplatzi/'
 
 const hotelConsoleImage = '/images/hotelverwaltung-konsole.png'
+
+const unoWebCover = '/images/uno-web-spieltisch.png'
 
 const projects = [
   {
@@ -418,6 +423,15 @@ const projects = [
     url: 'https://github.com/ekschedl/jawa_todo',
     demoUrl: shopDemoUrl,
     stack: 'Vue 3 · TypeScript · Vuetify · Pinia · Axios · REST-APIs'
+  },
+  {
+    id: 'uno-web',
+    title: 'UNO',
+    createdAt: '2025-10',
+    area: 'game',
+    image: unoWebCover,
+    url: 'https://github.com/ekschedl/NowaUno',
+    stack: 'HTML · CSS · JavaScript · REST-API'
   }
 ] as const
 
@@ -493,6 +507,13 @@ const projectGalleries = {
       { video: '/videos/uno-console.mp4', poster: projects[1].image, caption: { DE: 'Videodemo des UNO-Konsolenspiels', EN: 'UNO console game demo', RU: 'Видеодемонстрация консольной игры UNO' } }
     ]
   },
+  'uno-web': {
+    title: 'UNO',
+    slides: [
+      { image: unoWebCover, caption: { DE: 'Spieltisch · Lokale Vorschau mit Beispieldaten', EN: 'Game table · Local preview with sample data', RU: 'Игровой стол · Локальный предпросмотр с тестовыми данными' } },
+      { image: '/images/uno-web.png', caption: { DE: 'Startbildschirm · Namen für vier Spieler eingeben', EN: 'Start screen · Enter names for four players', RU: 'Стартовый экран · Ввод имён четырёх игроков' } },
+    ]
+  },
   kaffeehaus: {
     title: projects[2].title,
     slides: [
@@ -531,7 +552,7 @@ function changeHotelSlide(direction: number) {
   if (count > 1) hotelSlideIndex.value = (hotelSlideIndex.value + direction + count) % count
 }
 
-const featuredProjects = projects.filter((project) => project.id !== 'hotelverwaltung' && project.id !== 'feta' && project.id !== 'geschenkeverwaltung' && !('demoUrl' in project))
+const featuredProjects = projects.filter(({ id }) => id === 'yoganow' || id === 'uno' || id === 'kaffeehaus')
 
 const projectTechnologies = [...new Set(projects.flatMap(({ stack }) => stack.split(' · ')))]
   .sort((first, second) => first.localeCompare(second))
@@ -550,7 +571,8 @@ const visibleProjects = computed(() => {
       ...project,
       title: project.id === 'geschenkeverwaltung' ? t.value.giftsTitle : project.title,
       description: project.id === 'todo' ? t.value.todoDescription
-      : project.id === 'shopplatzi' ? t.value.shopDescription : t.value.projectDescriptions[index] }))
+      : project.id === 'shopplatzi' ? t.value.shopDescription
+      : project.id === 'uno-web' ? t.value.unoWebDescription : t.value.projectDescriptions[index] }))
     .filter((project) => {
       const stack = project.stack.split(' · ')
       const matchesTechnology = selectedTechnologies.value.length === 0
