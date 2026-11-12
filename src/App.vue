@@ -133,7 +133,7 @@ const translations = {
     github: 'Mein GitHub',
     email: 'E-Mail schreiben',
     unoTitle: 'UNO-Kartenspiel',
-    unoWebDescription: 'Browser-Version des Kartenspiels UNO für vier Personen. Das Frontend erfasst die Spielernamen, zeigt Karten, Punkte und den aktiven Spieler an und kommuniziert per REST-API mit meinem neu entwickelten Node.js-Backend. Die Spieloberfläche entstand im Team an der FH CAMPUS 02. Kartenanimationen und visuelles Feedback zeigen, ob ein Zug möglich ist.',
+    unoWebDescription: 'Vier Personen, ein Bildschirm. Karten ablegen, die Farbe wechseln und über mehrere Runden Punkte sammeln. Die Spieloberfläche entstand im Team an der FH CAMPUS 02. Für meine Weiterentwicklung habe ich ein eigenes Node.js-Backend mit Express gebaut, das die Karten austeilt, Spielzüge prüft und die Punkte verwaltet. Dazu kommen eigene Karten und ein Wintermodus. Die Demo läuft im kostenlosen Render-Tarif. Nach einer Pause kann das Laden etwa eine Minute dauern. Das ist normal.',
     projectDescriptions: [
       'YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team war ich für das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform zuständig.',
       'Im Team entwickeltes UNO-Kartenspiel für die Java-Konsole. Karten, Spieler und Spielrunden sind als Java-Klassen modelliert. Das Spiel prüft die Spielzüge und unterstützt Aktionskarten wie „Aussetzen“ und „Richtungswechsel“. Über JDBC speichert das Spiel die Punktestände in SQLite und ruft die Bestenliste per SQL ab.',
@@ -223,7 +223,7 @@ const translations = {
     github: 'My GitHub',
     email: 'Send an email',
     unoTitle: 'UNO Card Game',
-    unoWebDescription: 'A browser version of UNO for four players. The frontend collects player names, displays cards, scores and the active player, and connects to my own Node.js backend through a REST API. The team built the interface at FH CAMPUS 02. Card animations and visual feedback indicate whether a move is valid.',
+    unoWebDescription: 'Four players share one screen. Play cards, change colours and collect points over several rounds. We built the interface as a team at FH CAMPUS 02. I later built my own Node.js and Express backend to deal cards, validate moves and keep score. I also added my own card designs and a winter theme. The demo runs on Render’s free plan. After a period of inactivity, it may take about a minute to load. This is normal.',
     projectDescriptions: [
       'YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.',
       'A Java console version of UNO developed as a team. Cards, players and rounds are modelled as Java classes. The game validates moves and supports action cards such as Skip and Reverse. The game stores scores in SQLite via JDBC and retrieves the leaderboard with SQL.',
@@ -313,7 +313,7 @@ const translations = {
     github: 'Мой GitHub',
     email: 'Написать письмо',
     unoTitle: 'Карточная игра UNO',
-    unoWebDescription: 'Браузерная версия UNO для четырёх игроков. Интерфейс принимает имена, показывает карты, очки и текущего игрока и взаимодействует с моим сервером на Node.js через REST API. Интерфейс мы разработали командой в FH CAMPUS 02. Анимации карт и визуальные подсказки помогают понять, допустим ли ход.',
+    unoWebDescription: 'Четыре игрока за одним экраном. Сбрасывайте карты, меняйте цвет и набирайте очки за несколько раундов. Мы разработали интерфейс командой в FH CAMPUS 02. Затем я написала собственный сервер на Node.js и Express, который раздаёт карты, проверяет ходы и ведёт счёт. Также я добавила свой дизайн карт и зимнюю тему. Демо работает на бесплатном тарифе Render. После простоя загрузка может занять около минуты. Это нормально.',
     projectDescriptions: [
       'YogaNow Studio объединяет открытую библиотеку йоги и запись на занятия в студии. В команде я отвечала за дизайн, подключение базы данных Supabase и платформу записи на занятия.',
       'Консольная версия UNO на Java, разработанная в команде. Карты, игроки и раунды представлены классами Java. Игра проверяет ходы и поддерживает карты действий, например «Пропуск хода» и «Смена направления». Игра сохраняет очки в SQLite через JDBC и загружает таблицу рекордов с помощью SQL-запроса.',
@@ -343,6 +343,7 @@ const shopDemoUrl = 'https://ekschedl.github.io/jawa_todo/shopplatzi/'
 const hotelConsoleImage = '/images/hotelverwaltung-konsole.png'
 
 const unoWebDemoUrl = import.meta.env.VITE_CAMPUS02_DEMO_URL?.trim() || 'https://campus-kartenspiel.onrender.com/'
+const unoWebTitle = 'Farbwechsel'
 const unoWebCover = '/images/uno-web-spieltisch.png'
 
 const projects = [
@@ -427,7 +428,7 @@ const projects = [
   },
   {
     id: 'uno-web',
-    title: 'UNO',
+    title: unoWebTitle,
     createdAt: '2025-12',
     area: 'game',
     image: unoWebCover,
@@ -510,16 +511,19 @@ const projectGalleries = {
     ]
   },
   'uno-web': {
-    title: 'UNO',
+    title: unoWebTitle,
     slides: [
-      { image: unoWebCover, caption: { DE: 'Spieltisch · Lokale Vorschau mit Beispieldaten', EN: 'Game table · Local preview with sample data', RU: 'Игровой стол · Локальный предпросмотр с тестовыми данными' } },
-      { image: '/images/uno-web.png', caption: { DE: 'Startbildschirm · Namen für vier Spieler eingeben', EN: 'Start screen · Enter names for four players', RU: 'Стартовый экран · Ввод имён четырёх игроков' } },
+      { image: '/images/uno-web.png', caption: { DE: 'Spielstart im Holzdesign', EN: 'Game setup with the wood theme', RU: 'Начало игры в оформлении под дерево' } },
+      { image: unoWebCover, caption: { DE: 'Spieltisch im Wintermodus', EN: 'Game table with the winter theme', RU: 'Игровой стол в зимнем оформлении' } },
+      { image: '/images/campus02-farbwahl.png', caption: { DE: 'Neue Spielfarbe wählen', EN: 'Choosing the next colour', RU: 'Выбор нового цвета' } },
+      { image: '/images/campus02-rundensieg.png', caption: { DE: 'Rundensieg mit Punktestand', EN: 'Round winner and scores', RU: 'Победа в раунде и текущий счёт' } },
+      { image: '/images/campus02-partiesieg.png', caption: { DE: 'Partiesieg ab 500 Punkten', EN: 'Winning the match at 500 points', RU: 'Победа в игре при наборе 500 очков' } },
       {
         embed: unoWebDemoUrl,
         caption: {
-          DE: 'Vier Personen spielen an einem Bildschirm. Der erste Start kann etwa eine Minute dauern.',
-          EN: 'Four players share one screen. The first launch may take about a minute.',
-          RU: 'Четыре игрока играют на одном экране. Первый запуск может занять около минуты.'
+          DE: 'Render Free · Nach einer Pause kann das Laden etwa eine Minute dauern.',
+          EN: 'Render Free · Loading may take about a minute after inactivity.',
+          RU: 'Render Free · После простоя загрузка может занять около минуты.'
         }
       }
     ]
