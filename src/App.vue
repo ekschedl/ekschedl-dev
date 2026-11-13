@@ -32,7 +32,7 @@ function updatePageLanguage() {
   }
 }
 const menuOpen = ref(false)
-const projectAreas = ['mobile', 'game', 'web', 'backend', 'desktop'] as const
+const projectAreas = ['mobile', 'desktop', 'web', 'backend'] as const
 type ProjectArea = typeof projectAreas[number]
 type ProjectFilterMode = 'area' | 'technology'
 const projectFilterMode = ref<ProjectFilterMode>('area')
@@ -67,7 +67,7 @@ const translations = {
     areaFilter: 'Projektbereich',
     filterOptions: 'Projektfilter',
     allAreas: 'Alle Bereiche',
-    areas: { mobile: 'Mobile App', game: 'Spiel', web: 'Webentwicklung', backend: 'Backend & Daten', desktop: 'Desktop-App' },
+    areas: { mobile: 'Mobile App', web: 'Webentwicklung', backend: 'Backend & Daten', desktop: 'Desktop-App' },
     filter: 'Technologie filtern',
     allTechnologies: 'Alle Technologien',
     noResults: 'Keine passenden Projekte gefunden.',
@@ -99,9 +99,9 @@ const translations = {
     technologiesIntro: 'Mit diesen Technologien habe ich in meiner Ausbildung und in Projekten gearbeitet. Meine Erfahrung ist je nach Technologie unterschiedlich tief. Mit jedem Projekt lerne ich dazu.',
     techGroups: ['Frontend & Apps', 'Backend & Daten', 'Werkzeuge', 'KI-Werkzeuge', 'Ausbildungsschwerpunkte'], projectUse: 'Im Projekt eingesetzt', studyUse: 'In der Ausbildung vertieft',
     sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIEN', sectionAbout: '03 / ÜBER MICH', sectionContact: '04 / KONTAKT',
-    projectTypes: { mobile: 'MOBILE APP', game: 'KONSOLENSPIEL', web: 'WEBPROJEKT', backend: 'KONSOLENANWENDUNG', desktop: 'DESKTOP-APP' },
-    projectTypesShort: { mobile: 'APP', game: 'SPIEL', web: 'WEB', backend: 'JAVA', desktop: 'DESKTOP' },
-    studyTopics: 'Objektorientierte Programmierung · Algorithmen · Softwarearchitektur · Softwarequalitätssicherung',
+    projectTypes: { mobile: 'MOBILE APP', web: 'WEBPROJEKT', backend: 'KONSOLENANWENDUNG', desktop: 'DESKTOP-APP' },
+    projectTypesShort: { mobile: 'APP', web: 'WEB', backend: 'JAVA', desktop: 'DESKTOP' },
+    studyTopics: 'Objektorientierte Programmierung (OOP) · MVVM · Algorithmen · Softwarearchitektur · Softwarequalitätssicherung',
     techFilterAll: "Alle Bereiche", techFilterGroups: ["Frontend & Apps", "Backend & Daten", "Werkzeuge", "KI-Werkzeuge"],
     techFilterReset: 'Zurücksetzen',
     about: 'Über mich',
@@ -157,7 +157,7 @@ const translations = {
     areaFilter: 'Project area',
     filterOptions: 'Project filters',
     allAreas: 'All areas',
-    areas: { mobile: 'Mobile app', game: 'Game', web: 'Web development', backend: 'Backend & data', desktop: 'Desktop app' },
+    areas: { mobile: 'Mobile app', web: 'Web development', backend: 'Backend & data', desktop: 'Desktop app' },
     filter: 'Filter by technology',
     allTechnologies: 'All technologies',
     noResults: 'No matching projects found.',
@@ -189,9 +189,9 @@ const translations = {
     technologiesIntro: 'I have worked with these technologies during my training and in projects. My experience varies across them, and I keep learning with each project.',
     techGroups: ['Frontend & apps', 'Backend & data', 'Tools', 'AI tools', 'Study topics'], projectUse: 'Used in projects', studyUse: 'Covered in training',
     sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIES', sectionAbout: '03 / ABOUT ME', sectionContact: '04 / CONTACT',
-    projectTypes: { mobile: 'MOBILE APP', game: 'CONSOLE GAME', web: 'WEB PROJECT', backend: 'CONSOLE APP', desktop: 'DESKTOP APP' },
-    projectTypesShort: { mobile: 'APP', game: 'GAME', web: 'WEB', backend: 'JAVA', desktop: 'DESKTOP' },
-    studyTopics: 'Object-oriented programming · Algorithms · Software architecture · Software quality assurance',
+    projectTypes: { mobile: 'MOBILE APP', web: 'WEB PROJECT', backend: 'CONSOLE APP', desktop: 'DESKTOP APP' },
+    projectTypesShort: { mobile: 'APP', web: 'WEB', backend: 'JAVA', desktop: 'DESKTOP' },
+    studyTopics: 'Object-oriented programming (OOP) · MVVM · Algorithms · Software architecture · Software quality assurance',
     techFilterAll: "All areas", techFilterGroups: ["Frontend & apps", "Backend & data", "Tools", "AI tools"],
     techFilterReset: 'Reset',
     about: 'About me',
@@ -247,7 +247,7 @@ const translations = {
     areaFilter: 'Тип проекта',
     filterOptions: 'Фильтры проектов',
     allAreas: 'Все типы',
-    areas: { mobile: 'Мобильное приложение', game: 'Игра', web: 'Веб-разработка', backend: 'Бэкенд и данные', desktop: 'Десктопное приложение' },
+    areas: { mobile: 'Мобильное приложение', web: 'Веб-разработка', backend: 'Бэкенд и данные', desktop: 'Десктопное приложение' },
     filter: 'Фильтр по технологии',
     allTechnologies: 'Все технологии',
     noResults: 'Подходящих проектов нет.',
@@ -279,9 +279,9 @@ const translations = {
     technologiesIntro: 'С этими технологиями я работала во время обучения и в проектах. Глубина моего опыта различается. С каждым проектом я продолжаю учиться.',
     techGroups: ['Фронтенд и приложения', 'Бэкенд и данные', 'Инструменты', 'ИИ-инструменты', 'Темы обучения'], projectUse: 'Использовала в проектах', studyUse: 'Изучала в рамках обучения',
     sectionPortfolio: '01 / ПОРТФОЛИО', sectionTechnologies: '02 / ТЕХНОЛОГИИ', sectionAbout: '03 / ОБО МНЕ', sectionContact: '04 / КОНТАКТЫ',
-    projectTypes: { mobile: 'МОБИЛЬНОЕ ПРИЛОЖЕНИЕ', game: 'КОНСОЛЬНАЯ ИГРА', web: 'ВЕБ-ПРОЕКТ', backend: 'КОНСОЛЬНОЕ ПРИЛОЖЕНИЕ', desktop: 'ПРИЛОЖЕНИЕ ДЛЯ ПК' },
-    projectTypesShort: { mobile: 'ПРИЛ.', game: 'ИГРА', web: 'ВЕБ', backend: 'JAVA', desktop: 'ДЕСКТОП' },
-    studyTopics: 'Объектно-ориентированное программирование · Алгоритмы · Архитектура ПО · Обеспечение качества ПО',
+    projectTypes: { mobile: 'МОБИЛЬНОЕ ПРИЛОЖЕНИЕ', web: 'ВЕБ-ПРОЕКТ', backend: 'КОНСОЛЬНОЕ ПРИЛОЖЕНИЕ', desktop: 'ПРИЛОЖЕНИЕ ДЛЯ ПК' },
+    projectTypesShort: { mobile: 'ПРИЛ.', web: 'ВЕБ', backend: 'JAVA', desktop: 'ДЕСКТОП' },
+    studyTopics: 'Объектно-ориентированное программирование (OOP) · MVVM · Алгоритмы · Архитектура ПО · Обеспечение качества ПО',
     techFilterAll: "Все разделы", techFilterGroups: ["Фронтенд и приложения", "Бэкенд и данные", "Инструменты", "ИИ-инструменты"],
     techFilterReset: 'Сбросить',
     about: 'Обо мне',
@@ -362,7 +362,7 @@ const projects = [
     title: 'UNO',
     createdAt: '2025-06',
     type: 'CARD GAME',
-    area: 'game',
+    area: 'backend',
     image: '/images/uno.jpg',
     url: 'https://github.com/ekschedl/UnoGame_inDerKonsole_Java_campusMe_2025',
     stack: 'Java · OOP · JDBC · SQLite'
@@ -430,7 +430,7 @@ const projects = [
     id: 'uno-web',
     title: unoWebTitle,
     createdAt: '2025-12',
-    area: 'game',
+    area: 'web',
     image: unoWebCover,
     url: 'https://github.com/ekschedl/NowaUno',
     demoUrl: unoWebDemoUrl,
@@ -681,7 +681,16 @@ const skillGroups = [
       { name: 'JavaScript', icon: 'javascript', color: 'B99B00' },
       { name: 'TypeScript', icon: 'typescript', color: '3178C6' },
       { name: 'Vue 3', icon: 'vuedotjs', color: '42B883' },
-      { name: 'SwiftUI', icon: 'swift', color: 'F05138', note: 'project' }
+      { name: 'SwiftUI', icon: 'swift', color: 'F05138', note: 'project' },
+      { name: 'Swift', icon: 'swift', color: 'F05138' },
+      { name: 'Vuetify', icon: 'vuetify', color: '1867C0' },
+      { name: 'Pinia', icon: 'pinia', color: 'B99B00' },
+      { name: 'Axios', icon: 'axios', color: '5A29E4' },
+      { name: 'WordPress', icon: 'wordpress', color: '21759B' },
+      { name: 'C#', icon: '', color: '512BD4' },
+      { name: 'WPF', icon: '', color: '512BD4' },
+      { name: 'XAML', icon: '', color: '512BD4' },
+      { name: 'XML', icon: '', color: '4479A1' }
     ]
   },
   {
@@ -691,7 +700,16 @@ const skillGroups = [
       { name: 'SQL · MySQL', icon: 'mysql', color: '4479A1' },
       { name: 'REST APIs', icon: 'fastapi', color: '009688' },
       { name: 'PHP', icon: 'php', color: '777BB4' },
-      { name: 'Java', icon: 'openjdk', color: '437291' }
+      { name: 'Java', icon: 'openjdk', color: '437291' },
+      { name: 'Node.js', icon: 'nodedotjs', color: '339933' },
+      { name: 'Express', icon: 'express', color: '444444' },
+      { name: 'JDBC', icon: '', color: '437291' },
+      { name: 'Hibernate', icon: 'hibernate', color: '59666C' },
+      { name: 'JPA', icon: '', color: '59666C' },
+      { name: 'HQL', icon: '', color: '59666C' },
+      { name: 'SQLite', icon: 'sqlite', color: '003B57' },
+      { name: 'Entity Framework', icon: '', color: '512BD4' },
+      { name: 'SQL Server LocalDB', icon: '', color: '4479A1' }
     ]
   },
   {
@@ -1034,7 +1052,9 @@ function scrollToTop() {
             <button class="project-visual project-cover" :data-area="project.area"
               type="button" aria-haspopup="dialog" :aria-label="(project.id === 'todo' ? t.todoTitle : project.title) + ' · ' + galleryLabels.open"
               @click="openProjectGallery(project.id)">
-              <img :src="project.image" alt="" loading="lazy" />
+              <span class="project-cover-frame">
+                <img :src="project.image" alt="" loading="lazy" />
+              </span>
               <span class="project-cover-expand" aria-hidden="true">↗</span>
             </button>
 
@@ -1110,6 +1130,7 @@ function scrollToTop() {
               >
                 <span class="tech-icon" aria-hidden="true">
                   <img
+                    v-if="skill.icon"
                     :src="`https://cdn.simpleicons.org/${skill.icon}/${skill.color}`"
                     alt=""
                     loading="lazy"
@@ -1490,20 +1511,20 @@ function scrollToTop() {
   --area-color: var(--mist);
 }
 
-[data-area='game'] {
-  --area-color: var(--lilac);
-}
-
 [data-area='web'] {
   --area-color: var(--slate);
 }
 
 [data-area='backend'] {
+  --area-color: #efb58f;
+}
+
+:global(:root[data-theme='dark']) [data-area='backend'] {
   --area-color: var(--blue);
 }
 
 [data-area='desktop'] {
-  --area-color: color-mix(in srgb, var(--blue), var(--mist));
+  --area-color: var(--lilac);
 }
 
 .project-tile[data-area],
@@ -1581,10 +1602,22 @@ function scrollToTop() {
   color: var(--ink);
 }
 
-.project-cover > img {
+/* Alle Karten zeigen denselben Bildausschnitt-Rahmen. Vollbilder bleiben in der Galerie. */
+.project-cover-frame {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.project-cover .project-cover-frame > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .project-cover-expand {
@@ -1768,9 +1801,19 @@ function scrollToTop() {
   transition: background .18s ease, border-color .18s ease, transform .18s ease;
 }
 
+/* Filter und zugehöriger Block verwenden dieselbe Hintergrundfarbe. */
+.tech-group-filters button[class^='tech-filter-']:not(.tech-filter-reset) {
+  background: color-mix(in srgb, var(--tech-group-color, var(--surface)) 78%, var(--surface));
+}
+
 .tech-group-filters button[aria-pressed='true'] {
-  border-color: var(--tech-group-color, var(--accent));
-  background: color-mix(in srgb, var(--tech-group-color, var(--mist)) 78%, var(--surface));
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.tech-group-filters button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .tech-filter-programming,
