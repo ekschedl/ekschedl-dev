@@ -687,10 +687,9 @@ const skillGroups = [
       { name: 'Pinia', icon: 'pinia', color: 'B99B00' },
       { name: 'Axios', icon: 'axios', color: '5A29E4' },
       { name: 'WordPress', icon: 'wordpress', color: '21759B' },
-      { name: 'C#', icon: '', color: '512BD4' },
       { name: 'WPF', icon: '', color: '512BD4' },
       { name: 'XAML', icon: '', color: '512BD4' },
-      { name: 'XML', icon: '', color: '4479A1' }
+     
     ]
   },
   {
@@ -700,6 +699,8 @@ const skillGroups = [
       { name: 'SQL · MySQL', icon: 'mysql', color: '4479A1' },
       { name: 'REST APIs', icon: 'fastapi', color: '009688' },
       { name: 'PHP', icon: 'php', color: '777BB4' },
+      { name: 'C#', icon: '', color: '512BD4' },
+      { name: 'XML', icon: '', color: '4479A1' },
       { name: 'Java', icon: 'openjdk', color: '437291' },
       { name: 'Node.js', icon: 'nodedotjs', color: '339933' },
       { name: 'Express', icon: 'express', color: '444444' },
