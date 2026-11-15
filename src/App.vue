@@ -2,11 +2,18 @@
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import EducationPage from './EducationPage.vue'
 import ExperiencePage from './ExperiencePage.vue'
+import { useI18n } from 'vue-i18n'
+import de from './locales/de'
+import en from './locales/en'
+import ru from './locales/ru'
+const { locale } = useI18n()
 
 type Language = 'DE' | 'EN' | 'RU'
 
 const languages: Language[] = ['DE', 'EN', 'RU']
 const language = ref<Language>('DE')
+const { t: translate } = useI18n()
+
 const educationPath = '/Ausbildung'
 const experiencePath = '/Berufserfahrung'
 const isExperience = /^\/berufserfahrung\/?$/i.test(window.location.pathname)
@@ -49,6 +56,7 @@ onMounted(() => {
   } catch {
     // Language and theme switching also work when storage is unavailable.
   }
+  locale.value = language.value.toLowerCase()
   updatePageLanguage()
 })
 
@@ -63,276 +71,9 @@ watch(darkMode, (enabled) => {
 })
 
 const translations = {
-  DE: {
-    areaFilter: 'Projektbereich',
-    filterOptions: 'Projektfilter',
-    allAreas: 'Alle Bereiche',
-    areas: { mobile: 'Mobile App', web: 'Webentwicklung', backend: 'Backend & Daten', desktop: 'Desktop-App' },
-    filter: 'Technologie filtern',
-    allTechnologies: 'Alle Technologien',
-    noResults: 'Keine passenden Projekte gefunden.',
-    reset: 'Alle Filter zurücksetzen',
-    areaMode: 'Nach Projektbereich',
-    technologyMode: 'Nach Technologie',
-    projectCount: '{visible} von {total} Projekten',
-    sortLabel: 'Sortieren', newest: 'Neueste zuerst', oldest: 'Älteste zuerst', created: 'Erstellt',
-    switchToDark: 'Dunkelmodus einschalten', switchToLight: 'Hellmodus einschalten',
-    navigationLabel: 'Hauptnavigation',
-    languageLabel: 'Sprache',
-    nav: ['Start', 'Portfolio', 'Technologien', 'Über mich'],
-    contact: 'KONTAKT', cvDownload: 'CV herunterladen', cvShort: 'CV',
-    valueLabels: ['Programmieren', 'Gestalten', 'Lernen', 'Wiederholen'],
-    logoHome: 'ek. – Zur Startseite oben', heroGreeting: 'HALLO, ICH BIN', heroName: 'Ekaterina', whatIUse: 'WOMIT ICH ARBEITE', more: '+ weitere', aboutTile: 'EIN WENIG ÜBER MICH', footerMade: 'Mit Liebe zum Code und zum Detail.', footerCopyright: '© 2026 Ekaterina Schedlberger',
-    role: 'Softwareentwicklerin',
-    location: 'Graz, Österreich',
-    heroNote: 'Ideen verstehen. Lösungen entwickeln. Neues lernen.',
-    educationNews: 'Aktuell',
-    educationFocus: 'Softwareentwicklung im Fokus',
-    educationHeading: 'Akademisch geprüfte Softwareentwicklerin',
-    educationMilestone: 'Abgeschlossen im Oktober 2026',
-    educationNext: 'Nächster Schritt',
-    educationNextCourse: 'Python-Kurs in Hagen · geplant für Ende November 2026',
-    projectsTitle: 'Dinge, die ich entwickle.',
-    projectsIntro: 'Eine Auswahl meiner Projekte und Ideen.',
-    portfolioStatus: 'Derzeit in Bearbeitung',
-    technologiesTitle: 'Technologien aus meiner Praxis.',
-    technologiesIntro: 'Mit diesen Technologien habe ich in meiner Ausbildung und in Projekten gearbeitet. Meine Erfahrung ist je nach Technologie unterschiedlich tief. Mit jedem Projekt lerne ich dazu.',
-    techGroups: ['Frontend & Apps', 'Backend & Daten', 'Werkzeuge', 'KI-Werkzeuge', 'Ausbildungsschwerpunkte'], projectUse: 'Im Projekt eingesetzt', studyUse: 'In der Ausbildung vertieft',
-    sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIEN', sectionAbout: '03 / ÜBER MICH', sectionContact: '04 / KONTAKT',
-    projectTypes: { mobile: 'MOBILE APP', web: 'WEBPROJEKT', backend: 'KONSOLENANWENDUNG', desktop: 'DESKTOP-APP' },
-    projectTypesShort: { mobile: 'APP', web: 'WEB', backend: 'JAVA', desktop: 'DESKTOP' },
-    studyTopics: 'Objektorientierte Programmierung (OOP) · MVVM · Algorithmen · Softwarearchitektur · Softwarequalitätssicherung',
-    techFilterAll: "Alle Bereiche", techFilterGroups: ["Frontend & Apps", "Backend & Daten", "Werkzeuge", "KI-Werkzeuge"],
-    techFilterReset: 'Zurücksetzen',
-    about: 'Über mich',
-    aboutShort: 'Mein Weg und was mich antreibt.',
-    aboutTitle: 'Neugierig bleiben.',
-    aboutSections: [
-      {
-        heading: 'Was reizt mich am Code?',
-        before: '',
-        emphasis: 'Wenn Code hakt, gehe ich der Ursache auf den Grund.',
-        after: ' Das hat mich im Lehrgang Software-Entwicklung an der FH CAMPUS 02 genauso angetrieben wie in der Webentwicklung bei JAWA. Ich habe mir mein Wissen mit Zeit und Übung erarbeitet. Jetzt will ich wissen, was ich damit noch entwickeln kann.'
-      },
-      {
-        heading: 'Ich über KI',
-        before: 'Ein Streichholz spart Zeit beim Feuermachen. KI spart mir Zeit beim Entwickeln. So kann ich mehr Ideen testen und Fehler gezielter eingrenzen. ',
-        emphasis: 'Ich gebe die Richtung vor, prüfe die Vorschläge am Code und entscheide, welchen Ansatz ich weiterentwickle.',
-        after: ''
-      },
-      {
-        heading: 'Warum jetzt Python?',
-        before: '',
-        emphasis: 'Wie lernt ein Modell aus Daten?',
-        after: ' Und woran erkenne ich, ob ich seinem Ergebnis trauen kann? Das will ich selbst ausprobieren. Mein Einstieg ist der Python-Kurs in Hagen.'
-      },
-    ],
-    helloTitle: 'Lass uns etwas bewegen.',
-    helloText:
-      'Ich freue mich über interessante Projekte, neue Herausforderungen und berufliche Möglichkeiten in der Softwareentwicklung.',
-    github: 'Mein GitHub',
-    email: 'E-Mail schreiben',
-    unoTitle: 'UNO-Kartenspiel',
-    unoWebDescription: 'CAMPUS02 ColorSpiel ist ein webbasiertes Kartenspiel für vier Personen an einem Bildschirm. Karten ablegen, Farben wechseln und über mehrere Runden Punkte sammeln. Die Spieloberfläche entstand im Team an der FH CAMPUS 02. Für meine Weiterentwicklung habe ich ein eigenes Node.js-Backend mit Express gebaut, das Karten austeilt, Spielzüge prüft und Punkte verwaltet. Dazu kommen eigene Kartendesigns und ein Wintermodus. Die Demo läuft im kostenlosen Render-Tarif. Nach einer Pause kann das Laden etwa eine Minute dauern.',  
-    projectDescriptions: [
-      'YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team war ich für das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform zuständig.',
-      'Im Team entwickeltes UNO-Kartenspiel für die Java-Konsole. Karten, Spieler und Spielrunden sind als Java-Klassen modelliert. Das Spiel prüft die Spielzüge und unterstützt Aktionskarten wie „Aussetzen“ und „Richtungswechsel“. Über JDBC speichert das Spiel die Punktestände in SQLite und ruft die Bestenliste per SQL ab.',
-      'Kaffeehaus-Website mit Speisekarte, Bildergalerie und Kontaktformular, entstanden als Übungsprojekt an der FH CAMPUS 02. Der überschaubare Umfang ließ Raum für die Grundlagen der Webentwicklung: Seiten mit HTML strukturieren, Layouts mit CSS Grid und Flexbox an verschiedene Bildschirmgrößen anpassen und eine Bildergalerie mit JavaScript und Swiper einbinden.',
-      'Konsolenbasiertes Prüfungsprojekt zur Verwaltung von Gästen, Zimmern, Buchungen und Zusatzleistungen. Mit Hibernate/JPA, CRUD-Funktionen, HQL-Abfragen, Transaktionen und XML-Mapping.',
-      'Mit Feta begann mein Weg in die IT. Mein erstes Webprojekt war zugleich mein Diplomprojekt am WIFI und eine echte Kundenwebsite für einen Lutscherhersteller. Dafür erstellte ich ein eigenes responsives WordPress-Theme mit Produktkatalog, aufklappbaren Zutatenlisten und Kontaktformular. Die Kundenwebsite war online. Heute zeigt die Galerie eine lokale Vorschau.',
-      'Windows-Desktop-App zum Anlegen, Bearbeiten, Kopieren und Filtern von Geschenken. So funktioniert MVVM beim Löschen: Die Oberfläche löst den Löschbefehl aus, das ViewModel prüft die Auswahl und das Repository löscht das Geschenk über Entity Framework in SQL Server LocalDB. Anschließend aktualisiert WPF die Liste und die Statusleiste per Datenbindung.'
-    ],
-    giftsTitle: 'Geschenkeverwaltung',
-    todoTitle: 'To-do-App',
-    todoDescription: 'Aufgaben hinzufügen, abhaken und löschen. Pinia verwaltet den Zustand und speichert die Aufgaben im Browser.',
-    shopDescription: 'Shop-Demo mit Produktdaten und Kategorien aus der Platzi Fake Store API. Produkte lassen sich suchen, filtern, als Favoriten markieren und in den Warenkorb legen.',
-    liveDemo: 'Im neuen Tab öffnen',
-    inlineDemo: 'Demo hier testen',
-    projectLink: 'Projekt auf GitHub ansehen',
-    menuOpen: 'Menü öffnen',
-    menuClose: 'Menü schließen',
-    backToTop: 'Nach oben'
-  },
-  EN: {
-    areaFilter: 'Project area',
-    filterOptions: 'Project filters',
-    allAreas: 'All areas',
-    areas: { mobile: 'Mobile app', web: 'Web development', backend: 'Backend & data', desktop: 'Desktop app' },
-    filter: 'Filter by technology',
-    allTechnologies: 'All technologies',
-    noResults: 'No matching projects found.',
-    reset: 'Reset all filters',
-    areaMode: 'By project area',
-    technologyMode: 'By technology',
-    projectCount: '{visible} of {total} projects',
-    sortLabel: 'Sort', newest: 'Newest first', oldest: 'Oldest first', created: 'Created',
-    switchToDark: 'Switch to dark mode', switchToLight: 'Switch to light mode',
-    navigationLabel: 'Main navigation',
-    languageLabel: 'Language',
-    nav: ['Home', 'Portfolio', 'Technologies', 'About'],
-    contact: "LET'S TALK", cvDownload: 'Download CV', cvShort: 'CV',
-    valueLabels: ['Code', 'Create', 'Learn', 'Repeat'],
-    logoHome: 'ek. – Back to top of home page', heroGreeting: 'HELLO, I’M', heroName: 'Ekaterina', whatIUse: 'WHAT I USE', more: '+ more', aboutTile: 'A LITTLE ABOUT ME', footerMade: 'Made with love for code and detail.', footerCopyright: '© 2026 Ekaterina Schedlberger',
-    role: 'Software Developer',
-    location: 'Graz, Austria',
-    heroNote: 'Explore ideas. Build solutions. Keep learning.',
-    educationNews: 'Updates',
-    educationFocus: 'Software development in focus',
-    educationHeading: 'Academically qualified software developer',
-    educationMilestone: 'Completed in October 2026',
-    educationNext: 'Next step',
-    educationNextCourse: 'Python course in Hagen · planned for late November 2026',
-    projectsTitle: 'Things I build.',
-    projectsIntro: 'A selection of my projects and ideas.',
-    portfolioStatus: 'Currently in progress',
-    technologiesTitle: 'Technologies I’ve worked with.',
-    technologiesIntro: 'I have worked with these technologies during my training and in projects. My experience varies across them, and I keep learning with each project.',
-    techGroups: ['Frontend & apps', 'Backend & data', 'Tools', 'AI tools', 'Study topics'], projectUse: 'Used in projects', studyUse: 'Covered in training',
-    sectionPortfolio: '01 / PORTFOLIO', sectionTechnologies: '02 / TECHNOLOGIES', sectionAbout: '03 / ABOUT ME', sectionContact: '04 / CONTACT',
-    projectTypes: { mobile: 'MOBILE APP', web: 'WEB PROJECT', backend: 'CONSOLE APP', desktop: 'DESKTOP APP' },
-    projectTypesShort: { mobile: 'APP', web: 'WEB', backend: 'JAVA', desktop: 'DESKTOP' },
-    studyTopics: 'Object-oriented programming (OOP) · MVVM · Algorithms · Software architecture · Software quality assurance',
-    techFilterAll: "All areas", techFilterGroups: ["Frontend & apps", "Backend & data", "Tools", "AI tools"],
-    techFilterReset: 'Reset',
-    about: 'About me',
-    aboutShort: 'My journey and what motivates me.',
-    aboutTitle: 'Stay curious.',
-    aboutSections: [
-      {
-        heading: 'What draws me to code?',
-        before: '',
-        emphasis: 'When code breaks, I want to get to the root of the problem.',
-        after: ' That drove me throughout my Software Development programme at FH CAMPUS 02 and in my web development work at JAWA. I built up my knowledge through time and practice. Now I want to see what else I can build with it.'
-      },
-      {
-        heading: 'My take on AI',
-        before: 'A match saves time when lighting a fire. AI saves me time when developing software. It lets me test more ideas and pinpoint errors more quickly. ',
-        emphasis: 'I set the direction, test suggestions against the code and decide which approach to develop further.',
-        after: ''
-      },
-      {
-        heading: 'Why Python now?',
-        before: '',
-        emphasis: 'How does a model learn from data?',
-        after: ' How can I tell whether I can trust its results? I want to find out for myself. My starting point is a Python course in Hagen.'
-      },
-    ],
-    helloTitle: "Let's make something happen.",
-    helloText:
-      'I am open to interesting projects, new challenges and career opportunities in software development.',
-    github: 'My GitHub',
-    email: 'Send an email',
-    unoTitle: 'UNO Card Game',
-    unoWebDescription: 'CAMPUS02 ColorSpiel is a browser-based card game for four players sharing one screen. Play cards, change colours and collect points across several rounds. The interface was developed as a team at FH CAMPUS 02. I later built my own Node.js and Express backend to deal cards, validate moves and manage scores. I also added custom card designs and a winter theme. The demo runs on Render’s free plan and may take about a minute to load after inactivity.',   
-    projectDescriptions: [
-      'YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.',
-      'A Java console version of UNO developed as a team. Cards, players and rounds are modelled as Java classes. The game validates moves and supports action cards such as Skip and Reverse. The game stores scores in SQLite via JDBC and retrieves the leaderboard with SQL.',
-      'A coffee house website with a menu, photo gallery and contact form, built as a coursework project at FH CAMPUS 02. The small scope left room to practise the fundamentals: structuring pages with HTML, adapting layouts to different screen sizes with CSS Grid and Flexbox, and integrating an image gallery with JavaScript and Swiper.',
-      'A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.',
-      'Feta marked the start of my career in tech. It was my first web project, my diploma project at WIFI and a website for a lollipop manufacturer. I built a custom responsive WordPress theme with a product catalog, expandable ingredient lists and a contact form. The client website was live. The gallery now shows a local preview.',
-      'Windows desktop app for adding, editing, copying and filtering gifts. Here is how MVVM handles deletion: the view triggers the delete command, the ViewModel checks the selection and the repository deletes the gift from SQL Server LocalDB through Entity Framework. WPF data binding then updates the list and status bar.'
-    ],
-    giftsTitle: 'Gift Manager',
-    todoTitle: 'To-do App',
-    todoDescription: 'Add, complete and delete tasks. Pinia manages the app state and saves tasks in the browser.',
-    shopDescription: 'A shop demo that loads products and categories from the Platzi Fake Store API. Search and filter products, save favourites and add items to the cart.',
-    liveDemo: 'Open in a new tab',
-    inlineDemo: 'Try the demo here',
-    projectLink: 'View project on GitHub',
-    menuOpen: 'Open menu',
-    menuClose: 'Close menu',
-    backToTop: 'Back to top'
-  },
-  RU: {
-    areaFilter: 'Тип проекта',
-    filterOptions: 'Фильтры проектов',
-    allAreas: 'Все типы',
-    areas: { mobile: 'Мобильное приложение', web: 'Веб-разработка', backend: 'Бэкенд и данные', desktop: 'Десктопное приложение' },
-    filter: 'Фильтр по технологии',
-    allTechnologies: 'Все технологии',
-    noResults: 'Подходящих проектов нет.',
-    reset: 'Сбросить все фильтры',
-    areaMode: 'По типу проекта',
-    technologyMode: 'По технологии',
-    projectCount: 'Проекты: {visible} из {total}',
-    sortLabel: 'Сортировка', newest: 'Сначала новые', oldest: 'Сначала старые', created: 'Создано',
-    switchToDark: 'Включить тёмную тему', switchToLight: 'Включить светлую тему',
-    navigationLabel: 'Основная навигация',
-    languageLabel: 'Язык',
-    nav: ['Главная', 'Портфолио', 'Технологии', 'Обо мне'],
-    contact: 'КОНТАКТ', cvDownload: 'Скачать резюме', cvShort: 'Резюме',
-    valueLabels: ['Программировать', 'Создавать', 'Учиться', 'Повторять'],
-    logoHome: 'ek. – На главную страницу', heroGreeting: 'ПРИВЕТ, Я', heroName: 'Екатерина', whatIUse: 'МОИ ИНСТРУМЕНТЫ', more: 'и другие', aboutTile: 'НЕМНОГО ОБО МНЕ', footerMade: 'С любовью к коду и деталям.', footerCopyright: '© 2026 Екатерина Шедльбергер',
-    role: 'Разработчик программного обеспечения',
-    location: 'Грац, Австрия',
-    heroNote: 'Исследовать идеи. Находить решения. Учиться новому.',
-    educationNews: 'Новости',
-    educationFocus: 'В фокусе — разработка ПО',
-    educationHeading: 'Разработчик программного обеспечения с академической квалификацией',
-    educationMilestone: 'Завершено в октябре 2026 года',
-    educationNext: 'Следующий шаг',
-    educationNextCourse: 'Курс Python в Хагене · запланирован на конец ноября 2026 года',
-    projectsTitle: 'То, что я создаю.',
-    projectsIntro: 'Некоторые из моих проектов и идей.',
-    portfolioStatus: 'Раздел обновляется',
-    technologiesTitle: 'Технологии из моей практики.',
-    technologiesIntro: 'С этими технологиями я работала во время обучения и в проектах. Глубина моего опыта различается. С каждым проектом я продолжаю учиться.',
-    techGroups: ['Фронтенд и приложения', 'Бэкенд и данные', 'Инструменты', 'ИИ-инструменты', 'Темы обучения'], projectUse: 'Использовала в проектах', studyUse: 'Изучала в рамках обучения',
-    sectionPortfolio: '01 / ПОРТФОЛИО', sectionTechnologies: '02 / ТЕХНОЛОГИИ', sectionAbout: '03 / ОБО МНЕ', sectionContact: '04 / КОНТАКТЫ',
-    projectTypes: { mobile: 'МОБИЛЬНОЕ ПРИЛОЖЕНИЕ', web: 'ВЕБ-ПРОЕКТ', backend: 'КОНСОЛЬНОЕ ПРИЛОЖЕНИЕ', desktop: 'ПРИЛОЖЕНИЕ ДЛЯ ПК' },
-    projectTypesShort: { mobile: 'ПРИЛ.', web: 'ВЕБ', backend: 'JAVA', desktop: 'ДЕСКТОП' },
-    studyTopics: 'Объектно-ориентированное программирование (OOP) · MVVM · Алгоритмы · Архитектура ПО · Обеспечение качества ПО',
-    techFilterAll: "Все разделы", techFilterGroups: ["Фронтенд и приложения", "Бэкенд и данные", "Инструменты", "ИИ-инструменты"],
-    techFilterReset: 'Сбросить',
-    about: 'Обо мне',
-    aboutShort: 'Мой путь и то, что меня вдохновляет.',
-    aboutTitle: 'Сохранять любопытство.',
-    aboutSections: [
-      {
-        heading: 'Что меня увлекает в коде?',
-        before: '',
-        emphasis: 'Когда код даёт сбой, я ищу причину.',
-        after: ' Это стремление помогало мне и на программе по разработке ПО в FH CAMPUS 02, и в работе над веб-приложениями в JAWA. Я много практиковалась и шаг за шагом накапливала знания. Теперь хочу узнать, что ещё могу с их помощью создать.'
-      },
-      {
-        heading: 'Мой взгляд на ИИ',
-        before: 'Спичка помогает быстрее разжечь огонь. ИИ экономит мне время при разработке. С ним я могу проверить больше идей и точнее определить причину ошибки. ',
-        emphasis: 'Я задаю направление, проверяю предложения на практике и решаю, какой подход развивать дальше.',
-        after: ''
-      },
-      {
-        heading: 'Почему именно сейчас Python?',
-        before: '',
-        emphasis: 'Как модель учится на данных?',
-        after: ' Как понять, можно ли доверять её результатам? Я хочу проверить это сама. Начну с курса Python в Хагене.'
-      },
-    ],
-    helloTitle: 'Давайте создавать вместе.',
-    helloText:
-      'Я открыта к интересным проектам, новым задачам и профессиональным возможностям в разработке программного обеспечения.',
-    github: 'Мой GitHub',
-    email: 'Написать письмо',
-    unoTitle: 'Карточная игра UNO',
-    unoWebDescription: 'CAMPUS02 ColorSpiel — браузерная карточная игра для четырёх игроков за одним экраном. Игроки выкладывают карты, меняют цвета и набирают очки в нескольких раундах. Интерфейс был разработан в команде FH CAMPUS 02. Позже я создала собственный сервер на Node.js и Express для раздачи карт, проверки ходов и подсчёта очков. Также я добавила собственный дизайн карт и зимнюю тему. Демоверсия работает на бесплатном тарифе Render и после простоя может загружаться около минуты.',
-  projectDescriptions: [
-      'YogaNow Studio объединяет открытую библиотеку йоги и запись на занятия в студии. В команде я отвечала за дизайн, подключение базы данных Supabase и платформу записи на занятия.',
-      'Консольная версия UNO на Java, разработанная в команде. Карты, игроки и раунды представлены классами Java. Игра проверяет ходы и поддерживает карты действий, например «Пропуск хода» и «Смена направления». Игра сохраняет очки в SQLite через JDBC и загружает таблицу рекордов с помощью SQL-запроса.',
-      'Учебный проект в FH CAMPUS 02: сайт кофейни с меню, фотогалереей и контактной формой. Небольшой объём проекта позволил сосредоточиться на основах веб-разработки: структуре страниц на HTML, адаптивной вёрстке с CSS Grid и Flexbox и подключении фотогалереи с помощью JavaScript и Swiper.',
-      'Консольный экзаменационный проект для управления гостями, номерами, бронированиями и дополнительными услугами. Hibernate/JPA, операции CRUD, запросы HQL, транзакции и XML-маппинг.',
-      'С проекта Feta начался мой путь в ИТ. Моим первым веб-проектом и одновременно дипломной работой в WIFI стал сайт для производителя леденцов. Я разработала адаптивную тему WordPress с каталогом, раскрывающимися списками ингредиентов и контактной формой. Сайт компании был опубликован. Сейчас в галерее показана локальная версия.',
-      'Приложение для Windows, в котором можно добавлять, редактировать, копировать и фильтровать подарки. При удалении интерфейс запускает команду, ViewModel проверяет выбранный подарок, а репозиторий удаляет его из SQL Server LocalDB через Entity Framework. Затем привязка данных WPF обновляет список и строку состояния.'
-    ],
-    giftsTitle: 'Управление подарками',
-    todoTitle: 'Список задач',
-    todoDescription: 'Задачи можно добавлять, отмечать как выполненные и удалять. Pinia управляет состоянием приложения и сохраняет задачи в браузере.',
-    shopDescription: 'Демонстрационный магазин загружает товары и категории через Platzi Fake Store API. Товары можно искать, фильтровать, добавлять в избранное и в корзину.',
-    liveDemo: 'Открыть в новой вкладке',
-    inlineDemo: 'Попробовать демоверсию здесь',
-    projectLink: 'Открыть проект на GitHub',
-    menuOpen: 'Открыть меню',
-    menuClose: 'Закрыть меню',
-    backToTop: 'Наверх'
-  }
+  DE: de,
+  EN: en,
+  RU: ru
 }
 
 const t = computed(() => translations[language.value])
@@ -439,9 +180,19 @@ const projects = [
 ] as const
 
 const hotelSlides = [
-  { image: hotelConsoleImage, caption: { DE: 'Konsolenausgabe · Zimmerübersicht mit Kategorie, Preis und Verfügbarkeit', EN: 'Console output · Room overview with categories, prices and availability', RU: 'Вывод консоли · Номера, категории, цены и доступность' } },
+
+  {
+    image: hotelConsoleImage,
+    captionKey: 'hotelOverview',
+    caption: {
+      DE: 'Konsolenausgabe · Zimmerübersicht mit Kategorie, Preis und Verfügbarkeit',
+      EN: 'Console output · Room overview with categories, prices and availability',
+      RU: 'Вывод консоли · Номера, категории, цены и доступность'
+    }
+  },
   {
     image: '/images/hotelverwaltung-zimmerpreise.png',
+    captionKey: 'hotelPrices',
     caption: { DE: 'Zimmer nach Preis', EN: 'Rooms by price', RU: 'Номера по цене' }
   },
   {
@@ -538,12 +289,16 @@ const projectGalleries = {
   }
 }
 const galleryProject = ref<keyof typeof projectGalleries>('hotelverwaltung')
+
 const activeGallery = computed(() => {
   const gallery = projectGalleries[galleryProject.value]
-  if (galleryProject.value === 'todo') return { ...gallery, title: t.value.todoTitle }
-  if (galleryProject.value === 'geschenkeverwaltung') return { ...gallery, title: t.value.giftsTitle }
-  return galleryProject.value === 'uno' ? { ...gallery, title: t.value.unoTitle } : gallery
+
+  return {
+    ...gallery,
+    title: translate(`projectTitles.${galleryProject.value}`)
+  }
 })
+
 const hotelGalleryLabels = {
   DE: { open: 'Projektgalerie öffnen', close: 'Schließen', prev: 'Vorheriges Bild', next: 'Nächstes Bild', full: 'Bild in voller Größe' },
   EN: { open: 'Open project gallery', close: 'Close', prev: 'Previous image', next: 'Next image', full: 'Full-size image' },
@@ -579,27 +334,39 @@ const technologyAreas = new Map(projectTechnologies.map((technology) => {
   return [technology, areas.size === 1 ? [...areas][0] : undefined] as const
 }))
 
+
 const visibleProjects = computed(() => {
   return projects
     .map((project, index) => ({
       ...project,
-      title: project.id === 'geschenkeverwaltung' ? t.value.giftsTitle : project.title,
-      description: project.id === 'todo' ? t.value.todoDescription
-      : project.id === 'shopplatzi' ? t.value.shopDescription
-      : project.id === 'uno-web' ? t.value.unoWebDescription : t.value.projectDescriptions[index] }))
+      title: translate(`projectTitles.${project.id}`),
+      description: project.id === 'todo'
+        ? t.value.todoDescription
+        : project.id === 'shopplatzi'
+          ? t.value.shopDescription
+          : project.id === 'uno-web'
+            ? t.value.unoWebDescription
+            : t.value.projectDescriptions[index]
+    }))
     .filter((project) => {
       const stack = project.stack.split(' · ')
       const matchesTechnology = selectedTechnologies.value.length === 0
         || selectedTechnologies.value.some((item) => stack.includes(item))
-      const matchesArea = !selectedAreas.value.length || selectedAreas.value.includes(project.area)
+      const matchesArea = !selectedAreas.value.length
+        || selectedAreas.value.includes(project.area)
+
       return matchesArea && matchesTechnology
     })
     .sort((first, second) => {
-      if (!first.createdAt || !second.createdAt) return Number(!first.createdAt) - Number(!second.createdAt)
+      if (!first.createdAt || !second.createdAt) {
+        return Number(!first.createdAt) - Number(!second.createdAt)
+      }
+
       const order = first.createdAt.localeCompare(second.createdAt)
       return projectSort.value === 'newest' ? -order : order
     })
 })
+
 
 const projectDateFormatter = computed(() =>
   new Intl.DateTimeFormat(language.value === 'DE' ? 'de-AT' : language.value.toLowerCase(), {
@@ -772,6 +539,7 @@ const githubUrl = 'https://github.com/ekschedl'
 const emailAddress = ''
 
 function changeLanguage(next: Language) {
+  locale.value = next.toLowerCase()
   language.value = next
   updatePageLanguage()
   try {
@@ -809,8 +577,7 @@ function scrollToTop() {
         <a :href="homeLink('#technologies')" @click="closeMenu">{{ t.nav[2] }}</a>
         <a :href="homeLink('#about')" @click="closeMenu">{{ t.nav[3] }}</a>
         <a :href="educationPath" :aria-current="isEducation ? 'page' : undefined" @click="closeMenu">
-          {{ educationLabels[language] }}
-        </a>
+            {{ translate('education') }}        </a>
         <a :href="experiencePath" :aria-current="isExperience ? 'page' : undefined" @click="closeMenu">
           {{ experienceLabels[language] }}
         </a>
@@ -969,7 +736,7 @@ function scrollToTop() {
       <section id="projects" class="section projects-section">
         <div class="section-head">
           <span class="section-number">{{ t.sectionPortfolio }}</span>
-          <h2>{{ t.projectsTitle }}</h2>
+          <h2>{{ translate('projectsTitle') }}</h2>
           <p>{{ t.projectsIntro }}</p>
           <p class="portfolio-status">{{ t.portfolioStatus }}</p>
         </div>
@@ -1237,7 +1004,14 @@ function scrollToTop() {
           <img :src="hotelSlide.image" alt="" />
         </button>
         <img v-else :src="hotelSlide.image" :alt="hotelSlide.caption[language]" />
-        <figcaption>{{ hotelSlide.caption[language] }}</figcaption>
+
+      <figcaption>
+        {{
+          'captionKey' in hotelSlide
+            ? translate(`galleryCaptions.${hotelSlide.captionKey}`)
+            : hotelSlide.caption[language]
+        }}
+      </figcaption>
       </figure>
       <div v-if="activeGallery.slides.length > 1" class="hotel-gallery-controls">
         <button type="button" :aria-label="galleryLabels.prev" @click="changeHotelSlide(-1)">←</button>

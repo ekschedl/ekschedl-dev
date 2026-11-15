@@ -11,7 +11,8 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
-    "vue": "^3.5.42"
+    "vue": "^3.5.42",
+    "vue-i18n": "^11.4.20"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.5",
