@@ -69,20 +69,17 @@ export default {
       'I am open to interesting projects, new challenges and career opportunities in software development.',
     github: 'My GitHub',
     email: 'Send an email',
-    unoTitle: 'UNO Card Game',
-    unoWebDescription: 'CAMPUS02 ColorSpiel is a browser-based card game for four players sharing one screen. Play cards, change colours and collect points across several rounds. The interface was developed as a team at FH CAMPUS 02. I later built my own Node.js and Express backend to deal cards, validate moves and manage scores. I also added custom card designs and a winter theme. The demo runs on Render’s free plan and may take about a minute to load after inactivity.',   
-    projectDescriptions: [
-      'YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.',
-      'A Java console version of UNO developed as a team. Cards, players and rounds are modelled as Java classes. The game validates moves and supports action cards such as Skip and Reverse. The game stores scores in SQLite via JDBC and retrieves the leaderboard with SQL.',
-      'A coffee house website with a menu, photo gallery and contact form, built as a coursework project at FH CAMPUS 02. The small scope left room to practise the fundamentals: structuring pages with HTML, adapting layouts to different screen sizes with CSS Grid and Flexbox, and integrating an image gallery with JavaScript and Swiper.',
-      'A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.',
-      'Feta marked the start of my career in tech. It was my first web project, my diploma project at WIFI and a website for a lollipop manufacturer. I built a custom responsive WordPress theme with a product catalog, expandable ingredient lists and a contact form. The client website was live. The gallery now shows a local preview.',
-      'Windows desktop app for adding, editing, copying and filtering gifts. Here is how MVVM handles deletion: the view triggers the delete command, the ViewModel checks the selection and the repository deletes the gift from SQL Server LocalDB through Entity Framework. WPF data binding then updates the list and status bar.'
-    ],
-    giftsTitle: 'Gift Manager',
-    todoTitle: 'To-do App',
-    todoDescription: 'Add, complete and delete tasks. Pinia manages the app state and saves tasks in the browser.',
-    shopDescription: 'A shop demo that loads products and categories from the Platzi Fake Store API. Search and filter products, save favourites and add items to the cart.',
+    projectDescriptions: {
+        yoganow: "YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.",
+        uno: "A Java console version of UNO developed as a team. Cards, players and rounds are modelled as Java classes. The game validates moves and supports action cards such as Skip and Reverse. The game stores scores in SQLite via JDBC and retrieves the leaderboard with SQL.",
+        kaffeehaus: "A coffee house website with a menu, photo gallery and contact form, built as a coursework project at FH CAMPUS 02. The small scope left room to practise the fundamentals: structuring pages with HTML, adapting layouts to different screen sizes with CSS Grid and Flexbox, and integrating an image gallery with JavaScript and Swiper.",
+        hotelverwaltung: "A console-based assessment project for managing guests, rooms, bookings, and additional services. Built with Hibernate/JPA, CRUD operations, HQL queries, transactions, and XML mapping.",
+        feta: "Feta marked the start of my career in tech. It was my first web project, my diploma project at WIFI and a website for a lollipop manufacturer. I built a custom responsive WordPress theme with a product catalog, expandable ingredient lists and a contact form. The client website was live. The gallery now shows a local preview.",
+        geschenkeverwaltung: "Windows desktop app for adding, editing, copying and filtering gifts. Here is how MVVM handles deletion: the view triggers the delete command, the ViewModel checks the selection and the repository deletes the gift from SQL Server LocalDB through Entity Framework. WPF data binding then updates the list and status bar.",
+        todo: "Add, complete and delete tasks. Pinia manages the app state and saves tasks in the browser.",
+        shopplatzi: "A shop demo that loads products and categories from the Platzi Fake Store API. Search and filter products, save favourites and add items to the cart.",
+        "uno-web": "CAMPUS02 ColorSpiel is a browser-based card game for four players sharing one screen. Play cards, change colours and collect points across several rounds. The interface was developed as a team at FH CAMPUS 02. I later built my own Node.js and Express backend to deal cards, validate moves and manage scores. I also added custom card designs and a winter theme. The demo runs on Render’s free plan and may take about a minute to load after inactivity."
+    },
     liveDemo: 'Open in a new tab',
     inlineDemo: 'Try the demo here',
     projectLink: 'View project on GitHub',
@@ -157,7 +154,200 @@ export default {
     coffeeMenu: 'Menu',
     coffeeGallery: 'Photo gallery'
     },
-
-
+    portfolioName: "Ekaterina Schedlberger",
+    homePageTitle: "Ekaterina Schedlberger {separator} Software Developer in Graz",
+    galleryControls: {
+      open: "Open project gallery",
+      close: "Close",
+      prev: "Previous image",
+      next: "Next image",
+      full: "Full-size image"
+    },
+    yogaDemo: {
+      action: "View booking demo",
+      access: "The Yoga Library is open without signing in. To try the booking platform yourself, you need an account."
+    },
+    educationPage: {
+      reset: "Reset",
+      sortLabel: "Sort",
+      newest: "Newest first",
+      oldest: "Oldest first",
+      filter: "Filter by category",
+      categories: {
+        all: "All",
+        degree: "School, university & qualifications",
+        it: "IT training",
+        language: "Languages",
+        hospitality: "Hospitality"
+      },
+      title: "Education",
+      label: "My learning journey",
+      intro: "The world is full of fascinating subjects, and I never stop learning. My educational path led me from economics and languages to software development. I now see what connects all these stages: my curiosity, love of learning and desire to understand how things fit together.",
+      completed: "Successfully completed in October 2026",
+      focus: "Areas of study",
+      topics: "Object-oriented programming, algorithms, databases, software architecture, REST APIs and software quality assurance.",
+      practice: "Practical training at JAWA Management Software GmbH",
+      project: "Contributed to client projects and inforum, the modular management platform for manufacturing; investigated issues with PHP and Xdebug, and worked with SQL and Jira Service Management.",
+      institution: "Institution",
+      location: "Location",
+      recognition: "Recognition",
+      institutionNotes: {
+        campus: "Academic Programme in Software Engineering",
+        glo: "Online school for programming and web development",
+        wifi: "Professional education institute of the Styrian Economic Chamber",
+        graz: "University of Graz"
+      },
+      places: [
+        "Graz, Austria",
+        "Online",
+        "Irkutsk, Russia",
+        "Bratsk, Russia"
+      ],
+      entries: {
+        softwareEngineering: {
+          title: "Academically certified software developer",
+          institution: "CAMPUS 02 University of Applied Sciences for Business and the Economy"
+        },
+        vue: {
+          title: "Vue.js – Fundamentals and first project",
+          institution: "Glo Academy"
+        },
+        javascript: {
+          title: "JavaScript",
+          institution: "Glo Academy"
+        },
+        webDevelopment: {
+          title: "Web Developer",
+          institution: "WIFI Steiermark",
+          period: "14 November 2022 – 27 March 2023"
+        },
+        reception: {
+          title: "Certified Receptionist",
+          institution: "WIFI Steiermark",
+          period: "11 October 2019 – 13 December 2019"
+        },
+        englishB1: {
+          title: "English B1",
+          institution: "Internationales Sprachzentrum an der Universität Graz — International Language Centre at the University of Graz"
+        },
+        englishA2B1: {
+          title: "English A2 and B1",
+          institution: "Internationales Sprachzentrum an der Universität Graz — International Language Centre at the University of Graz"
+        },
+        transculturalCommunication: {
+          title: "Bachelor of Arts (BA) in Transcultural Communication – German, Italian and Russian",
+          institution: "Karl-Franzens-Universität Graz"
+        },
+        germanC1: {
+          title: "German C1",
+          institution: "University Preparation Programme of the Universities and Higher Education Institutions of Graz (VGUH)"
+        },
+        economics: {
+          title: "Economist and manager",
+          institution: "Baikal State University of Economics and Law",
+          recognition: "ENIC NARIC Austria",
+          recognitionNote: ""
+        },
+        banking: {
+          title: "Banking",
+          institution: "College of Baikal State University of Economics and Law",
+          recognition: "BMWfi – recognition as a bank clerk (Austrian apprenticeship qualification)"
+        },
+        school: {
+          title: "School education",
+          institution: "Secondary School No. 3"
+        }
+      }
+    },
+    experiencePage: {
+      sortLabel: "Sort",
+      techStack: "Technologies",
+      newest: "Newest first",
+      oldest: "Oldest first",
+      filter: "Filter by category",
+      categories: {
+        all: "All",
+        it: "Software development",
+        finance: "Securities",
+        hospitality: "Hospitality",
+        interpreting: "Interpreting",
+        break: "Leave & career transition"
+      },
+      title: "Work experience",
+      label: "My career",
+      intro: "My path into software development began long before my first line of code. Finance taught me precision, hospitality taught me to pay attention to people, and interpreting taught me to find common ground. Today I bring these experiences together to build thoughtful software solutions.",
+      place: "Location",
+      field: "Sector",
+      position: "Position",
+      places: [
+        "Graz, Austria",
+        "Moscow, Russia",
+        "Novosibirsk, Russia",
+        "Irkutsk, Russia"
+      ],
+      fields: [
+        "Securities",
+        "General medical first-contact and primary care",
+        "Hospitality and tourism",
+        "Software development and management platforms for manufacturing"
+      ],
+      entries: {
+        "2002-09": {
+          role: "Registration department staff member",
+          tasks: [
+            "Client support",
+            "Documentation"
+          ]
+        },
+        "2004-05": {
+          role: "Back office staff member",
+          tasks: [
+            "Client support",
+            "Securities trade settlement",
+            "Contributed to financial reports"
+          ]
+        },
+        "2007-03": {
+          role: "Head of Back Office",
+          tasks: [
+            "Client support",
+            "Securities trade settlement",
+            "Recording securities transactions"
+          ]
+        },
+        "2008-10": {
+          role: "Career transition"
+        },
+        "2009-02": {
+          role: "Internal controlling of securities transactions",
+          tasks: [
+            "General settlement operations",
+            "Securities transfers",
+            "Monitoring cash balances",
+            "Client support"
+          ]
+        },
+        "2012-07": {
+          role: "Parental leave"
+        },
+        "2014-04": {
+          role: "Volunteer Russian interpreter"
+        },
+        "2015-12": {
+          role: "Parental leave"
+        },
+        "2020-08": {
+          role: "Receptionist"
+        },
+        "2025-09": {
+          role: "Software development",
+          tasks: [
+            "Contributed to client projects and the modular INFORUM platform",
+            "Investigated issues and debugged PHP with Xdebug",
+            "Worked with SQL and Jira Service Management"
+          ],
+          institutionNote: ""
+        }
+      }
+    }
 }
-  

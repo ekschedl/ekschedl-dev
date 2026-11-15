@@ -3,40 +3,27 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import EducationPage from './EducationPage.vue'
 import ExperiencePage from './ExperiencePage.vue'
 import { useI18n } from 'vue-i18n'
-import de from './locales/de'
-import en from './locales/en'
-import ru from './locales/ru'
-const { locale } = useI18n()
+const { locale, t, tm, rt } = useI18n({ useScope: 'global' })
 
 type Language = 'DE' | 'EN' | 'RU'
 
 const languages: Language[] = ['DE', 'EN', 'RU']
-const language = ref<Language>('DE')
-const { t: translate } = useI18n()
+const language = computed(() => locale.value.toUpperCase())
 
 const educationPath = '/Ausbildung'
 const experiencePath = '/Berufserfahrung'
 const isExperience = /^\/berufserfahrung\/?$/i.test(window.location.pathname)
-const experienceLabels = { DE: 'Berufserfahrung', EN: 'Work experience', RU: 'Опыт работы' }
 const isEducation = /^\/ausbildung\/?$/i.test(window.location.pathname)
-const educationLabels = { DE: 'Ausbildung', EN: 'Education', RU: 'Образование' }
-const portfolioName = computed(() => ({
-  DE: 'Ekaterina Schedlberger',
-  EN: 'Ekaterina Schedlberger',
-  RU: 'Екатерина Шедльбергер'
-})[language.value])
+const portfolioName = computed(() => t('portfolioName'))
 
 function homeLink(hash: string) {
   return isEducation || isExperience ? '/' + hash : hash
 }
 
 function updatePageLanguage() {
-  document.documentElement.lang = language.value.toLowerCase()
-  if (isEducation) {
-    document.title = educationLabels[language.value] + ' | ' + portfolioName.value
-  } else if (isExperience) {
-    document.title = experienceLabels[language.value] + ' | ' + portfolioName.value
-  }
+  document.documentElement.lang = locale.value
+  const pageTitle = isEducation ? 'educationPage.title' : isExperience ? 'experiencePage.title' : null
+  document.title = pageTitle ? t(pageTitle) + ' | ' + portfolioName.value : t('homePageTitle', { separator: '|' })
 }
 const menuOpen = ref(false)
 const projectAreas = ['mobile', 'desktop', 'web', 'backend'] as const
@@ -52,13 +39,13 @@ onMounted(() => {
   try {
     darkMode.value = localStorage.getItem('portfolio-theme') === 'dark'
     const savedLanguage = languages.find((item) => item === localStorage.getItem('portfolio-language'))
-    if (savedLanguage) language.value = savedLanguage
+    if (savedLanguage) locale.value = savedLanguage.toLowerCase()
   } catch {
     // Language and theme switching also work when storage is unavailable.
   }
-  locale.value = language.value.toLowerCase()
-  updatePageLanguage()
 })
+
+watch(locale, updatePageLanguage, { immediate: true })
 
 watch(darkMode, (enabled) => {
   const theme = enabled ? 'dark' : 'light'
@@ -70,13 +57,8 @@ watch(darkMode, (enabled) => {
   }
 })
 
-const translations = {
-  DE: de,
-  EN: en,
-  RU: ru
-}
 
-const t = computed(() => translations[language.value])
+const aboutSections = computed(() => tm('aboutSections'))
 
 const todoDemoUrl = 'https://ekschedl.github.io/jawa_todo/todo/'
 const shopDemoUrl = 'https://ekschedl.github.io/jawa_todo/shopplatzi/'
@@ -84,13 +66,11 @@ const shopDemoUrl = 'https://ekschedl.github.io/jawa_todo/shopplatzi/'
 const hotelConsoleImage = '/images/hotelverwaltung-konsole.png'
 
 const unoWebDemoUrl = import.meta.env.VITE_CAMPUS02_DEMO_URL?.trim() || 'https://campus-kartenspiel.onrender.com/'
-const unoWebTitle = 'CAMPUS02 ColorSpiel'
 const unoWebCover = '/images/uno-web-spieltisch.png'
 
 const projects = [
   {
     id: 'yoganow',
-    title: 'YogaNow Studio',
     createdAt: '2026-06',
     type: 'iOS APP',
     area: 'mobile',
@@ -100,7 +80,6 @@ const projects = [
   },
   {
     id: 'uno',
-    title: 'UNO',
     createdAt: '2025-06',
     type: 'CARD GAME',
     area: 'backend',
@@ -110,7 +89,6 @@ const projects = [
   },
   {
     id: 'kaffeehaus',
-    title: 'Kaffeehaus Mokka',
     createdAt: '2025-06',
     type: 'WEB PROJECT',
     area: 'web',
@@ -120,7 +98,6 @@ const projects = [
   },
   {
     id: 'hotelverwaltung',
-    title: 'Hotelverwaltung',
     createdAt: '2026-01',
     type: 'CONSOLE APP',
     area: 'backend',
@@ -130,7 +107,6 @@ const projects = [
   },
   {
     id: 'feta',
-    title: 'Feta',
     createdAt: '2023-03',
     type: 'CLIENT WEBSITE',
     area: 'web',
@@ -140,7 +116,6 @@ const projects = [
   },
   {
     id: 'geschenkeverwaltung',
-    title: 'Geschenkeverwaltung',
     createdAt: '2026-01',
     area: 'desktop',
     image: '/images/geschenkeverwaltung-vorschau.png',
@@ -149,7 +124,6 @@ const projects = [
   },
   {
     id: 'todo',
-    title: 'To-do-App',
     createdAt: '2025-07',
     area: 'web',
     image: '/images/todo-aufgaben.jpg',
@@ -159,7 +133,6 @@ const projects = [
   },
   {
     id: 'shopplatzi',
-    title: 'ShopPlatzi',
     createdAt: '2025-07',
     area: 'web',
     image: '/images/todo-shopplatzi.jpg',
@@ -169,7 +142,6 @@ const projects = [
   },
   {
     id: 'uno-web',
-    title: unoWebTitle,
     createdAt: '2025-12',
     area: 'web',
     image: unoWebCover,
@@ -183,108 +155,87 @@ const hotelSlides = [
 
   {
     image: hotelConsoleImage,
-    captionKey: 'hotelOverview',
-    caption: {
-      DE: 'Konsolenausgabe · Zimmerübersicht mit Kategorie, Preis und Verfügbarkeit',
-      EN: 'Console output · Room overview with categories, prices and availability',
-      RU: 'Вывод консоли · Номера, категории, цены и доступность'
-    }
+    captionKey: 'hotelOverview'
   },
   {
     image: '/images/hotelverwaltung-zimmerpreise.png',
-    captionKey: 'hotelPrices',
-    caption: { DE: 'Zimmer nach Preis', EN: 'Rooms by price', RU: 'Номера по цене' }
+    captionKey: 'hotelPrices'
   },
   {
     image: '/images/hotelverwaltung-buchungsdemo.png',
-    caption: { DE: 'Erfolgreiche Buchung', EN: 'Successful booking', RU: 'Успешное бронирование' }
+    captionKey: 'hotelBooking'
   },
-  { image: '/images/hotelverwaltung-modell.svg', caption: { DE: 'Datenmodell: Gäste, Zimmer, Buchungen und Zusatzleistungen', EN: 'Data model: guests, rooms, bookings and additional services', RU: 'Модель данных: гости, номера, бронирования и дополнительные услуги' } },
-  { image: '/images/hotelverwaltung-buchung.svg', caption: { DE: 'Buchungsablauf: prüfen, speichern und Änderungen gemeinsam übernehmen', EN: 'Booking flow: validate, save and commit the changes together', RU: 'Бронирование: проверка, сохранение и фиксация всех изменений' } },
-  { image: '/images/hotelverwaltung-architektur.svg', caption: { DE: 'Architektur: Modelle, Datenzugriff, Abfragen und Services', EN: 'Architecture: models, data access, queries and services', RU: 'Архитектура: модели, доступ к данным, запросы и сервисы' } },
-  { image: '/images/hotelverwaltung-uml.png', caption: { DE: 'Vollständiges UML-Klassendiagramm mit Attributen, Methoden und Beziehungen', EN: 'Full UML class diagram with attributes, methods and relationships', RU: 'Полная диаграмма классов UML с атрибутами, методами и связями' } }
+  { image: '/images/hotelverwaltung-modell.svg', captionKey: 'hotelModel' },
+  { image: '/images/hotelverwaltung-buchung.svg', captionKey: 'hotelProcess' },
+  { image: '/images/hotelverwaltung-architektur.svg', captionKey: 'hotelArchitecture' },
+  { image: '/images/hotelverwaltung-uml.png', captionKey: 'hotelUml' }
 ] as const
 const yogaSlides = [
-  { image: '/images/yoganow-overview.png', caption: { DE: 'Startseite: Bibliothek und Kursplattform', EN: 'Home screen: library and course platform', RU: 'Главный экран: библиотека и платформа занятий' } },
-  { image: '/images/yoganow-slide-09.png', caption: { DE: 'Yoga Library: Video zum Mitmachen', EN: 'Yoga Library: follow-along video', RU: 'Библиотека йоги: видео для занятий' } },
-  { image: '/images/yoganow-slide-10.png', caption: { DE: 'Kursdetails und Buchung', EN: 'Course details and booking', RU: 'Информация о занятии и бронирование' } },
-  { video: '/videos/yoganow-demo.mp4', poster: '/images/yoganow-video-poster.jpg', caption: { DE: 'Videodemo: Vom Kurskalender zur bestätigten Buchung', EN: 'Video demo: from the class calendar to the confirmed booking', RU: 'Видео: от календаря занятий до подтверждённой записи' } }
+  { image: '/images/yoganow-overview.png', captionKey: 'yogaHome' },
+  { image: '/images/yoganow-slide-09.png', captionKey: 'yogaLibrary' },
+  { image: '/images/yoganow-slide-10.png', captionKey: 'yogaBooking' },
+  { video: '/videos/yoganow-demo.mp4', poster: '/images/yoganow-video-poster.jpg', captionKey: 'yogaVideo' }
 ] as const
 
-const yogaDemoText = {
-  DE: { action: 'Buchungsdemo ansehen', access: 'Die Yoga Library ist ohne Anmeldung zugänglich. Zum selbstständigen Testen der Kursplattform ist ein Konto erforderlich.' },
-  EN: { action: 'View booking demo', access: 'The Yoga Library is open without signing in. To try the booking platform yourself, you need an account.' },
-  RU: { action: 'Посмотреть, как записаться на занятие', access: 'Библиотека йоги доступна без входа. Чтобы самостоятельно попробовать запись на занятия, нужна учётная запись.' }
-}
 
 const fetaSlides = [
-  { image: '/images/feta-ueber-uns.png', caption: { DE: 'Startseite · Lokale Vorschau', EN: 'Home page · Local preview', RU: 'Главная страница · Локальная версия' } },
-  { image: '/images/feta-katalog.png', caption: { DE: 'Produktkatalog · Zutatenliste geschlossen', EN: 'Product catalog · Ingredients collapsed', RU: 'Каталог · Список ингредиентов свёрнут' } },
-  { image: '/images/feta-zutaten.png', caption: { DE: 'Produktkatalog mit aufgeklappter Zutatenliste', EN: 'Product catalog with the ingredients expanded', RU: 'Каталог с открытым списком ингредиентов' } },
-  { image: '/images/feta-mobil.png', caption: { DE: 'Produktkatalog · Mobile Ansicht', EN: 'Product catalog · Mobile view', RU: 'Каталог продукции · Мобильная версия' } },
-  { image: '/images/feta-kontakt.png', caption: { DE: 'Kontaktformular · Vorschau', EN: 'Contact form · Preview', RU: 'Контактная форма · Предпросмотр' } }
+  { image: '/images/feta-ueber-uns.png', captionKey: 'fetaHome' },
+  { image: '/images/feta-katalog.png', captionKey: 'fetaCatalog' },
+  { image: '/images/feta-zutaten.png', captionKey: 'fetaIngredients' },
+  { image: '/images/feta-mobil.png', captionKey: 'fetaMobile' },
+  { image: '/images/feta-kontakt.png', captionKey: 'fetaContact' }
 ] as const
 
 const projectGalleries = {
   geschenkeverwaltung: {
-    title: 'Geschenkeverwaltung',
     slides: [
-      { image: '/images/geschenkeverwaltung-vorschau.png', caption: { DE: 'Vorschau nach XAML · Wunschzettel und Geschenkdetails', EN: 'XAML-based preview · Wish list and gift details', RU: 'Визуализация по XAML · Список желаний и сведения о подарке' } },
-      { image: '/images/geschenkeverwaltung-startfenster.png', caption: { DE: 'Vorschau nach XAML · Startfenster mit geöffneter Menüleiste', EN: 'XAML-based preview · Start window with the menu open', RU: 'Визуализация по XAML · Стартовое окно с открытым меню' } },
-      { image: '/images/geschenkeverwaltung-rechner.png', caption: { DE: 'Vorschau nach XAML · Geschenke-Rechner mit Notenskala', EN: 'XAML-based preview · Gift calculator with grade scale', RU: 'Визуализация по XAML · Калькулятор подарков со шкалой оценок' } }
+      { image: '/images/geschenkeverwaltung-vorschau.png', captionKey: 'giftsOverview' },
+      { image: '/images/geschenkeverwaltung-startfenster.png', captionKey: 'giftsMenu' },
+      { image: '/images/geschenkeverwaltung-rechner.png', captionKey: 'giftsCalculator' }
     ]
   },
   todo: {
-    title: 'To-do-App',
     slides: [
-      { image: '/images/todo-start.jpg', caption: { DE: 'Startseite mit Aufgabenliste und zwei Shop-Demos', EN: 'Home screen with the task list and two shop demos', RU: 'Главная страница со списком задач и двумя демоверсиями магазинов' } },
-      { image: '/images/todo-aufgaben.jpg', caption: { DE: 'Aufgabenliste mit offenen und erledigten Beispielaufgaben', EN: 'Task list with open and completed sample tasks', RU: 'Список с открытыми и выполненными примерами задач' } },
-      { embed: `${todoDemoUrl}?v=91f0b77`, caption: { DE: 'Live-Demo', EN: 'Live demo', RU: 'Интерактивная демоверсия' } }
+      { image: '/images/todo-start.jpg', captionKey: 'todoHome' },
+      { image: '/images/todo-aufgaben.jpg', captionKey: 'todoTasks' },
+      { embed: `${todoDemoUrl}?v=91f0b77`, captionKey: 'todoDemo' }
     ]
   },
   shopplatzi: {
-    title: 'ShopPlatzi',
     slides: [
-      { image: '/images/todo-shopplatzi.jpg', caption: { DE: 'Produktübersicht mit Suche, Kategorien und Favoriten', EN: 'Product catalogue with search, categories and favourites', RU: 'Каталог товаров с поиском, категориями и избранным' } },
-      { embed: `${shopDemoUrl}?v=91f0b77`, caption: { DE: 'Live-Demo', EN: 'Live demo', RU: 'Интерактивная демоверсия' } }
+      { image: '/images/todo-shopplatzi.jpg', captionKey: 'shopOverview' },
+      { embed: `${shopDemoUrl}?v=91f0b77`, captionKey: 'shopDemo' }
     ]
   },
-  feta: { title: 'Feta', slides: fetaSlides },
-  hotelverwaltung: { title: 'Hotelverwaltung', slides: hotelSlides },
-  yoganow: { title: 'YogaNow Studio', slides: yogaSlides },
+  feta: { slides: fetaSlides },
+  hotelverwaltung: { slides: hotelSlides },
+  yoganow: { slides: yogaSlides },
   uno: {
-    title: projects[1].title,
     slides: [
-      { image: projects[1].image, caption: { DE: 'Spielstart mit Bestenliste und Spielreihenfolge', EN: 'Game start with highscores and turn order', RU: 'Начало игры, рекорды и порядок ходов' } },
-      { image: '/images/uno_spiel.png', caption: { DE: 'Karten auf der Hand und Farbwahl', EN: 'Cards in hand and colour selection', RU: 'Карты на руках и выбор цвета' } },
-      { image: '/images/uno_sieger.png', caption: { DE: 'Glückwunsch zum Rundensieg und aktueller Punktestand', EN: 'Round winner and updated scores', RU: 'Поздравление победителя раунда и текущий счёт' } },
-      { video: '/videos/uno-console.mp4', poster: projects[1].image, caption: { DE: 'Videodemo des UNO-Konsolenspiels', EN: 'UNO console game demo', RU: 'Видеодемонстрация консольной игры UNO' } }
+      { image: projects[1].image, captionKey: 'unoStart' },
+      { image: '/images/uno_spiel.png', captionKey: 'unoCards' },
+      { image: '/images/uno_sieger.png', captionKey: 'unoWinner' },
+      { video: '/videos/uno-console.mp4', poster: projects[1].image, captionKey: 'unoVideo' }
     ]
   },
   'uno-web': {
-    title: unoWebTitle,
     slides: [
-      { image: '/images/uno-web.png', caption: { DE: 'Spielstart im Holzdesign', EN: 'Game setup with the wood theme', RU: 'Начало игры в оформлении под дерево' } },
-      { image: unoWebCover, caption: { DE: 'Spieltisch im Wintermodus', EN: 'Game table with the winter theme', RU: 'Игровой стол в зимнем оформлении' } },
-      { image: '/images/campus02-farbwahl.png', caption: { DE: 'Neue Spielfarbe wählen', EN: 'Choosing the next colour', RU: 'Выбор нового цвета' } },
-      { image: '/images/campus02-rundensieg.png', caption: { DE: 'Rundensieg mit Punktestand', EN: 'Round winner and scores', RU: 'Победа в раунде и текущий счёт' } },
-      { image: '/images/campus02-partiesieg.png', caption: { DE: 'Partiesieg ab 500 Punkten', EN: 'Winning the match at 500 points', RU: 'Победа в игре при наборе 500 очков' } },
+      { image: '/images/uno-web.png', captionKey: 'unoWebStart' },
+      { image: unoWebCover, captionKey: 'unoWebWinter' },
+      { image: '/images/campus02-farbwahl.png', captionKey: 'unoWebColor' },
+      { image: '/images/campus02-rundensieg.png', captionKey: 'unoWebRound' },
+      { image: '/images/campus02-partiesieg.png', captionKey: 'unoWebWinner' },
       {
         embed: unoWebDemoUrl,
-        caption: {
-          DE: 'Render Free · Nach einer Pause kann das Laden etwa eine Minute dauern.',
-          EN: 'Render Free · Loading may take about a minute after inactivity.',
-          RU: 'Render Free · После простоя загрузка может занять около минуты.'
-        }
+        captionKey: 'unoWebDemo'
       }
     ]
   },
   kaffeehaus: {
-    title: projects[2].title,
     slides: [
-      { image: '/images/mokka-start.png', caption: { DE: 'Startseite', EN: 'Home page', RU: 'Главная страница' } },
-      { image: '/images/mokka-menu.png', caption: { DE: 'Speisekarte', EN: 'Menu', RU: 'Меню' } },
-      { image: '/images/mokka-galerie-detail.png', caption: { DE: 'Bildergalerie', EN: 'Photo gallery', RU: 'Фотогалерея' } }
+      { image: '/images/mokka-start.png', captionKey: 'coffeeHome' },
+      { image: '/images/mokka-menu.png', captionKey: 'coffeeMenu' },
+      { image: '/images/mokka-galerie-detail.png', captionKey: 'coffeeGallery' }
     ]
   }
 }
@@ -295,20 +246,15 @@ const activeGallery = computed(() => {
 
   return {
     ...gallery,
-    title: translate(`projectTitles.${galleryProject.value}`)
+    title: t(`projectTitles.${galleryProject.value}`)
   }
 })
 
-const hotelGalleryLabels = {
-  DE: { open: 'Projektgalerie öffnen', close: 'Schließen', prev: 'Vorheriges Bild', next: 'Nächstes Bild', full: 'Bild in voller Größe' },
-  EN: { open: 'Open project gallery', close: 'Close', prev: 'Previous image', next: 'Next image', full: 'Full-size image' },
-  RU: { open: 'Открыть галерею проекта', close: 'Закрыть', prev: 'Предыдущее изображение', next: 'Следующее изображение', full: 'Изображение в полном размере' }
-}
 const hotelGallery = ref<HTMLDialogElement | null>(null)
 const galleryVideo = ref<HTMLVideoElement | null>(null)
 const hotelSlideIndex = ref(0)
 const hotelSlide = computed(() => activeGallery.value.slides[hotelSlideIndex.value] ?? activeGallery.value.slides[0])
-const galleryLabels = computed(() => hotelGalleryLabels[language.value])
+const hotelSlideCaption = computed(() => t(`galleryCaptions.${hotelSlide.value.captionKey}`))
 
 function openProjectGallery(project: keyof typeof projectGalleries, startAt = 0) {
   galleryProject.value = project
@@ -321,7 +267,10 @@ function changeHotelSlide(direction: number) {
   if (count > 1) hotelSlideIndex.value = (hotelSlideIndex.value + direction + count) % count
 }
 
-const featuredProjects = projects.filter(({ id }) => id === 'yoganow' || id === 'uno' || id === 'kaffeehaus')
+const featuredProjects = computed(() => projects
+  .filter(({ id }) => id === 'yoganow' || id === 'uno' || id === 'kaffeehaus')
+  .map(project => ({ ...project, title: t(`projectTitles.${project.id}`) }))
+)
 
 const projectTechnologies = [...new Set(projects.flatMap(({ stack }) => stack.split(' · ')))]
   .sort((first, second) => first.localeCompare(second))
@@ -337,16 +286,10 @@ const technologyAreas = new Map(projectTechnologies.map((technology) => {
 
 const visibleProjects = computed(() => {
   return projects
-    .map((project, index) => ({
+    .map(project => ({
       ...project,
-      title: translate(`projectTitles.${project.id}`),
-      description: project.id === 'todo'
-        ? t.value.todoDescription
-        : project.id === 'shopplatzi'
-          ? t.value.shopDescription
-          : project.id === 'uno-web'
-            ? t.value.unoWebDescription
-            : t.value.projectDescriptions[index]
+      title: t(`projectTitles.${project.id}`),
+      description: t(`projectDescriptions.${project.id}`)
     }))
     .filter((project) => {
       const stack = project.stack.split(' · ')
@@ -369,7 +312,7 @@ const visibleProjects = computed(() => {
 
 
 const projectDateFormatter = computed(() =>
-  new Intl.DateTimeFormat(language.value === 'DE' ? 'de-AT' : language.value.toLowerCase(), {
+  new Intl.DateTimeFormat(locale.value === 'de' ? 'de-AT' : locale.value, {
     month: 'long',
     year: 'numeric'
   })
@@ -380,10 +323,10 @@ function formatProjectDate(month: string) {
 }
 
 const hasProjectFilters = computed(() => selectedAreas.value.length > 0 || selectedTechnologies.value.length > 0)
-const projectCount = computed(() => t.value.projectCount
-  .replace('{visible}', String(visibleProjects.value.length))
-  .replace('{total}', String(projects.length))
-)
+const projectCount = computed(() => t('projectCount', {
+  visible: visibleProjects.value.length,
+  total: projects.length
+}))
 
 function switchProjectFilterMode(mode: ProjectFilterMode) {
   if (mode === projectFilterMode.value) return
@@ -540,8 +483,6 @@ const emailAddress = ''
 
 function changeLanguage(next: Language) {
   locale.value = next.toLowerCase()
-  language.value = next
-  updatePageLanguage()
   try {
     localStorage.setItem('portfolio-language', next)
   } catch {
@@ -562,7 +503,7 @@ function scrollToTop() {
 <template>
   <div class="page">
     <header class="header">
-      <a href="/#home" class="logo" :aria-label="t.logoHome" @click="closeMenu">
+      <a href="/#home" class="logo" :aria-label="t('logoHome')" @click="closeMenu">
         ek<span>.</span>
       </a>
 
@@ -570,21 +511,21 @@ function scrollToTop() {
         id="main-navigation"
         class="navigation"
         :class="{ open: menuOpen }"
-        :aria-label="t.navigationLabel"
+        :aria-label="t('navigationLabel')"
       >
-        <a :href="homeLink('#home')" @click="closeMenu">{{ t.nav[0] }}</a>
-        <a :href="homeLink('#projects')" @click="closeMenu">{{ t.nav[1] }}</a>
-        <a :href="homeLink('#technologies')" @click="closeMenu">{{ t.nav[2] }}</a>
-        <a :href="homeLink('#about')" @click="closeMenu">{{ t.nav[3] }}</a>
+        <a :href="homeLink('#home')" @click="closeMenu">{{ t('nav.0') }}</a>
+        <a :href="homeLink('#projects')" @click="closeMenu">{{ t('nav.1') }}</a>
+        <a :href="homeLink('#technologies')" @click="closeMenu">{{ t('nav.2') }}</a>
+        <a :href="homeLink('#about')" @click="closeMenu">{{ t('nav.3') }}</a>
         <a :href="educationPath" :aria-current="isEducation ? 'page' : undefined" @click="closeMenu">
-            {{ translate('education') }}        </a>
+            {{ t('education') }}        </a>
         <a :href="experiencePath" :aria-current="isExperience ? 'page' : undefined" @click="closeMenu">
-          {{ experienceLabels[language] }}
+          {{ t('experiencePage.title') }}
         </a>
       </nav>
 
       <div class="header-actions">
-        <div class="languages" role="group" :aria-label="t.languageLabel">
+        <div class="languages" role="group" :aria-label="t('languageLabel')">
           <button
             v-for="lang in languages"
             :key="lang"
@@ -600,9 +541,9 @@ function scrollToTop() {
         <button
           class="theme-button"
           type="button"
-          :aria-label="darkMode ? t.switchToLight : t.switchToDark"
+          :aria-label="darkMode ? t('switchToLight') : t('switchToDark')"
           :aria-pressed="darkMode"
-          :title="darkMode ? t.switchToLight : t.switchToDark"
+          :title="darkMode ? t('switchToLight') : t('switchToDark')"
           @click="darkMode = !darkMode"
         >
           <span aria-hidden="true">{{ darkMode ? '☼' : '☾' }}</span>
@@ -615,24 +556,24 @@ function scrollToTop() {
             href="/cv/Schedlberger_Lebenslauf_Softwareentwicklerin_12_26.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            :aria-label="t.cvDownload"
-            :title="t.cvDownload"
+            :aria-label="t('cvDownload')"
+            :title="t('cvDownload')"
           >
-            <span class="cv-label-full">{{ t.cvDownload }}</span>
-            <span class="cv-label-short">{{ t.cvShort }}</span>
+            <span class="cv-label-full">{{ t('cvDownload') }}</span>
+            <span class="cv-label-short">{{ t('cvShort') }}</span>
             <svg class="cv-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none">
               <path d="M12 3v12m0 0 5-5m-5 5-5-5M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </a>
           <a class="header-contact" :href="homeLink('#contact')">
-            {{ t.contact }} <span aria-hidden="true">↗</span>
+            {{ t('contact') }} <span aria-hidden="true">↗</span>
           </a>
         </div>
 
         <button
           class="menu-button"
           type="button"
-          :aria-label="menuOpen ? t.menuClose : t.menuOpen"
+          :aria-label="menuOpen ? t('menuClose') : t('menuOpen')"
           aria-controls="main-navigation"
           :aria-expanded="menuOpen"
           @click="menuOpen = !menuOpen"
@@ -642,22 +583,22 @@ function scrollToTop() {
       </div>
     </header>
 
-    <EducationPage v-if="isEducation" :language="language" />
-    <ExperiencePage v-else-if="isExperience" :language="language" />
+    <EducationPage v-if="isEducation" />
+    <ExperiencePage v-else-if="isExperience" />
     <main v-else class="portfolio-home">
       <a class="education-milestone" :href="educationPath">
         <div class="education-milestone-headline">
-          <span class="education-milestone-news">{{ t.educationNews }}</span>
-          <span class="education-milestone-focus">{{ t.educationFocus }}</span>
+          <span class="education-milestone-news">{{ t('educationNews') }}</span>
+          <span class="education-milestone-focus">{{ t('educationFocus') }}</span>
         </div>
         <div class="education-milestone-copy">
-          <strong class="education-milestone-heading">{{ t.educationHeading }}</strong>
+          <strong class="education-milestone-heading">{{ t('educationHeading') }}</strong>
           <span class="education-milestone-detail">FH CAMPUS 02</span>
-          <span class="education-milestone-detail">{{ t.educationMilestone }}</span>
+          <span class="education-milestone-detail">{{ t('educationMilestone') }}</span>
         </div>
         <div class="education-milestone-next">
-          <strong class="education-milestone-label">{{ t.educationNext }}</strong>
-          <span>{{ t.educationNextCourse }}</span>
+          <strong class="education-milestone-label">{{ t('educationNext') }}</strong>
+          <span>{{ t('educationNextCourse') }}</span>
         </div>
       </a>
 
@@ -676,16 +617,16 @@ function scrollToTop() {
           />
         </div>
 
-        <a href="#projects" class="tile intro-tile" :aria-label="t.nav[1]">
+        <a href="#projects" class="tile intro-tile" :aria-label="t('nav.1')">
           <div>
-            <span class="eyebrow">{{ t.heroGreeting }}</span>
-            <h1>{{ t.heroName }}<span>.</span></h1>
-            <h2>{{ t.role }}</h2>
-            <p class="location">{{ t.location }}</p>
+            <span class="eyebrow">{{ t('heroGreeting') }}</span>
+            <h1>{{ t('heroName') }}<span>.</span></h1>
+            <h2>{{ t('role') }}</h2>
+            <p class="location">{{ t('location') }}</p>
           </div>
 
           <div class="intro-bottom">
-            <p>{{ t.heroNote }}</p>
+            <p>{{ t('heroNote') }}</p>
             <span class="round-arrow" aria-hidden="true">↗</span>
           </div>
         </a>
@@ -699,35 +640,35 @@ function scrollToTop() {
           :data-area="project.area"
           :class="'tile-' + project.id"
         >
-          <span class="tile-type tile-type-full">{{ t.projectTypes[project.area] }}</span>
-          <span class="tile-type tile-type-compact">{{ t.projectTypesShort[project.area] }}</span>
+          <span class="tile-type tile-type-full">{{ t(`projectTypes.${project.area}`) }}</span>
+          <span class="tile-type tile-type-compact">{{ t(`projectTypesShort.${project.area}`) }}</span>
 
           <div class="tile-project-image">
             <img v-if="project.image" :src="project.image" :alt="project.title" loading="lazy" />
           </div>
 
           <div class="tile-bottom">
-            <h3>{{ project.id === 'uno' ? t.unoTitle : project.title }}</h3>
+            <h3>{{ project.title }}</h3>
             <span aria-hidden="true">↗</span>
           </div>
         </a>
 
         <a href="#technologies" class="tile expertise-tile">
-          <span class="tile-type">{{ t.whatIUse }}</span>
-          <h3>{{ t.nav[2] }}</h3>
+          <span class="tile-type">{{ t('whatIUse') }}</span>
+          <h3>{{ t('nav.2') }}</h3>
           <div class="expertise-preview">
             <span>Vue </span>
             <span>TypeScript</span>
             <span>PHP</span>
-            <span>{{ t.more }}</span>
+            <span>{{ t('more') }}</span>
           </div>
           <span class="tile-corner-arrow" aria-hidden="true">↗</span>
         </a>
 
         <a href="#about" class="tile about-tile">
-          <span class="tile-type">{{ t.aboutTile }}</span>
-          <h3>{{ t.about }}</h3>
-          <p>{{ t.aboutShort }}</p>
+          <span class="tile-type">{{ t('aboutTile') }}</span>
+          <h3>{{ t('about') }}</h3>
+          <p>{{ t('aboutShort') }}</p>
           <span class="tile-corner-arrow" aria-hidden="true">↗</span>
         </a>
       </section>
@@ -735,47 +676,47 @@ function scrollToTop() {
       <!-- 01 / PORTFOLIO -->
       <section id="projects" class="section projects-section">
         <div class="section-head">
-          <span class="section-number">{{ t.sectionPortfolio }}</span>
-          <h2>{{ translate('projectsTitle') }}</h2>
-          <p>{{ t.projectsIntro }}</p>
-          <p class="portfolio-status">{{ t.portfolioStatus }}</p>
+          <span class="section-number">{{ t('sectionPortfolio') }}</span>
+          <h2>{{ t('projectsTitle') }}</h2>
+          <p>{{ t('projectsIntro') }}</p>
+          <p class="portfolio-status">{{ t('portfolioStatus') }}</p>
         </div>
 
-        <div class="project-controls" role="group" :aria-label="t.filterOptions">
+        <div class="project-controls" role="group" :aria-label="t('filterOptions')">
           <div class="project-filter-header">
-            <div class="project-filter-mode" role="group" :aria-label="t.filterOptions">
+            <div class="project-filter-mode" role="group" :aria-label="t('filterOptions')">
               <button type="button" :aria-pressed="projectFilterMode === 'area'" @click="switchProjectFilterMode('area')">
-                {{ t.areaMode }}
+                {{ t('areaMode') }}
               </button>
               <button type="button" :aria-pressed="projectFilterMode === 'technology'" @click="switchProjectFilterMode('technology')">
-                {{ t.technologyMode }}
+                {{ t('technologyMode') }}
               </button>
             </div>
             <div class="project-filter-summary">
               <span role="status">{{ hasProjectFilters ? projectCount : '' }}</span>
               <button v-if="hasProjectFilters" class="reset-filters" type="button" @click="resetProjectFilters">
-                {{ t.reset }}
+                {{ t('reset') }}
               </button>
             </div>
-            <div class="project-sort" role="group" :aria-label="t.sortLabel">
+            <div class="project-sort" role="group" :aria-label="t('sortLabel')">
               <button
                 type="button"
-                :aria-label="t.newest"
+                :aria-label="t('newest')"
                 :aria-pressed="projectSort === 'newest'"
-                :title="t.newest"
+                :title="t('newest')"
                 @click="projectSort = 'newest'"
               >↓</button>
               <button
                 type="button"
-                :aria-label="t.oldest"
+                :aria-label="t('oldest')"
                 :aria-pressed="projectSort === 'oldest'"
-                :title="t.oldest"
+                :title="t('oldest')"
                 @click="projectSort = 'oldest'"
               >↑</button>
             </div>
           </div>
           <fieldset v-if="projectFilterMode === 'area'" class="project-technology-filters">
-            <legend>{{ t.areaFilter }}</legend>
+            <legend>{{ t('areaFilter') }}</legend>
             <div class="project-filter-buttons">
               <button
                 v-for="area in (['', ...projectAreas] as const)"
@@ -785,13 +726,13 @@ function scrollToTop() {
                 :aria-pressed="area ? selectedAreas.includes(area) : !selectedAreas.length"
                 @click="toggleProjectArea(area)"
               >
-                {{ area ? t.areas[area] : t.allAreas }}
+                {{ area ? t(`areas.${area}`) : t('allAreas') }}
               </button>
             </div>
           </fieldset>
 
           <fieldset v-else class="project-technology-filters">
-            <legend>{{ t.filter }}</legend>
+            <legend>{{ t('filter') }}</legend>
             <div class="project-filter-buttons">
               <button
                 v-for="option in ['', ...projectTechnologies]"
@@ -801,14 +742,14 @@ function scrollToTop() {
                 :aria-pressed="option ? selectedTechnologies.includes(option) : !selectedTechnologies.length"
                 @click="toggleTechnology(option)"
               >
-                {{ option || t.allTechnologies }}
+                {{ option || t('allTechnologies') }}
               </button>
             </div>
           </fieldset>
         </div>
 
         <div role="status">
-          <p v-if="!visibleProjects.length" class="project-empty">{{ t.noResults }}</p>
+          <p v-if="!visibleProjects.length" class="project-empty">{{ t('noResults') }}</p>
         </div>
         <div v-if="visibleProjects.length" class="projects-grid">
           <article
@@ -818,7 +759,7 @@ function scrollToTop() {
             class="project-card"
           >
             <button class="project-visual project-cover" :data-area="project.area"
-              type="button" aria-haspopup="dialog" :aria-label="(project.id === 'todo' ? t.todoTitle : project.title) + ' · ' + galleryLabels.open"
+              type="button" aria-haspopup="dialog" :aria-label="(project.title) + ' · ' + t('galleryControls.open')"
               @click="openProjectGallery(project.id)">
               <span class="project-cover-frame">
                 <img :src="project.image" alt="" loading="lazy" />
@@ -828,30 +769,30 @@ function scrollToTop() {
 
             <div class="project-meta">
               <div class="project-details">
-                <span class="project-type project-area" :data-area="project.area">{{ t.areas[project.area] }}</span>
+                <span class="project-type project-area" :data-area="project.area">{{ t(`areas.${project.area}`) }}</span>
                 <div class="project-title-row">
-                  <h3>{{ project.id === 'todo' ? t.todoTitle : project.id === 'uno' ? t.unoTitle : project.title }}</h3>
-                  <a v-if="'url' in project" class="project-repository-link" :href="project.url" :aria-label="t.projectLink" target="_blank" rel="noopener noreferrer">
+                  <h3>{{ project.title }}</h3>
+                  <a v-if="'url' in project" class="project-repository-link" :href="project.url" :aria-label="t('projectLink')" target="_blank" rel="noopener noreferrer">
                     GitHub <span aria-hidden="true">↗</span>
                   </a>
                 </div>
-                <p v-if="project.createdAt" class="project-created">{{ t.created }} · {{ formatProjectDate(project.createdAt) }}</p>
+                <p v-if="project.createdAt" class="project-created">{{ t('created') }} · {{ formatProjectDate(project.createdAt) }}</p>
                 <p>{{ project.description }}</p>
               </div>
               <span class="project-stack">{{ project.stack }}</span>
               <div v-if="'demoUrl' in project" class="project-card-actions">
                 <button type="button" aria-haspopup="dialog"
                   @click="openProjectGallery(project.id, projectGalleries[project.id].slides.length - 1)">
-                  {{ t.inlineDemo }}
+                  {{ t('inlineDemo') }}
                 </button>
                 <a :href="project.demoUrl" target="_blank" rel="noopener noreferrer">
-                  {{ t.liveDemo }} <span aria-hidden="true">↗</span>
+                  {{ t('liveDemo') }} <span aria-hidden="true">↗</span>
                 </a>
               </div>
               <div v-else class="project-card-actions">
                 <button type="button" aria-haspopup="dialog"
                   @click="openProjectGallery(project.id, project.id === 'yoganow' ? yogaSlides.length - 1 : 0)">
-                  {{ project.id === 'yoganow' ? yogaDemoText[language].action : galleryLabels.open }}
+                  {{ project.id === 'yoganow' ? t('yogaDemo.action') : t('galleryControls.open') }}
                   <span aria-hidden="true">↗</span>
                 </button>
               </div>
@@ -863,13 +804,13 @@ function scrollToTop() {
       <!-- 02 / TECHNOLOGIES -->
       <section id="technologies" class="section technologies-section">
         <div class="section-head">
-          <span class="section-number">{{ t.sectionTechnologies }}</span>
-          <h2>{{ t.technologiesTitle }}</h2>
-          <p>{{ t.technologiesIntro }}</p>
+          <span class="section-number">{{ t('sectionTechnologies') }}</span>
+          <h2>{{ t('technologiesTitle') }}</h2>
+          <p>{{ t('technologiesIntro') }}</p>
         </div>
 
-        <div class="tech-group-filters" role="group" :aria-label="t.technologiesTitle">
-          <button type="button" :aria-pressed="!selectedSkillGroups.length" @click="toggleSkillGroup()">{{ t.techFilterAll }}</button>
+        <div class="tech-group-filters" role="group" :aria-label="t('technologiesTitle')">
+          <button type="button" :aria-pressed="!selectedSkillGroups.length" @click="toggleSkillGroup()">{{ t('techFilterAll') }}</button>
           <button
             v-for="(key, index) in filterableSkillGroupKeys"
             :key="key"
@@ -877,18 +818,18 @@ function scrollToTop() {
             :class="'tech-filter-' + key"
             :aria-pressed="selectedSkillGroups.includes(key)"
             @click="toggleSkillGroup(key)"
-          >{{ t.techFilterGroups[index] }}</button>
+          >{{ t(`techFilterGroups.${index}`) }}</button>
           <button
             v-if="selectedSkillGroups.length"
             type="button"
             class="tech-filter-reset"
             @click="toggleSkillGroup()"
-          >{{ t.techFilterReset }}</button>
+          >{{ t('techFilterReset') }}</button>
         </div>
         <div class="tech-groups">
-          <section v-for="(group, index) in visibleSkillGroups" :key="group.key" class="tech-group" :class="['tech-group-' + group.key, { 'tech-group-study': group.textKey }]">
-            <h3>{{ t.techGroups[group.key === 'study' ? 4 : filterableSkillGroupKeys.indexOf(group.key as SkillGroupKey)] }}</h3>
-            <p v-if="group.textKey" class="tech-study">{{ t.studyTopics }}</p>
+          <section v-for="group in visibleSkillGroups" :key="group.key" class="tech-group" :class="['tech-group-' + group.key, { 'tech-group-study': group.textKey }]">
+            <h3>{{ t(`techGroups.${group.key === 'study' ? 4 : filterableSkillGroupKeys.indexOf(group.key as SkillGroupKey)}`) }}</h3>
+            <p v-if="group.textKey" class="tech-study">{{ t('studyTopics') }}</p>
             <div v-else class="tech-list">
               <div
                 v-for="skill in group.skills"
@@ -918,15 +859,15 @@ function scrollToTop() {
       <section id="about" class="section about-section">
         <div class="about-layout">
           <div class="section-head">
-            <span class="section-number">{{ t.sectionAbout }}</span>
-            <h2>{{ t.aboutTitle }}</h2>
+            <span class="section-number">{{ t('sectionAbout') }}</span>
+            <h2>{{ t('aboutTitle') }}</h2>
           </div>
 
           <div class="about-content">
             <div class="about-topics">
-              <div v-for="topic in t.aboutSections" :key="topic.heading" class="about-topic">
-                <h3>{{ topic.heading }}</h3>
-                <p>{{ topic.before }}<strong>{{ topic.emphasis }}</strong>{{ topic.after }}</p>
+              <div v-for="(topic, index) in aboutSections" :key="index" class="about-topic">
+                <h3>{{ rt(topic.heading) }}</h3>
+                <p>{{ rt(topic.before) }}<strong>{{ rt(topic.emphasis) }}</strong>{{ rt(topic.after) }}</p>
               </div>
             </div>
 
@@ -937,7 +878,7 @@ function scrollToTop() {
                 class="value-item"
               >
                 <span aria-hidden="true">{{ value.symbol }}</span>
-                <strong>{{ t.valueLabels[index] }}</strong>
+                <strong>{{ t(`valueLabels.${index}`) }}</strong>
               </div>
             </div>
           </div>
@@ -947,9 +888,9 @@ function scrollToTop() {
       <!-- 04 / SAY HELLO -->
       <section id="contact" class="section contact-section">
         <div class="contact-copy">
-          <span class="section-number">{{ t.sectionContact }}</span>
-          <h2>{{ t.helloTitle }}</h2>
-          <p>{{ t.helloText }}</p>
+          <span class="section-number">{{ t('sectionContact') }}</span>
+          <h2>{{ t('helloTitle') }}</h2>
+          <p>{{ t('helloText') }}</p>
 
           <div class="contact-actions">
             <a
@@ -957,7 +898,7 @@ function scrollToTop() {
               :href="`mailto:${emailAddress}`"
               class="primary-link"
             >
-              {{ t.email }} <span aria-hidden="true">↗</span>
+              {{ t('email') }} <span aria-hidden="true">↗</span>
             </a>
 
             <a
@@ -966,7 +907,7 @@ function scrollToTop() {
               rel="noopener noreferrer"
               class="secondary-link"
             >
-              {{ t.github }} <span aria-hidden="true">↗</span>
+              {{ t('github') }} <span aria-hidden="true">↗</span>
             </a>
           </div>
         </div>
@@ -988,48 +929,42 @@ function scrollToTop() {
       @keydown.left.prevent="changeHotelSlide(-1)" @keydown.right.prevent="changeHotelSlide(1)">
       <div class="hotel-gallery-header">
         <strong>{{ activeGallery.title }}</strong>
-        <button type="button" autofocus :aria-label="galleryLabels.close" @click="hotelGallery?.close()">×</button>
+        <button type="button" autofocus :aria-label="t('galleryControls.close')" @click="hotelGallery?.close()">×</button>
       </div>
       <figure aria-live="polite" @click.self="hotelGallery?.close()">
         <video v-if="'video' in hotelSlide" ref="galleryVideo" :src="hotelSlide.video"
           :poster="hotelSlide.poster"
-          :aria-label="hotelSlide.caption[language]" controls muted playsinline preload="none" @keydown.left.stop @keydown.right.stop />
+          :aria-label="hotelSlideCaption" controls muted playsinline preload="none" @keydown.left.stop @keydown.right.stop />
         <iframe v-else-if="'embed' in hotelSlide" class="todo-demo-frame" :src="hotelSlide.embed"
           :title="activeGallery.title"
           :sandbox="galleryProject === 'uno-web'
             ? 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox'
             : 'allow-scripts allow-same-origin'" />
         <button v-else-if="activeGallery.slides.length > 1" type="button" class="hotel-gallery-image"
-          :aria-label="galleryLabels.next" @click="changeHotelSlide(1)">
+          :aria-label="t('galleryControls.next')" @click="changeHotelSlide(1)">
           <img :src="hotelSlide.image" alt="" />
         </button>
-        <img v-else :src="hotelSlide.image" :alt="hotelSlide.caption[language]" />
+        <img v-else :src="hotelSlide.image" :alt="hotelSlideCaption" />
 
-      <figcaption>
-        {{
-          'captionKey' in hotelSlide
-            ? translate(`galleryCaptions.${hotelSlide.captionKey}`)
-            : hotelSlide.caption[language]
-        }}
-      </figcaption>
+      <figcaption>{{ hotelSlideCaption }}</figcaption>
       </figure>
       <div v-if="activeGallery.slides.length > 1" class="hotel-gallery-controls">
-        <button type="button" :aria-label="galleryLabels.prev" @click="changeHotelSlide(-1)">←</button>
+        <button type="button" :aria-label="t('galleryControls.prev')" @click="changeHotelSlide(-1)">←</button>
         <span>{{ hotelSlideIndex + 1 }} / {{ activeGallery.slides.length }}</span>
         <button v-if="'embed' in (activeGallery.slides[hotelSlideIndex + 1] ?? {})"
-          type="button" @click="changeHotelSlide(1)">{{ t.inlineDemo }} →</button>
-        <button v-else type="button" :aria-label="galleryLabels.next" @click="changeHotelSlide(1)">→</button>
+          type="button" @click="changeHotelSlide(1)">{{ t('inlineDemo') }} →</button>
+        <button v-else type="button" :aria-label="t('galleryControls.next')" @click="changeHotelSlide(1)">→</button>
       </div>
-      <a v-if="'image' in hotelSlide" :href="hotelSlide.image" target="_blank" rel="noopener">{{ galleryLabels.full }} ↗</a>
-      <p v-if="galleryProject === 'yoganow'" class="yoga-gallery-access">{{ yogaDemoText[language].access }}</p>
+      <a v-if="'image' in hotelSlide" :href="hotelSlide.image" target="_blank" rel="noopener">{{ t('galleryControls.full') }} ↗</a>
+      <p v-if="galleryProject === 'yoganow'" class="yoga-gallery-access">{{ t('yogaDemo.access') }}</p>
     </dialog>
 
     <footer class="footer">
-      <span>{{ t.footerCopyright }}</span>
-      <span>{{ t.footerMade }}</span>
+      <span>{{ t('footerCopyright') }}</span>
+      <span>{{ t('footerMade') }}</span>
     </footer>
 
-    <button class="back-to-top" type="button" :aria-label="t.backToTop" :title="t.backToTop" @click="scrollToTop">
+    <button class="back-to-top" type="button" :aria-label="t('backToTop')" :title="t('backToTop')" @click="scrollToTop">
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
         <path d="M12 20V4m0 0 7 7m-7-7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>

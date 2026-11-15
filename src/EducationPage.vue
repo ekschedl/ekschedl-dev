@@ -1,121 +1,45 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-const props = defineProps<{ language: 'DE' | 'EN' | 'RU' }>()
-
-const copy = {
-  DE: {
-    reset: 'Zurücksetzen', sortLabel: 'Sortieren', newest: 'Neueste zuerst', oldest: 'Älteste zuerst',
-    filter: 'Nach Bereich filtern', categories: { all: 'Alle', degree: 'Schule, Studium & Abschlüsse', it: 'IT-Weiterbildungen', language: 'Sprachen', hospitality: 'Hotellerie' },
-    title: 'Ausbildung', label: 'Mein Bildungsweg',
-    intro: 'Die Welt ist voller spannender Themen – und Lernen hört für mich nie auf. Mein Bildungsweg führte mich von Wirtschaft und Sprachen zur Softwareentwicklung. Heute sehe ich, was all diese Etappen verbindet: meine Neugier, die Freude am Lernen und der Wunsch, Zusammenhänge zu verstehen.',
-    completed: 'Erfolgreich abgeschlossen im Oktober 2026',
-    focus: 'Schwerpunkte', topics: 'Objektorientierte Programmierung, Algorithmen, Datenbanken, Softwarearchitektur, REST-APIs und Softwarequalitätssicherung.',
-    practice: 'Berufspraxis bei JAWA Management Software GmbH', project: 'Mitarbeit an Kundenprojekten und an inforum, der modularen Management-Plattform für die produzierende Industrie; Fehleranalyse mit PHP und Xdebug, Arbeit mit SQL und Jira Service Management.',
-    institution: 'Einrichtung', location: 'Ort', recognition: 'Anerkennung',
-    institutionNotes: {
-      campus: 'Akademischer Hochschullehrgang Software Engineering',
-      glo: 'Online-Schule für Programmierung und Webentwicklung',
-      wifi: 'Institut für berufliche Aus- und Weiterbildung der Wirtschaftskammer Steiermark',
-      graz: ''
-    },
-    places: ['Graz, Österreich', 'Online', 'Irkutsk, Russland', 'Bratsk, Russland'],
-    titles: ['Akademisch geprüfte Softwareentwicklerin', 'Vue.js – Grundlagen und erstes Projekt', 'JavaScript', 'Web Developerin', 'Geprüfte Rezeptionistin', 'Englisch B1', 'Englisch A2 und B1', 'Bachelor of Arts (BA) – Transkulturelle Kommunikation, Deutsch, Italienisch und Russisch', 'Deutsch C1', 'Ökonom – Manager', 'Bankwesen', 'Allgemeinbildende Schulbildung'],
-    banking: 'BMWfi – Anerkennung als Bankkauffrau (österreichischer Lehrberuf)'
-  },
-  EN: {
-    reset: 'Reset',
-    sortLabel: 'Sort', newest: 'Newest first', oldest: 'Oldest first',
-    filter: 'Filter by category', categories: { all: 'All', degree: 'School, university & qualifications', it: 'IT training', language: 'Languages', hospitality: 'Hospitality' },
-    title: 'Education', label: 'My learning journey',
-    intro: 'The world is full of fascinating subjects, and I never stop learning. My educational path led me from economics and languages to software development. I now see what connects all these stages: my curiosity, love of learning and desire to understand how things fit together.',
-    completed: 'Successfully completed in October 2026',
-    focus: 'Areas of study', topics: 'Object-oriented programming, algorithms, databases, software architecture, REST APIs and software quality assurance.',
-    practice: 'Practical training at JAWA Management Software GmbH', project: 'Contributed to client projects and inforum, the modular management platform for manufacturing; investigated issues with PHP and Xdebug, and worked with SQL and Jira Service Management.',
-    institution: 'Institution', location: 'Location', recognition: 'Recognition',
-    institutionNotes: {
-      campus: 'Academic Programme in Software Engineering',
-      glo: 'Online school for programming and web development',
-      wifi: 'Professional education institute of the Styrian Economic Chamber',
-      graz: 'University of Graz'
-    },
-    places: ['Graz, Austria', 'Online', 'Irkutsk, Russia', 'Bratsk, Russia'],
-    titles: ['Academically certified software developer', 'Vue.js – Fundamentals and first project', 'JavaScript', 'Web Developer', 'Certified Receptionist', 'English B1', 'English A2 and B1', 'Bachelor of Arts (BA) in Transcultural Communication – German, Italian and Russian', 'German C1', 'Economist and manager', 'Banking', 'School education'],
-    banking: 'BMWfi – recognition as a bank clerk (Austrian apprenticeship qualification)'
-  },
-  RU: {
-    reset: 'Сбросить',
-    sortLabel: 'Сортировка', newest: 'Сначала новые', oldest: 'Сначала старые',
-    filter: 'Фильтр по категории', categories: { all: 'Все', degree: 'Школа, вуз и квалификации', it: 'Курсы по ИТ', language: 'Языки', hospitality: 'Гостиничное дело' },
-    title: 'Образование', label: 'Мой путь в образовании',
-    intro: 'Мир полон интересного, и я продолжаю учиться всю жизнь. Мой образовательный путь привёл меня от экономики и языков к разработке ПО. Теперь я понимаю, что объединяет все эти этапы: любознательность, любовь к учёбе и желание разбираться в том, как всё устроено.',
-    completed: 'Обучение успешно завершено в октябре 2026 года',
-    focus: 'Основные темы', topics: 'Объектно-ориентированное программирование, алгоритмы, базы данных, архитектура ПО, REST API и обеспечение качества ПО.',
-    practice: 'Практика в австрийской компании JAWA Management Software GmbH', project: 'Участие в клиентских проектах и работе над inforum — модульной платформой управления для производственной отрасли; анализ ошибок с PHP и Xdebug, работа с SQL и Jira Service Management.',
-    institution: 'Учебное заведение', location: 'Место', recognition: 'Признание квалификации',
-    institutionNotes: {
-      campus: 'Академическая программа по инженерной разработке ПО',
-      glo: 'Онлайн-школа программирования и веб-разработки',
-      wifi: 'Институт профессионального обучения и повышения квалификации Экономической палаты Штирии',
-      graz: 'Университет Карла и Франца в Граце'
-    },
-    places: ['Грац, Австрия', 'Онлайн', 'Иркутск, Россия', 'Братск, Россия'],
-    titles: ['Разработчик программного обеспечения с академической квалификацией', 'Vue.js – основы и первый проект', 'JavaScript', 'Веб-разработчик (Web Developerin)', 'Администратор гостиницы (Geprüfte Rezeptionistin)', 'Английский B1', 'Английский A2 и B1', 'Бакалавр гуманитарных наук (Bachelor of Arts, BA) — транскультурная коммуникация, немецкий, итальянский и русский языки', 'Немецкий C1', 'Экономист-менеджер', 'Банковское дело', 'Среднее общее образование'],
-    banking: 'BMWfi – признание квалификации банковского служащего в Австрии'
-  }
-}
+const { locale, t } = useI18n({ useScope: 'global' })
 
 const categories = ['all', 'degree', 'it', 'language', 'hospitality'] as const
 type Category = typeof categories[number]
-type InstitutionNoteKey = 'campus' | 'glo' | 'wifi' | 'graz'
 const selectedCategory = ref<Category>('all')
 const sortOrder = ref<'newest' | 'oldest'>('newest')
 
-const entries: {
-  category: Exclude<Category, 'all'>
-  additionalCategories?: Exclude<Category, 'all'>[]
-  start: string
-  end: string
-  institution?: string
-  institutionEn?: string
-  institutionRu?: string
-  institutionNote?: InstitutionNoteKey
-  place: number
-  period?: { DE: string; EN: string; RU: string }
-  recognition?: string
-  recognitionRu?: string
-}[] = [
-  { category: 'degree', start: '2025-02', end: '2026-10', institution: 'FH CAMPUS 02 – Fachhochschule der Wirtschaft', institutionEn: 'CAMPUS 02 University of Applied Sciences for Business and the Economy', institutionRu: 'FH CAMPUS 02 — высшее учебное заведение с прикладной подготовкой в сфере экономики', institutionNote: 'campus', place: 0 },
-  { category: 'it', start: '2025-01', end: '2025-03', institution: 'Glo Academy', institutionNote: 'glo', place: 1 },
-  { category: 'it', start: '2024-03', end: '2024-05', institution: 'Glo Academy', institutionNote: 'glo', place: 1 },
-  { category: 'it', start: '2022-11', end: '2023-03', institution: 'WIFI Steiermark', institutionNote: 'wifi', place: 0, period: { DE: '14.11.2022 – 27.03.2023', EN: '14 November 2022 – 27 March 2023', RU: '14.11.2022–27.03.2023' } },
-  { category: 'hospitality', start: '2019-10', end: '2019-12', institution: 'WIFI Steiermark', institutionNote: 'wifi', place: 0, period: { DE: '11.10.2019 – 13.12.2019', EN: '11 October 2019 – 13 December 2019', RU: '11.10.2019–13.12.2019' } },
-  { category: 'language', start: '2019-10', end: '2020-01', institution: 'Internationales Sprachzentrum an der Universität Graz', institutionEn: 'Internationales Sprachzentrum an der Universität Graz — International Language Centre at the University of Graz', institutionRu: 'Internationales Sprachzentrum an der Universität Graz — Международный языковой центр при Университете Граца', place: 0 },
-  { category: 'language', start: '2016-11', end: '2017-07', institution: 'Internationales Sprachzentrum an der Universität Graz', institutionEn: 'Internationales Sprachzentrum an der Universität Graz — International Language Centre at the University of Graz', institutionRu: 'Internationales Sprachzentrum an der Universität Graz — Международный языковой центр при Университете Граца', place: 0 },
-  { category: 'degree', additionalCategories: ['language'], start: '2010-09', end: '2015-09', institution: 'Karl-Franzens-Universität Graz', institutionNote: 'graz', place: 0 },
-  { category: 'language', start: '2009-09', end: '2010-07', institution: 'Vorstudienlehrgang der Grazer Universitäten und Hochschulen', institutionEn: 'University Preparation Programme of the Universities and Higher Education Institutions of Graz (VGUH)', institutionRu: 'Подготовительная программа университетов и высших учебных заведений Граца (VGUH)', place: 0 },
-  { category: 'degree', start: '2002-09', end: '2006-12', institution: 'Baikal Universität für Ökonomie und Recht', institutionEn: 'Baikal State University of Economics and Law', institutionRu: 'Байкальский государственный университет экономики и права', place: 2, recognition: 'ENIC NARIC Austria', recognitionRu: 'австрийский национальный центр по оценке иностранных дипломов для профессиональных целей' },
-  { category: 'degree', start: '2000-09', end: '2002-07', institution: 'Kolleg der Baikal Universität für Ökonomie und Recht', institutionEn: 'College of Baikal State University of Economics and Law', institutionRu: 'Колледж Байкальского государственного университета экономики и права', place: 2, recognition: 'banking' },
-  { category: 'degree', start: '1990-09', end: '2000-07', institution: 'Schule Nr. 3', institutionEn: 'Secondary School No. 3', institutionRu: 'Средняя школа № 3', place: 3 }
-]
+const entries = [
+  { id: 'softwareEngineering', category: 'degree', start: '2025-02', end: '2026-10', institutionNote: 'campus', place: 0 },
+  { id: 'vue', category: 'it', start: '2025-01', end: '2025-03', institutionNote: 'glo', place: 1 },
+  { id: 'javascript', category: 'it', start: '2024-03', end: '2024-05', institutionNote: 'glo', place: 1 },
+  { id: 'webDevelopment', category: 'it', start: '2022-11', end: '2023-03', institutionNote: 'wifi', place: 0, hasPeriod: true },
+  { id: 'reception', category: 'hospitality', start: '2019-10', end: '2019-12', institutionNote: 'wifi', place: 0, hasPeriod: true },
+  { id: 'englishB1', category: 'language', start: '2019-10', end: '2020-01', place: 0 },
+  { id: 'englishA2B1', category: 'language', start: '2016-11', end: '2017-07', place: 0 },
+  { id: 'transculturalCommunication', category: 'degree', additionalCategories: ['language'], start: '2010-09', end: '2015-09', institutionNote: 'graz', place: 0 },
+  { id: 'germanC1', category: 'language', start: '2009-09', end: '2010-07', place: 0 },
+  { id: 'economics', category: 'degree', start: '2002-09', end: '2006-12', place: 2, hasRecognition: true, hasRecognitionNote: true },
+  { id: 'banking', category: 'degree', start: '2000-09', end: '2002-07', place: 2, hasRecognition: true },
+  { id: 'school', category: 'degree', start: '1990-09', end: '2000-07', place: 3 }
+] as const
 
 const indexedEntries = entries.map((entry, index) => ({ ...entry, index }))
 const visibleEntries = computed(() => indexedEntries
-  .filter((entry) => selectedCategory.value === 'all' || entry.category === selectedCategory.value || entry.additionalCategories?.includes(selectedCategory.value) === true)
+  .filter((entry) => selectedCategory.value === 'all' || entry.category === selectedCategory.value || ('additionalCategories' in entry && entry.additionalCategories.some(category => category === selectedCategory.value)))
   .sort((first, second) => {
     const order = first.start.localeCompare(second.start)
     return sortOrder.value === 'newest' ? -order : order
   })
 )
 
-const t = computed(() => copy[props.language])
 function resetEducationControls() {
   selectedCategory.value = 'all'
   sortOrder.value = 'newest'
 }
 
 const formatter = computed(() => new Intl.DateTimeFormat(
-  { DE: 'de-AT', EN: 'en-GB', RU: 'ru-RU' }[props.language],
+  locale.value === 'de' ? 'de-AT' : locale.value === 'en' ? 'en-GB' : 'ru-RU',
   { month: 'long', year: 'numeric', timeZone: 'UTC' }
 ))
 
@@ -127,11 +51,11 @@ function formatMonth(value: string) {
 <template>
   <main class="section" aria-labelledby="education-title">
     <header class="tile education-heading">
-      <span class="eyebrow">{{ t.label }}</span>
-      <h1 id="education-title">{{ t.title }}</h1>
-      <p>{{ t.intro }}</p>
+      <span class="eyebrow">{{ t('educationPage.label') }}</span>
+      <h1 id="education-title">{{ t('educationPage.title') }}</h1>
+      <p>{{ t('educationPage.intro') }}</p>
     </header>
-    <div class="education-filters" role="group" :aria-label="t.filter">
+    <div class="education-filters" role="group" :aria-label="t('educationPage.filter')">
       <button
         v-for="category in categories"
         :key="category"
@@ -140,24 +64,24 @@ function formatMonth(value: string) {
         :aria-pressed="selectedCategory === category"
         @click="selectedCategory = category"
       >
-        {{ t.categories[category] }}
+        {{ t(`educationPage.categories.${category}`) }}
       </button>
     </div>
 
     <div class="education-toolbar">
-      <div class="education-sort" role="group" :aria-label="t.sortLabel">
+      <div class="education-sort" role="group" :aria-label="t('educationPage.sortLabel')">
         <button
           type="button"
-          :aria-label="t.newest"
+          :aria-label="t('educationPage.newest')"
           :aria-pressed="sortOrder === 'newest'"
-          :title="t.newest"
+          :title="t('educationPage.newest')"
           @click="sortOrder = 'newest'"
         >↓</button>
         <button
           type="button"
-          :aria-label="t.oldest"
+          :aria-label="t('educationPage.oldest')"
           :aria-pressed="sortOrder === 'oldest'"
-          :title="t.oldest"
+          :title="t('educationPage.oldest')"
           @click="sortOrder = 'oldest'"
         >↑</button>
       </div>
@@ -167,7 +91,7 @@ function formatMonth(value: string) {
         type="button"
         @click="resetEducationControls"
       >
-        {{ t.reset }}
+        {{ t('educationPage.reset') }}
       </button>
     </div>
     <ol class="projects-grid education-list" role="list">
@@ -181,47 +105,47 @@ function formatMonth(value: string) {
         <div class="project-type education-dates">
           <span class="education-category-list">
             <span
-              v-for="category in [entry.category, ...(entry.additionalCategories ?? [])]"
+              v-for="category in [entry.category, ...('additionalCategories' in entry ? entry.additionalCategories : [])]"
               :key="category"
               class="education-category"
               :data-category="category"
-            >{{ t.categories[category] }}</span>
+            >{{ t(`educationPage.categories.${category}`) }}</span>
           </span>
-          <span v-if="entry.period">{{ entry.period[props.language] }}</span>
+          <span v-if="'hasPeriod' in entry">{{ t(`educationPage.entries.${entry.id}.period`) }}</span>
           <template v-else>
             <time :datetime="entry.start">{{ formatMonth(entry.start) }}</time>
             –
             <time :datetime="entry.end">{{ formatMonth(entry.end) }}</time>
           </template>
         </div>
-        <h3>{{ t.titles[entry.index] }}</h3>
+        <h3>{{ t(`educationPage.entries.${entry.id}.title`) }}</h3>
         <div v-if="entry.index === 0" class="project-stack education-completed">
           <span class="education-completed-check" aria-hidden="true">✓</span>
-          {{ t.completed }}
+          {{ t('educationPage.completed') }}
         </div>
         <dl class="education-details">
-          <div v-if="entry.institution">
-            <dt>{{ t.institution }}</dt>
-            <dd>{{ props.language === 'RU' && entry.institutionRu ? entry.institutionRu : props.language === 'EN' && entry.institutionEn ? entry.institutionEn : entry.institution }}<template v-if="entry.institutionNote && t.institutionNotes[entry.institutionNote]"> — {{ t.institutionNotes[entry.institutionNote] }}</template></dd>
+          <div>
+            <dt>{{ t('educationPage.institution') }}</dt>
+            <dd>{{ t(`educationPage.entries.${entry.id}.institution`) }}<template v-if="'institutionNote' in entry && t(`educationPage.institutionNotes.${entry.institutionNote}`)"> — {{ t(`educationPage.institutionNotes.${entry.institutionNote}`) }}</template></dd>
           </div>
           <div>
-            <dt>{{ t.location }}</dt>
-            <dd>{{ t.places[entry.place] }}</dd>
+            <dt>{{ t('educationPage.location') }}</dt>
+            <dd>{{ t(`educationPage.places.${entry.place}`) }}</dd>
           </div>
-          <div v-if="entry.recognition">
-            <dt>{{ t.recognition }}</dt>
-            <dd>{{ entry.recognition === 'banking' ? t.banking : entry.recognition }}<template v-if="props.language === 'RU' && entry.recognitionRu"> — {{ entry.recognitionRu }}</template></dd>
+          <div v-if="'hasRecognition' in entry">
+            <dt>{{ t('educationPage.recognition') }}</dt>
+            <dd>{{ t(`educationPage.entries.${entry.id}.recognition`) }}<template v-if="'hasRecognitionNote' in entry && t(`educationPage.entries.${entry.id}.recognitionNote`)"> — {{ t(`educationPage.entries.${entry.id}.recognitionNote`) }}</template></dd>
           </div>
         </dl>
         <template v-if="entry.index === 0">
           <div class="education-notes">
             <div>
-              <h4>{{ t.focus }}</h4>
-              <p>{{ t.topics }}</p>
+              <h4>{{ t('educationPage.focus') }}</h4>
+              <p>{{ t('educationPage.topics') }}</p>
             </div>
             <div>
-              <h4>{{ t.practice }}</h4>
-              <p>{{ t.project }}</p>
+              <h4>{{ t('educationPage.practice') }}</h4>
+              <p>{{ t('educationPage.project') }}</p>
             </div>
           </div>
         </template>

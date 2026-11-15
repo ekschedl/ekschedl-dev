@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-const props = defineProps<{ language: 'DE' | 'EN' | 'RU' }>()
+const { locale, t, tm, rt } = useI18n({ useScope: 'global' })
 
 const categories = ['all', 'it', 'finance', 'hospitality', 'interpreting', 'break'] as const
 type Category = typeof categories[number]
@@ -13,76 +14,53 @@ const entries = [
     category: "finance" as const,
     start: "2002-09",
     end: "2004-05",
-    roles: ["Mitarbeiterin in der Registrierungsabteilung", "Registration department staff member", "Сотрудница отдела регистрации"],
     institution: "Stock Manadzer AG",
     place: 3,
     field: 0,
-    tasks: [
-      ["Kundenbetreuung", "Dokumentation"],
-      ["Client support", "Documentation"],
-      ["Обслуживание клиентов", "Ведение документации"],
-    ],
+    hasTasks: true,
   },
   {
     category: "finance" as const,
     start: "2004-05",
     end: "2007-02",
-    roles: ["Mitarbeiterin im Backoffice", "Back office staff member", "Сотрудница бэк-офиса"],
     institution: "Edinstvo AG Investmentfirma",
     place: 3,
     field: 0,
-    tasks: [
-      ["Kundenbetreuung", "Abwicklung von Wertpapiergeschäften", "Mitwirkung an Finanzreports"],
-      ["Client support", "Securities trade settlement", "Contributed to financial reports"],
-      ["Обслуживание клиентов", "Расчёты по сделкам с ценными бумагами", "Участие в подготовке финансовой отчётности"],
-    ],
+    hasTasks: true,
   },
   {
     category: "finance" as const,
     start: "2007-03",
     end: "2008-09",
-    roles: ["Leiterin des Backoffice", "Head of Back Office", "Руководительница бэк-офиса"],
     institution: "Alfa Broker Kapital GmbH",
     place: 2,
     field: 0,
-    tasks: [
-      ["Kundenbetreuung", "Abwicklung von Wertpapiergeschäften", "Verbuchung von Wertpapieren"],
-      ["Client support", "Securities trade settlement", "Recording securities transactions"],
-      ["Обслуживание клиентов", "Расчёты по сделкам с ценными бумагами", "Учёт ценных бумаг"],
-    ],
+    hasTasks: true,
   },
   {
     category: "break" as const,
     start: "2008-10",
     end: "2009-01",
-    roles: ["Berufliche Neuorientierung", "Career transition", "Профессиональная переориентация"],
     place: 1,
   },
   {
     category: "finance" as const,
     start: "2009-02",
     end: "2009-06",
-    roles: ["Internes Controlling von Wertpapiergeschäften", "Internal controlling of securities transactions", "Внутренний контроль операций с ценными бумагами"],
     institution: "Delta Kapital AG",
     place: 1,
     field: 0,
-    tasks: [
-      ["Allgemeine Abwicklungstätigkeiten", "Übertragung von Wertpapieren", "Überwachung des Finanzmittelbestands", "Kundenbetreuung"],
-      ["General settlement operations", "Securities transfers", "Monitoring cash balances", "Client support"],
-      ["Общие расчётные операции", "Перевод ценных бумаг", "Контроль остатков денежных средств", "Обслуживание клиентов"],
-    ],
+    hasTasks: true,
   },
   {
     category: "break" as const,
     start: "2012-07",
     end: "2014-01",
-    roles: ["Karenzzeit", "Parental leave", "Отпуск по уходу за ребёнком"],
   },
   {
     category: "interpreting" as const,
     start: "2014-04",
     end: "2015-10",
-    roles: ["Ehrenamtliche Dolmetscherin für Russisch", "Volunteer Russian interpreter", "Волонтёр — устный переводчик русского языка"],
     institution: "Ambulatorium Caritas Marienambulanz",
     place: 0,
     field: 1,
@@ -91,13 +69,11 @@ const entries = [
     category: "break" as const,
     start: "2015-12",
     end: "2020-01",
-    roles: ["Karenzzeit", "Parental leave", "Отпуск по уходу за ребёнком"],
   },
   {
     category: "hospitality" as const,
     start: "2020-08",
     end: "2024-07",
-    roles: ["Rezeptionistin", "Receptionist", "Администратор гостиницы"],
     institution: "Boutiquehotel Dom – Rooms & Suites",
     place: 0,
     field: 2,
@@ -106,60 +82,13 @@ const entries = [
     category: "it" as const,
     start: "2025-09",
     end: "2026-10",
-    roles: ["Softwareentwicklung", "Software development", "Разработка программного обеспечения"],
     institution: "JAWA Management Software GmbH",
-    institutionRu: "австрийская компания-разработчик программного обеспечения для управления бизнес-процессами",
+    hasInstitutionNote: true,
     place: 0,
     field: 3,
-    tasks: [
-      ["Mitarbeit an Kundenprojekten und an der modularen Plattform INFORUM", "Fehleranalyse und PHP-Debugging mit Xdebug", "Arbeit mit SQL und Jira Service Management"],
-      ["Contributed to client projects and the modular INFORUM platform", "Investigated issues and debugged PHP with Xdebug", "Worked with SQL and Jira Service Management"],
-      ["Участие в клиентских проектах и разработке модульной платформы INFORUM", "Анализ ошибок и отладка PHP с помощью Xdebug", "Работа с SQL и Jira Service Management"],
-    ],
+    hasTasks: true,
   },
 ]
-
-const copy = {
-  DE: {
-    sortLabel: 'Sortieren', techStack: 'Technologien', newest: 'Neueste zuerst', oldest: 'Älteste zuerst',
-    filter: "Nach Bereich filtern",
-    categories: { all: "Alle", it: "Softwareentwicklung", finance: "Wertpapier", hospitality: "Hotellerie", interpreting: "Dolmetschen", break: "Karenz & Neuorientierung" },
-    title: 'Berufserfahrung',
-    label: 'Mein Berufsweg',
-    intro: 'Mein Weg in die Softwareentwicklung begann lange vor dem ersten Code. Das Finanzwesen lehrte mich Genauigkeit, die Hotellerie Aufmerksamkeit für Menschen, und durch die Sprachmittlung lernte ich, Verständigung zwischen Menschen zu schaffen. Heute verbinde ich diese Erfahrungen, um durchdachte Softwarelösungen zu entwickeln.',
-    place: "Ort",
-    field: "Bereich",
-    position: "Position",
-    places: ["Graz, Österreich", "Moskau, Russland", "Novosibirsk, Russland", "Irkutsk, Russland"],
-    fields: ["Wertpapier", "Allgemeinmedizinische Erst- und Grundversorgung", "Hotellerie und Tourismus", "Softwareentwicklung und Managementplattformen für die produzierende Industrie"]
-  },
-  EN: {
-    sortLabel: 'Sort', techStack: 'Technologies', newest: 'Newest first', oldest: 'Oldest first',
-    filter: "Filter by category",
-    categories: { all: "All", it: "Software development", finance: "Securities", hospitality: "Hospitality", interpreting: "Interpreting", break: "Leave & career transition" },
-    title: 'Work experience',
-    label: 'My career',
-    intro: 'My path into software development began long before my first line of code. Finance taught me precision, hospitality taught me to pay attention to people, and interpreting taught me to find common ground. Today I bring these experiences together to build thoughtful software solutions.',
-    place: "Location",
-    field: "Sector",
-    position: "Position",
-    places: ["Graz, Austria", "Moscow, Russia", "Novosibirsk, Russia", "Irkutsk, Russia"],
-    fields: ["Securities", "General medical first-contact and primary care", "Hospitality and tourism", "Software development and management platforms for manufacturing"]
-  },
-  RU: {
-    sortLabel: 'Сортировка', techStack: 'Технологии', newest: 'Сначала новые', oldest: 'Сначала старые',
-    filter: "Фильтр по категории",
-    categories: { all: "Все", it: "Разработка ПО", finance: "Ценные бумаги", hospitality: "Гостиничное дело", interpreting: "Устный перевод", break: "Отпуск и смена профессии" },
-    title: 'Опыт работы',
-    label: 'Мой профессиональный путь',
-    intro: 'Мой путь в разработку начался задолго до первого кода. Финансы научили меня точности, гостиничное дело — вниманию к людям, а перевод — находить общий язык. Сегодня я объединяю этот опыт в работе над продуманными программными решениями.',
-    place: "Место",
-    field: "Сфера",
-    position: "Должность",
-    places: ["Грац, Австрия", "Москва, Россия", "Новосибирск, Россия", "Иркутск, Россия"],
-    fields: ["Ценные бумаги", "Первичная общемедицинская помощь", "Гостиничное дело и туризм", "Разработка ПО и платформ управления для производственной отрасли"]
-  }
-}
 
 const numberedEntries = entries.map((entry, index) => ({ ...entry, number: index + 1 }))
 const visibleEntries = computed(() => numberedEntries
@@ -171,11 +100,8 @@ const visibleEntries = computed(() => numberedEntries
   .map((entry, index) => ({ ...entry, number: index + 1 }))
 )
 
-const languageIndex = computed(() => ({ DE: 0, EN: 1, RU: 2 })[props.language])
-
-const t = computed(() => copy[props.language])
 const formatter = computed(() => new Intl.DateTimeFormat(
-  { DE: 'de-AT', EN: 'en-GB', RU: 'ru-RU' }[props.language],
+  locale.value === 'de' ? 'de-AT' : locale.value === 'en' ? 'en-GB' : 'ru-RU',
   { month: 'long', year: 'numeric', timeZone: 'UTC' }
 ))
 
@@ -187,13 +113,13 @@ function formatMonth(value: string) {
 <template>
   <main class="section" aria-labelledby="experience-title">
     <header class="tile experience-heading">
-      <span class="eyebrow">{{ t.label }}</span>
-      <h1 id="experience-title">{{ t.title }}</h1>
-      <p>{{ t.intro }}</p>
+      <span class="eyebrow">{{ t('experiencePage.label') }}</span>
+      <h1 id="experience-title">{{ t('experiencePage.title') }}</h1>
+      <p>{{ t('experiencePage.intro') }}</p>
     </header>
 
     <div class="experience-controls">
-      <div class="experience-filters" role="group" :aria-label="t.filter">
+      <div class="experience-filters" role="group" :aria-label="t('experiencePage.filter')">
         <button
           v-for="category in categories"
           :key="category"
@@ -202,12 +128,12 @@ function formatMonth(value: string) {
           :aria-pressed="selectedCategory === category"
           @click="selectedCategory = category"
         >
-          {{ t.categories[category] }}
+          {{ t(`experiencePage.categories.${category}`) }}
         </button>
       </div>
-      <div class="experience-sort" role="group" :aria-label="t.sortLabel">
-        <button type="button" :aria-label="t.newest" :aria-pressed="sortOrder === 'newest'" :title="t.newest" @click="sortOrder = 'newest'">↓</button>
-        <button type="button" :aria-label="t.oldest" :aria-pressed="sortOrder === 'oldest'" :title="t.oldest" @click="sortOrder = 'oldest'">↑</button>
+      <div class="experience-sort" role="group" :aria-label="t('experiencePage.sortLabel')">
+        <button type="button" :aria-label="t('experiencePage.newest')" :aria-pressed="sortOrder === 'newest'" :title="t('experiencePage.newest')" @click="sortOrder = 'newest'">↓</button>
+        <button type="button" :aria-label="t('experiencePage.oldest')" :aria-pressed="sortOrder === 'oldest'" :title="t('experiencePage.oldest')" @click="sortOrder = 'oldest'">↑</button>
       </div>
     </div>
     <ol class="experience-list" role="list">
@@ -224,30 +150,30 @@ function formatMonth(value: string) {
           –
           <time :datetime="entry.end">{{ formatMonth(entry.end) }}</time>
         </div>
-        <span class="experience-category project-type">{{ t.categories[entry.category] }}</span>
+        <span class="experience-category project-type">{{ t(`experiencePage.categories.${entry.category}`) }}</span>
         <h2>
           <a v-if="entry.institution === 'JAWA Management Software GmbH'" href="https://jawa.at/en/" target="_blank" rel="noreferrer">{{ entry.institution }}</a>
-          <template v-else>{{ entry.institution || entry.roles[languageIndex] }}</template>
-          <span v-if="props.language === 'RU' && 'institutionRu' in entry" class="experience-company-translation"> — {{ entry.institutionRu }}</span>
+          <template v-else>{{ entry.institution || t(`experiencePage.entries.${entry.start}.role`) }}</template>
+          <span v-if="'hasInstitutionNote' in entry && t(`experiencePage.entries.${entry.start}.institutionNote`)" class="experience-company-translation"> — {{ t(`experiencePage.entries.${entry.start}.institutionNote`) }}</span>
         </h2>
         <dl v-if="entry.institution || entry.place !== undefined" class="experience-details">
           <div v-if="entry.place !== undefined">
-            <dt>{{ t.place }}</dt>
-            <dd>{{ t.places[entry.place] }}</dd>
+            <dt>{{ t('experiencePage.place') }}</dt>
+            <dd>{{ t(`experiencePage.places.${entry.place}`) }}</dd>
           </div>
           <div v-if="entry.field !== undefined">
-            <dt>{{ t.field }}</dt>
-            <dd>{{ t.fields[entry.field] }}</dd>
+            <dt>{{ t('experiencePage.field') }}</dt>
+            <dd>{{ t(`experiencePage.fields.${entry.field}`) }}</dd>
           </div>
           <div v-if="entry.institution">
-            <dt>{{ t.position }}</dt>
-            <dd>{{ entry.roles[languageIndex] }}</dd>
+            <dt>{{ t('experiencePage.position') }}</dt>
+            <dd>{{ t(`experiencePage.entries.${entry.start}.role`) }}</dd>
           </div>
         </dl>
-        <ul v-if="entry.tasks" class="experience-tasks">
-          <li v-for="task in entry.tasks[languageIndex]" :key="task">{{ task }}</li>
+        <ul v-if="entry.hasTasks" class="experience-tasks">
+          <li v-for="(task, index) in tm(`experiencePage.entries.${entry.start}.tasks`)" :key="index">{{ rt(task) }}</li>
         </ul>
-        <ul v-if="entry.institution === 'JAWA Management Software GmbH'" class="experience-stack" :aria-label="t.techStack">
+        <ul v-if="entry.institution === 'JAWA Management Software GmbH'" class="experience-stack" :aria-label="t('experiencePage.techStack')">
           <li v-for="tool in ['PHP', 'Xdebug', 'SQL', 'Jira Service Management', 'INFORUM']" :key="tool">
             {{ tool }}
           </li>
