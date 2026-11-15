@@ -1,4 +1,9 @@
 export default {
+    assistant: {
+        title: 'AI assistant',
+        status: 'In progress',
+        greeting: 'Hello, I’ll be up and running by the end of this week.'
+    },
     welcome: 'Welcome',
     education: 'Education',
     areaFilter: 'Project area',

@@ -1,4 +1,9 @@
 export default {
+    assistant: {
+        title: 'KI-Assistent',
+        status: 'In Bearbeitung',
+        greeting: 'Hallo, am Ende dieser Woche werde ich funktionieren.'
+    },
     welcome: 'Willkommen',
     education: 'Ausbildung',
     areaFilter: 'Projektbereich',

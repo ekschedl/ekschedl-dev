@@ -26,6 +26,7 @@ function updatePageLanguage() {
   document.title = pageTitle ? t(pageTitle) + ' | ' + portfolioName.value : t('homePageTitle', { separator: '|' })
 }
 const menuOpen = ref(false)
+const assistantDialog = ref<HTMLDialogElement | null>(null)
 const projectAreas = ['mobile', 'desktop', 'web', 'backend'] as const
 type ProjectArea = typeof projectAreas[number]
 type ProjectFilterMode = 'area' | 'technology'
@@ -964,6 +965,35 @@ function scrollToTop() {
       <span>{{ t('footerMade') }}</span>
     </footer>
 
+    <button
+      class="assistant-trigger"
+      type="button"
+      aria-haspopup="dialog"
+      aria-controls="portfolio-assistant"
+      @click="assistantDialog?.showModal()"
+    >
+      {{ t('assistant.title') }}
+    </button>
+
+    <dialog
+      id="portfolio-assistant"
+      ref="assistantDialog"
+      class="assistant-dialog"
+      aria-labelledby="assistant-title"
+      @click.self="assistantDialog?.close()"
+    >
+      <div class="assistant-content">
+        <header class="assistant-header">
+          <h2 id="assistant-title">{{ t('assistant.title') }}</h2>
+          <form method="dialog">
+            <button type="submit" autofocus :aria-label="t('galleryControls.close')">×</button>
+          </form>
+        </header>
+        <p class="assistant-status">{{ t('assistant.status') }}</p>
+        <p class="assistant-message">{{ t('assistant.greeting') }} <span aria-hidden="true">🙂</span></p>
+      </div>
+    </dialog>
+
     <button class="back-to-top" type="button" :aria-label="t('backToTop')" :title="t('backToTop')" @click="scrollToTop">
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
         <path d="M12 20V4m0 0 7 7m-7-7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -1695,6 +1725,90 @@ function scrollToTop() {
 
 .header-cv-compact-label .cv-label-short {
   display: inline;
+}
+
+.assistant-trigger {
+  position: fixed;
+  z-index: 40;
+  inset-inline-start: clamp(10px, 2vw, 24px);
+  bottom: clamp(10px, 2vw, 24px);
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.assistant-trigger:hover {
+  background: var(--paper);
+}
+
+.assistant-dialog {
+  box-sizing: border-box;
+  width: min(390px, calc(100% - 32px));
+  padding: 0;
+  border: 1px solid var(--accent);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.assistant-dialog::backdrop {
+  background: rgb(18 15 19 / 48%);
+}
+
+.assistant-content {
+  padding: 20px;
+}
+
+.assistant-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.assistant-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.assistant-header button {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--accent);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.assistant-trigger:focus-visible,
+.assistant-header button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.assistant-status {
+  margin: 2px 0 14px;
+  color: var(--accent);
+  font-size: .875rem;
+  font-weight: 600;
+}
+
+.assistant-message {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--paper);
 }
 
 .back-to-top {

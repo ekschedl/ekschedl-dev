@@ -1,4 +1,9 @@
 export default {
+    assistant: {
+        title: 'ИИ-ассистент',
+        status: 'В разработке',
+        greeting: 'Привет! К концу этой недели я уже буду работать.'
+    },
     welcome: 'Добро пожаловать',
     education: 'Образование',
     areaFilter: 'Тип проекта',
