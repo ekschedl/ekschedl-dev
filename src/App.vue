@@ -3,6 +3,9 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import EducationPage from './EducationPage.vue'
 import ExperiencePage from './ExperiencePage.vue'
 import { useI18n } from 'vue-i18n'
+import Assistant from './Assistant.vue'
+import { cvPath, hotelConsoleImage, projects, shopDemoUrl, skillGroups, todoDemoUrl, unoWebCover, unoWebDemoUrl } from './portfolioData'
+
 const { locale, t, tm, rt } = useI18n({ useScope: 'global' })
 
 type Language = 'DE' | 'EN' | 'RU'
@@ -26,7 +29,7 @@ function updatePageLanguage() {
   document.title = pageTitle ? t(pageTitle) + ' | ' + portfolioName.value : t('homePageTitle', { separator: '|' })
 }
 const menuOpen = ref(false)
-const assistantDialog = ref<HTMLDialogElement | null>(null)
+
 const projectAreas = ['mobile', 'desktop', 'web', 'backend'] as const
 type ProjectArea = typeof projectAreas[number]
 type ProjectFilterMode = 'area' | 'technology'
@@ -60,97 +63,6 @@ watch(darkMode, (enabled) => {
 
 
 const aboutSections = computed(() => tm('aboutSections'))
-
-const todoDemoUrl = 'https://ekschedl.github.io/jawa_todo/todo/'
-const shopDemoUrl = 'https://ekschedl.github.io/jawa_todo/shopplatzi/'
-
-const hotelConsoleImage = '/images/hotelverwaltung-konsole.png'
-
-const unoWebDemoUrl = import.meta.env.VITE_CAMPUS02_DEMO_URL?.trim() || 'https://campus-kartenspiel.onrender.com/'
-const unoWebCover = '/images/uno-web-spieltisch.png'
-
-const projects = [
-  {
-    id: 'yoganow',
-    createdAt: '2026-06',
-    type: 'iOS APP',
-    area: 'mobile',
-    image: '/images/yoganow-overview.png',
-    url: 'https://github.com/ekschedl/YogaNowStudio',
-    stack: 'Swift · SwiftUI · Supabase'
-  },
-  {
-    id: 'uno',
-    createdAt: '2025-06',
-    type: 'CARD GAME',
-    area: 'backend',
-    image: '/images/uno.jpg',
-    url: 'https://github.com/ekschedl/UnoGame_inDerKonsole_Java_campusMe_2025',
-    stack: 'Java · OOP · JDBC · SQLite'
-  },
-  {
-    id: 'kaffeehaus',
-    createdAt: '2025-06',
-    type: 'WEB PROJECT',
-    area: 'web',
-    image: '/images/mokka-start.png',
-    url: 'https://github.com/ekschedl/web1_hausaufgabe01_Mokka',
-    stack: 'HTML · CSS · JavaScript'
-  },
-  {
-    id: 'hotelverwaltung',
-    createdAt: '2026-01',
-    type: 'CONSOLE APP',
-    area: 'backend',
-    image: hotelConsoleImage,
-    url: 'https://github.com/ekschedl/Datenbankenprogrammierung_02_hotel_pruefung',
-    stack: 'Java · Hibernate · JPA · HQL · SQLite · XML'
-  },
-  {
-    id: 'feta',
-    createdAt: '2023-03',
-    type: 'CLIENT WEBSITE',
-    area: 'web',
-    image: '/images/feta-katalog.png',
-    url: 'https://github.com/ekschedl/feta_new_2024/tree/main/feta-theme-new_server_08.2024',
-    stack: 'WordPress · PHP · HTML · CSS · JavaScript'
-  },
-  {
-    id: 'geschenkeverwaltung',
-    createdAt: '2026-01',
-    area: 'desktop',
-    image: '/images/geschenkeverwaltung-vorschau.png',
-    url: 'https://github.com/ekschedl/ISY_GeschenkeManager',
-    stack: 'C# · WPF · XAML · MVVM · Entity Framework · SQL Server LocalDB'
-  },
-  {
-    id: 'todo',
-    createdAt: '2025-07',
-    area: 'web',
-    image: '/images/todo-aufgaben.jpg',
-    url: 'https://github.com/ekschedl/jawa_todo',
-    demoUrl: todoDemoUrl,
-    stack: 'Vue 3 · TypeScript · Vuetify · Pinia'
-  },
-  {
-    id: 'shopplatzi',
-    createdAt: '2025-07',
-    area: 'web',
-    image: '/images/todo-shopplatzi.jpg',
-    url: 'https://github.com/ekschedl/jawa_todo',
-    demoUrl: shopDemoUrl,
-    stack: 'Vue 3 · TypeScript · Vuetify · Pinia · Axios · REST-APIs'
-  },
-  {
-    id: 'uno-web',
-    createdAt: '2025-12',
-    area: 'web',
-    image: unoWebCover,
-    url: 'https://github.com/ekschedl/NowaUno',
-    demoUrl: unoWebDemoUrl,
-    stack: 'HTML · CSS · JavaScript · Node.js · Express · REST-API'
-  }
-] as const
 
 const hotelSlides = [
 
@@ -368,6 +280,7 @@ function resetProjectFilters() {
 }
 
 async function openProject(event: MouseEvent, id: string) {
+  if (isEducation || isExperience) return
   if (visibleProjects.value.some((project) => project.id === id)) return
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
 
@@ -382,67 +295,6 @@ async function openProject(event: MouseEvent, id: string) {
     window.location.hash = hash
   }
 }
-
-const skillGroups = [
-  {
-    key: 'programming',
-    skills: [
-      { name: 'HTML', icon: 'html5', color: 'E34F26' },
-      { name: 'CSS', icon: 'css3', color: '1572B6' },
-      { name: 'JavaScript', icon: 'javascript', color: 'B99B00' },
-      { name: 'TypeScript', icon: 'typescript', color: '3178C6' },
-      { name: 'Vue 3', icon: 'vuedotjs', color: '42B883' },
-      { name: 'SwiftUI', icon: 'swift', color: 'F05138', note: 'project' },
-      { name: 'Swift', icon: 'swift', color: 'F05138' },
-      { name: 'Vuetify', icon: 'vuetify', color: '1867C0' },
-      { name: 'Pinia', icon: 'pinia', color: 'B99B00' },
-      { name: 'Axios', icon: 'axios', color: '5A29E4' },
-      { name: 'WordPress', icon: 'wordpress', color: '21759B' },
-      { name: 'WPF', icon: '', color: '512BD4' },
-      { name: 'XAML', icon: '', color: '512BD4' },
-     
-    ]
-  },
-  {
-    key: 'apps',
-    skills: [
-      { name: 'Supabase', icon: 'supabase', color: '3ECF8E', note: 'project' },
-      { name: 'SQL · MySQL', icon: 'mysql', color: '4479A1' },
-      { name: 'REST APIs', icon: 'fastapi', color: '009688' },
-      { name: 'PHP', icon: 'php', color: '777BB4' },
-      { name: 'C#', icon: '', color: '512BD4' },
-      { name: 'XML', icon: '', color: '4479A1' },
-      { name: 'Java', icon: 'openjdk', color: '437291' },
-      { name: 'Node.js', icon: 'nodedotjs', color: '339933' },
-      { name: 'Express', icon: 'express', color: '444444' },
-      { name: 'JDBC', icon: '', color: '437291' },
-      { name: 'Hibernate', icon: 'hibernate', color: '59666C' },
-      { name: 'JPA', icon: '', color: '59666C' },
-      { name: 'HQL', icon: '', color: '59666C' },
-      { name: 'SQLite', icon: 'sqlite', color: '003B57' },
-      { name: 'Entity Framework', icon: '', color: '512BD4' },
-      { name: 'SQL Server LocalDB', icon: '', color: '4479A1' }
-    ]
-  },
-  {
-    key: 'tools',
-    skills: [
-      { name: 'Git', icon: 'git', color: 'F05032' },
-      { name: 'Docker', icon: 'docker', color: '2496ED' },
-      { name: 'Xcode', icon: 'xcode', color: '147EFB' },
-      { name: 'Xdebug', icon: 'php', color: '777BB4' },
-      { name: 'Jira Service Management', icon: 'atlassian', color: '0052CC' }
-    ]
-  },
-  {
-    key: 'ai',
-    skills: [{ name: 'ChatGPT', icon: 'openai', color: '412991' }]
-  },
-  {
-    key: 'study',
-    textKey: 'studyTopics'
-  }
-]
 
 type SkillGroupKey = 'programming' | 'apps' | 'tools' | 'ai' | 'study'
 const selectedSkillGroups = ref<SkillGroupKey[]>([])
@@ -478,9 +330,9 @@ const values = [
   { symbol: '⟳' }
 ]
 
-// Hier später deine bestätigten Kontaktdaten eintragen.
 const githubUrl = 'https://github.com/ekschedl'
-const emailAddress = ''
+const linkedinUrl = 'https://www.linkedin.com/in/ekaterina-schedlberger-05162630b/'
+const emailAddress = 'ek.schedl@gmail.com'
 
 function changeLanguage(next: Language) {
   locale.value = next.toLowerCase()
@@ -554,7 +406,7 @@ function scrollToTop() {
           <a
             class="header-cv"
             :class="{ 'header-cv-compact-label': language !== 'RU' }"
-            href="/cv/Schedlberger_Lebenslauf_Softwareentwicklerin_12_26.pdf"
+            :href="cvPath"
             target="_blank"
             rel="noopener noreferrer"
             :aria-label="t('cvDownload')"
@@ -677,10 +529,12 @@ function scrollToTop() {
       <!-- 01 / PORTFOLIO -->
       <section id="projects" class="section projects-section">
         <div class="section-head">
-          <span class="section-number">{{ t('sectionPortfolio') }}</span>
+          <div class="portfolio-heading-meta">
+            <span class="section-number">{{ t('sectionPortfolio') }}</span>
+            <span class="portfolio-status">{{ t('portfolioStatus') }}</span>
+          </div>
           <h2>{{ t('projectsTitle') }}</h2>
           <p>{{ t('projectsIntro') }}</p>
-          <p class="portfolio-status">{{ t('portfolioStatus') }}</p>
         </div>
 
         <div class="project-controls" role="group" :aria-label="t('filterOptions')">
@@ -899,7 +753,11 @@ function scrollToTop() {
               :href="`mailto:${emailAddress}`"
               class="primary-link"
             >
-              {{ t('email') }} <span aria-hidden="true">↗</span>
+              <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <path d="m4 7 8 6 8-6" />
+              </svg>
+              {{ emailAddress }} <span aria-hidden="true">↗</span>
             </a>
 
             <a
@@ -908,7 +766,19 @@ function scrollToTop() {
               rel="noopener noreferrer"
               class="secondary-link"
             >
+              <svg class="contact-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38l-.01-1.49c-2.22.48-2.69-.94-2.69-.94-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.82 1.23.82.71 1.23 1.87.87 2.33.67.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.14 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.19c0 .21.15.46.55.38A8 8 0 0 0 8 0Z" />
+              </svg>
               {{ t('github') }} <span aria-hidden="true">↗</span>
+            </a>
+
+            <a :href="linkedinUrl" target="_blank" rel="noopener noreferrer" class="secondary-link">
+              <svg class="contact-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                <rect x="2" y="2" width="20" height="20" rx="2.5" stroke="currentColor" stroke-width="1.75" />
+                <circle cx="7.4" cy="7.4" r="1.2" fill="currentColor" />
+                <path d="M7.4 11v6m4-6v6m0-3.7c0-1.45 1-2.3 2.4-2.3 1.5 0 2.4 1 2.4 2.6V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              LinkedIn <span aria-hidden="true">↗</span>
             </a>
           </div>
         </div>
@@ -965,34 +835,7 @@ function scrollToTop() {
       <span>{{ t('footerMade') }}</span>
     </footer>
 
-    <button
-      class="assistant-trigger"
-      type="button"
-      aria-haspopup="dialog"
-      aria-controls="portfolio-assistant"
-      @click="assistantDialog?.showModal()"
-    >
-      {{ t('assistant.title') }}
-    </button>
-
-    <dialog
-      id="portfolio-assistant"
-      ref="assistantDialog"
-      class="assistant-dialog"
-      aria-labelledby="assistant-title"
-      @click.self="assistantDialog?.close()"
-    >
-      <div class="assistant-content">
-        <header class="assistant-header">
-          <h2 id="assistant-title">{{ t('assistant.title') }}</h2>
-          <form method="dialog">
-            <button type="submit" autofocus :aria-label="t('galleryControls.close')">×</button>
-          </form>
-        </header>
-        <p class="assistant-status">{{ t('assistant.status') }}</p>
-        <p class="assistant-message">{{ t('assistant.greeting') }} <span aria-hidden="true">🙂</span></p>
-      </div>
-    </dialog>
+    <Assistant @open-project="openProject" />
 
     <button class="back-to-top" type="button" :aria-label="t('backToTop')" :title="t('backToTop')" @click="scrollToTop">
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
@@ -1003,6 +846,12 @@ function scrollToTop() {
 </template>
 
 <style scoped>
+.contact-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 auto;
+}
+
 .portfolio-home {
   --hero-section-gap: clamp(16px, 2vw, 26px);
 }
@@ -1123,19 +972,36 @@ function scrollToTop() {
   }
 }
 
-.section-head .portfolio-status {
-  display: block;
-  max-width: none;
-  margin: 16px 0 0;
-  padding: 14px clamp(12px, 3vw, 22px);
-  border-inline-start: 5px solid #dbad46;
-  border-radius: 10px;
-  background: #245c4b;
-  color: #fff;
-  font-size: clamp(17px, 2vw, 22px);
-  font-weight: 700;
-  line-height: 1.4;
+.portfolio-heading-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+}
+
+.portfolio-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 4px 9px;
+  border: 1px solid color-mix(in srgb, var(--accent) 27%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  color: var(--accent);
+  font-size: .75rem;
+  font-weight: 650;
+  line-height: 1.35;
   overflow-wrap: anywhere;
+}
+
+.portfolio-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .project-filter-header,
@@ -1725,90 +1591,6 @@ function scrollToTop() {
 
 .header-cv-compact-label .cv-label-short {
   display: inline;
-}
-
-.assistant-trigger {
-  position: fixed;
-  z-index: 40;
-  inset-inline-start: clamp(10px, 2vw, 24px);
-  bottom: clamp(10px, 2vw, 24px);
-  min-height: 44px;
-  padding: 8px 16px;
-  border: 1px solid var(--accent);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--accent);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.assistant-trigger:hover {
-  background: var(--paper);
-}
-
-.assistant-dialog {
-  box-sizing: border-box;
-  width: min(390px, calc(100% - 32px));
-  padding: 0;
-  border: 1px solid var(--accent);
-  border-radius: 16px;
-  background: var(--surface);
-  color: var(--ink);
-}
-
-.assistant-dialog::backdrop {
-  background: rgb(18 15 19 / 48%);
-}
-
-.assistant-content {
-  padding: 20px;
-}
-
-.assistant-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.assistant-header h2 {
-  margin: 0;
-  font-size: 1.25rem;
-}
-
-.assistant-header button {
-  display: grid;
-  width: 44px;
-  height: 44px;
-  place-items: center;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--accent);
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.assistant-trigger:focus-visible,
-.assistant-header button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.assistant-status {
-  margin: 2px 0 14px;
-  color: var(--accent);
-  font-size: .875rem;
-  font-weight: 600;
-}
-
-.assistant-message {
-  margin: 0;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: var(--paper);
 }
 
 .back-to-top {
