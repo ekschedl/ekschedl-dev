@@ -1714,6 +1714,18 @@ function scrollToTop() {
   cursor: pointer;
 }
 
+@media (max-width: 920px) {
+  .footer {
+    padding-block-end: calc(64px + clamp(10px, 2vw, 24px) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .footer-legal :is(a, button) {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+  }
+}
+
 .hotel-gallery button.demo-settings-shortcut {
   margin-inline-start: auto;
   padding-inline: 8px;
