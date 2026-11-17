@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import ContactEmail from './ContactEmail.vue'
 
 defineProps<{ page: 'imprint' | 'privacy' }>()
 
 const { t } = useI18n()
-const publicEmail = 'ek.schedl@gmail.com'
 const contactFormConfigured = Boolean(import.meta.env.VITE_TURNSTILE_SITE_KEY?.trim())
 </script>
 
@@ -16,8 +16,7 @@ const contactFormConfigured = Boolean(import.meta.env.VITE_TURNSTILE_SITE_KEY?.t
     <p>{{ t(page === 'imprint' ? 'legal.owner' : 'legal.controller') }}<br />
       Ekaterina Schedlberger<br />
       Graz, {{ t('legal.austria') }}<br />
-      <a v-if="publicEmail" :href="`mailto:${publicEmail}`">{{ publicEmail }}</a>
-      <span v-else>{{ t('legal.emailPlaceholder') }}</span>
+      <ContactEmail class="legal-email" />
     </p>
     <p v-if="page === 'imprint'">{{ t('legal.purpose') }}</p>
     <template v-else>
@@ -83,7 +82,14 @@ const contactFormConfigured = Boolean(import.meta.env.VITE_TURNSTILE_SITE_KEY?.t
   font-size: 1.2rem;
 }
 
-.legal-page a {
+button.legal-email {
+  padding: 0;
+  background: none;
+  font: inherit;
+}
+
+.legal-page a,
+.legal-email {
   color: var(--accent);
   text-decoration: underline;
 }

@@ -5,6 +5,7 @@ import ExperiencePage from './ExperiencePage.vue'
 import { useI18n } from 'vue-i18n'
 import Assistant from './Assistant.vue'
 import LegalPage from './LegalPage.vue'
+import ContactEmail from './ContactEmail.vue'
 import { cvPath, hotelConsoleImage, projects, shopDemoUrl, skillGroups, todoDemoUrl, unoWebCover, unoWebDemoUrl } from './portfolioData'
 
 const { locale, t, tm, rt } = useI18n({ useScope: 'global' })
@@ -388,7 +389,6 @@ const values = [
 
 const githubUrl = 'https://github.com/ekschedl'
 const linkedinUrl = 'https://www.linkedin.com/in/ekaterina-schedlberger-05162630b/'
-const emailAddress = 'ek.schedl@gmail.com'
 
 function changeLanguage(next: Language) {
   locale.value = next.toLowerCase()
@@ -474,8 +474,14 @@ function scrollToTop() {
               <path d="M12 3v12m0 0 5-5m-5 5-5-5M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </a>
-          <a class="header-contact" :href="homeLink('#contact')">
-            {{ t('contact') }} <span aria-hidden="true">↗</span>
+          <a class="header-contact" :href="homeLink('#contact')" :aria-label="t('email')" :title="t('email')">
+            <span class="header-contact-label">{{ t('contact') }}</span>
+            <span class="header-contact-arrow" aria-hidden="true">↗</span>
+            <svg class="header-contact-icon contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <path d="m4 7 8 6 8-6" />
+            </svg>
           </a>
         </div>
 
@@ -814,17 +820,13 @@ function scrollToTop() {
           <p>{{ t('helloText') }}</p>
 
           <div class="contact-actions">
-            <a
-              v-if="emailAddress"
-              :href="`mailto:${emailAddress}`"
-              class="primary-link"
-            >
+            <ContactEmail class="primary-link">
               <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                 <rect x="3" y="5" width="18" height="14" rx="2" />
                 <path d="m4 7 8 6 8-6" />
               </svg>
-              {{ emailAddress }} <span aria-hidden="true">↗</span>
-            </a>
+              <span>{{ t('email') }}</span> <span aria-hidden="true">↗</span>
+            </ContactEmail>
 
             <a
               :href="githubUrl"
@@ -1640,6 +1642,10 @@ function scrollToTop() {
   padding: 0 20px;
 }
 
+.header-contact-icon {
+  display: none;
+}
+
 .theme-button {
   box-sizing: border-box;
   width: 44px;
@@ -1915,10 +1921,6 @@ function scrollToTop() {
 }
 
 @media (max-width: 920px) {
-  .header-contact {
-    display: none;
-  }
-
   .cv-label-full {
     display: none;
   }
@@ -1954,10 +1956,6 @@ function scrollToTop() {
     min-width: 0;
     justify-content: space-between;
     gap: 4px;
-  }
-
-  .header-contact {
-    display: none;
   }
 
   .navigation {
@@ -2042,6 +2040,22 @@ function scrollToTop() {
 }
 
 @media (max-width: 680px) {
+  .header-contact {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    padding: 0;
+  }
+
+  .header-contact .header-contact-label,
+  .header-contact .header-contact-arrow {
+    display: none;
+  }
+
+  .header-contact-icon {
+    display: block;
+  }
+
   .cv-label-full,
   .cv-label-short,
   .header-cv-compact-label .cv-label-short {
@@ -2088,6 +2102,7 @@ function scrollToTop() {
     padding: 0;
   }
 
+  .header-contact,
   .header-cv {
     width: 30px;
     min-width: 30px;
