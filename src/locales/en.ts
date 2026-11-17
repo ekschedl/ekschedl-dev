@@ -35,6 +35,11 @@ export default {
     authority: "Austrian Data Protection Authority",
   },
     assistant: {
+        aiNotice: "AI pilot for YogaNow Studio. Questions about this project are sent to Cloudflare Workers AI to generate a reply. Please do not enter personal information.",
+        aiLoading: "Pixel is writing a reply …",
+        aiUnknown: "I don’t have information on that.",
+        aiUnavailable: "The AI reply is unavailable right now. You can still open the project page.",
+        aiPrivacy: "In the YogaNow pilot, Cloudflare Workers AI (Cloudflare, Inc., USA) processes the question you submit to generate the AI reply you request. Please do not enter personal information.",
         cvTitle: 'CV',
         cvAnswer: 'You can open Ekaterina’s CV here as a PDF.',
         projectDetailsLink: 'View project in the portfolio',

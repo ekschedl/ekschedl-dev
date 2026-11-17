@@ -5,6 +5,7 @@ import ContactEmail from './ContactEmail.vue'
 defineProps<{ page: 'imprint' | 'privacy' }>()
 
 const { t } = useI18n()
+const aiPilotEnabled = import.meta.env.VITE_PIXEL_AI_PILOT === 'true'
 const contactFormConfigured = Boolean(import.meta.env.VITE_TURNSTILE_SITE_KEY?.trim())
 </script>
 
@@ -43,6 +44,12 @@ const contactFormConfigured = Boolean(import.meta.env.VITE_TURNSTILE_SITE_KEY?.t
           <a href="https://render.com/privacy">Render</a>
         </p>
         <p>{{ t('legal.shopData') }}</p>
+      </section>
+      <section v-if="aiPilotEnabled" id="pixel-ki">
+        <h2>Pixel · Workers AI</h2>
+        <p>{{ t('assistant.aiPrivacy') }}
+          <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare</a>
+        </p>
       </section>
       <section id="kontakt">
         <h2>{{ t('legal.contactTitle') }}</h2>

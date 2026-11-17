@@ -35,6 +35,11 @@ export default {
     authority: "österreichischen Datenschutzbehörde",
   },
     assistant: {
+        aiNotice: "KI-Test für YogaNow Studio. Fragen zu diesem Projekt werden zur Beantwortung an Cloudflare Workers AI gesendet. Bitte geben Sie keine persönlichen Daten ein.",
+        aiLoading: "Pixel formuliert eine Antwort …",
+        aiUnknown: "Dazu liegen mir keine Angaben vor.",
+        aiUnavailable: "Die KI-Antwort ist gerade nicht verfügbar. Die Projektseite können Sie trotzdem öffnen.",
+        aiPrivacy: "Im YogaNow-Test verarbeitet Cloudflare Workers AI (Cloudflare, Inc., USA) Ihre eingegebene Frage, um die gewünschte KI-Antwort zu erzeugen. Bitte geben Sie keine persönlichen Daten ein.",
         cvTitle: 'Lebenslauf',
         cvAnswer: 'Hier finden Sie Ekaterinas Lebenslauf als PDF.',
         projectDetailsLink: 'Projekt im Portfolio ansehen',

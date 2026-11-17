@@ -11,6 +11,9 @@ const emit = defineEmits<{ openProject: [event: MouseEvent, projectId: string] }
 const assistantDialog = ref<HTMLDialogElement | null>(null)
 const assistantQuestion = ref('')
 const submittedQuestion = ref('')
+const aiPilotEnabled = import.meta.env.VITE_PIXEL_AI_PILOT === 'true'
+const aiReply = ref('')
+let aiRequest: AbortController | undefined
 const contactEmail = ref('')
 const contactMessage = ref('')
 const contactWebsite = ref('')
@@ -92,6 +95,7 @@ async function prepareContactVerification(event: Event) {
 
 onBeforeUnmount(() => {
   disposed = true
+  aiRequest?.abort()
   if (turnstileWidget !== undefined) turnstileApi()?.remove(turnstileWidget)
 })
 
@@ -146,9 +150,38 @@ function openAnswerLink(event: MouseEvent, projectId?: string) {
   if (projectId) emit('openProject', event, projectId)
 }
 
+async function requestPilotAnswer(question: string) {
+  const request = new AbortController()
+  aiRequest = request
+  const timeout = window.setTimeout(() => request.abort(), 12000)
+  aiReply.value = replyText('assistant.aiLoading')
+
+  try {
+    const response = await fetch('/api/pixel-chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, project: 'yoganow', language: answerLanguage.value }),
+      signal: request.signal
+    })
+    if (!response.ok) throw new Error('Pixel AI unavailable')
+    const { answer } = await response.json()
+    if (aiRequest === request) {
+      aiReply.value = typeof answer === 'string' ? answer : replyText('assistant.aiUnknown')
+    }
+  } catch {
+    if (aiRequest === request && !disposed) aiReply.value = replyText('assistant.aiUnavailable')
+  } finally {
+    window.clearTimeout(timeout)
+    if (aiRequest === request) aiRequest = undefined
+  }
+}
+
 function sendAssistantQuestion(input: string) {
   const question = input.trim()
-  if (!question) return
+  if (!question || question.length > 500) return
+  aiRequest?.abort()
+  aiRequest = undefined
+  aiReply.value = ''
 
   const matches = findKnowledgeTopics(question)
   const refersBack = /(?<!\p{L})(dort|dabei|there|that project|там|в этом проекте)(?!\p{L})/iu.test(question)
@@ -167,6 +200,9 @@ function sendAssistantQuestion(input: string) {
 
   submittedQuestion.value = question
   assistantQuestion.value = ''
+  if (aiPilotEnabled && currentTopics.value.length === 1 && currentTopics.value[0]?.project?.id === 'yoganow') {
+    void requestPilotAnswer(question)
+  }
 }
 
 async function sendContactMessage() {
@@ -306,9 +342,14 @@ async function sendContactMessage() {
         </button>
       </div>
 
+      <p v-if="aiPilotEnabled" id="pixel-ai-notice" class="assistant-status">
+        {{ t('assistant.aiNotice') }}
+        <a href="/Datenschutz#pixel-ki" target="_blank" rel="noopener">{{ t('legal.privacy') }}</a>
+      </p>
       <form class="assistant-question-form" @submit.prevent="sendAssistantQuestion(assistantQuestion)">
         <label for="assistant-question">{{ t('assistant.questionLabel') }}</label>
-        <input id="assistant-question" v-model="assistantQuestion" type="text" />
+        <input id="assistant-question" v-model="assistantQuestion" type="text" maxlength="500"
+          :aria-describedby="aiPilotEnabled ? 'pixel-ai-notice' : undefined" />
         <button type="submit">{{ t('assistant.send') }}</button>
       </form>
 
@@ -317,7 +358,7 @@ async function sendContactMessage() {
         <template v-if="submittedQuestion">
           <article v-for="(answer, index) in answers" :key="index" class="assistant-reply">
             <h3 v-if="answer.title">{{ answer.title }}</h3>
-            <p>{{ answer.text }}</p>
+            <p>{{ aiReply || answer.text }}</p>
             <p v-if="answer.stack">
               <strong>{{ replyText('experiencePage.techStack') }}</strong> · {{ answer.stack }}
             </p>
