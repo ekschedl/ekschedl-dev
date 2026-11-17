@@ -287,9 +287,30 @@ async function requestPilotAnswer(
       signal: request.signal
     })
 
+
     if (!response.ok) {
-      throw new Error('Pixel AI unavailable')
+    const body = await response.json().catch(() => null)
+    const errorCode =
+        body && typeof body.error === 'string'
+        ? body.error
+        : ''
+
+    const messageKey: Record<string, string> = {
+        quota_exceeded: 'assistant.errors.quota',
+        capacity: 'assistant.errors.capacity',
+        offline: 'assistant.errors.offline',
+        input: 'assistant.errors.input'
     }
+
+    const key = messageKey[errorCode] ?? 'assistant.errors.general'
+
+    if (aiRequest === request && !disposed) {
+        aiReply.value = replyText(key)
+    }
+
+    return
+    }
+
 
     const { answer } = await response.json()
 
@@ -303,11 +324,15 @@ async function requestPilotAnswer(
             : answer
           : replyText('assistant.aiUnknown')
     }
-  } catch {
-    if (aiRequest === request && !disposed) {
-      aiReply.value = replyText('assistant.aiUnavailable')
-    }
-  } finally {
+} catch (error) {
+  if (aiRequest === request && !disposed) {
+    aiReply.value = replyText(
+      error instanceof DOMException && error.name === 'AbortError'
+        ? 'assistant.errors.timeout'
+        : 'assistant.errors.network'
+    )
+  }
+} finally {
     window.clearTimeout(timeout)
 
     if (aiRequest === request) {

@@ -35,6 +35,15 @@ export default {
     authority: "Austrian Data Protection Authority",
   },
     assistant: {
+        errors: {
+            quota: 'My free AI allowance for today has unfortunately been used up. I will be back tomorrow! In the meantime, you are welcome to explore Ekaterina’s projects.',
+            capacity: 'Things are quite busy at the moment. Please try again in a few minutes.',
+            offline: 'My AI feature is taking a short break. You can still explore Ekaterina’s portfolio.',
+            input: 'I could not process your question. Please make it a little shorter and try again.',
+            timeout: 'The response is taking longer than expected. Please try again.',
+            network: 'Unfortunately, I could not establish a connection. Please check your internet connection and try again.',
+            general: 'Sorry, something went wrong. Please try again later.'
+        },
         aiNotice: "AI assistant test version. Questions about projects, education and work experience may be sent to Cloudflare Workers AI to generate a reply. Answers may contain errors. Please do not enter personal information.",
         aiLoading: "Pixel is writing a reply …",
         aiUnknown: "I don’t have information on that.",
