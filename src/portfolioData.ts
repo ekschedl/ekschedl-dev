@@ -5,7 +5,7 @@ export const shopDemoUrl = 'https://ekschedl.github.io/jawa_todo/shopplatzi/'
 
 export const hotelConsoleImage = '/images/hotelverwaltung-konsole.png'
 
-export const unoWebDemoUrl = import.meta.env.VITE_CAMPUS02_DEMO_URL?.trim() || 'https://campus-kartenspiel.onrender.com/'
+export const unoWebDemoUrl = import.meta.env?.VITE_CAMPUS02_DEMO_URL?.trim() || 'https://campus-kartenspiel.onrender.com/'
 export const unoWebCover = '/images/uno-web-spieltisch.png'
 
 export const projects = [
