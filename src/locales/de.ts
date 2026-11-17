@@ -35,6 +35,7 @@ export default {
     authority: "österreichischen Datenschutzbehörde",
   },
     assistant: {
+        open: 'Lieber persönlich Kontakt aufnehmen?',
         errors: {
             quota: 'My free AI allowance for today has unfortunately been used up. I will be back tomorrow! In the meantime, you are welcome to explore Ekaterina’s projects.',
             capacity: 'Things are quite busy at the moment. Please try again in a few minutes.',
@@ -88,7 +89,7 @@ export default {
             },
             teamwork: {
                 title: "Zusammenarbeit im Team",
-                answer: "Ekaterina arbeitet gern im Team. Sie hält ihre Kolleginnen und Kollegen auf dem Laufenden, teilt, was sie gelernt hat, und hilft gern weiter. Ihr ist wichtig, dass man sich im Team gegenseitig unterstützt.",
+                answer: "Ekaterina arbeitet gerne mit anderen zusammen. Sie tauscht Ideen aus, hilft bei Problemen und freut sich, wenn man gemeinsam Lösungen findet. Ein freundliches und unterstützendes Team ist ihr wichtig.",
             },
             growth: {
                 title: "Was Ekaterina weiterentwickelt",

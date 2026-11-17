@@ -35,6 +35,7 @@ export default {
     authority: "Austrian Data Protection Authority",
   },
     assistant: {
+        open: 'Prefer to contact Ekaterina directly?',
         errors: {
             quota: 'My free AI allowance for today has unfortunately been used up. I will be back tomorrow! In the meantime, you are welcome to explore Ekaterina’s projects.',
             capacity: 'Things are quite busy at the moment. Please try again in a few minutes.',

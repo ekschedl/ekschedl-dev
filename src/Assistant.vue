@@ -287,30 +287,24 @@ async function requestPilotAnswer(
       signal: request.signal
     })
 
-
     if (!response.ok) {
-    const body = await response.json().catch(() => null)
-    const errorCode =
-        body && typeof body.error === 'string'
-        ? body.error
-        : ''
+      const body = await response.json().catch(() => null)
+      const errorCode =
+        body && typeof body.error === 'string' ? body.error : ''
 
-    const messageKey: Record<string, string> = {
+      const messageKey: Record<string, string> = {
         quota_exceeded: 'assistant.errors.quota',
         capacity: 'assistant.errors.capacity',
         offline: 'assistant.errors.offline',
         input: 'assistant.errors.input'
-    }
+      }
 
-    const key = messageKey[errorCode] ?? 'assistant.errors.general'
-
-    if (aiRequest === request && !disposed) {
+      const key = messageKey[errorCode] ?? 'assistant.errors.general'
+      if (aiRequest === request && !disposed) {
         aiReply.value = replyText(key)
+      }
+      return
     }
-
-    return
-    }
-
 
     const { answer } = await response.json()
 
@@ -324,15 +318,15 @@ async function requestPilotAnswer(
             : answer
           : replyText('assistant.aiUnknown')
     }
-} catch (error) {
-  if (aiRequest === request && !disposed) {
-    aiReply.value = replyText(
-      error instanceof DOMException && error.name === 'AbortError'
-        ? 'assistant.errors.timeout'
-        : 'assistant.errors.network'
-    )
-  }
-} finally {
+  } catch (error) {
+    if (aiRequest === request && !disposed) {
+      aiReply.value = replyText(
+        error instanceof DOMException && error.name === 'AbortError'
+          ? 'assistant.errors.timeout'
+          : 'assistant.errors.network'
+      )
+    }
+  } finally {
     window.clearTimeout(timeout)
 
     if (aiRequest === request) {
@@ -535,6 +529,8 @@ async function sendContactMessage() {
     @click.self="assistantDialog?.close()"
   >
     <div class="assistant-content">
+
+      <!-- Header -->
       <header class="assistant-header">
         <div class="assistant-identity">
           <img
@@ -544,9 +540,16 @@ async function sendContactMessage() {
             width="56"
             height="56"
           />
-          <h2 id="assistant-title">
+        <div class="assistant-heading">
+        <h2 id="assistant-title">
             {{ t('assistant.name') }}
-          </h2>
+        </h2>
+
+        <p class="assistant-header-status">
+            <strong>{{ t('assistant.status') }}</strong>
+            <span>{{ t('assistant.statusNote') }}</span>
+        </p>
+        </div>
         </div>
 
         <form method="dialog">
@@ -560,129 +563,20 @@ async function sendContactMessage() {
         </form>
       </header>
 
-      <p class="assistant-status">
-        <strong>
-          {{ t('assistant.status') }}
-        </strong>
-        <span>
-          {{ t('assistant.statusNote') }}
-        </span>
-      </p>
+ 
 
+      <!-- Begrüßung -->
       <p class="assistant-message">
         {{ t('assistant.greeting') }}
         <span aria-hidden="true">🙂</span>
       </p>
 
-      <details
-        class="assistant-contact"
-        @toggle="prepareContactVerification"
-      >
-        <summary>
-          {{ t('assistant.contactForm.open') }}
-        </summary>
+      <!-- Abschnittsüberschrift -->
+      <h3 class="assistant-section-title">
+        {{ t('assistant.suggestionLabel') }}
+      </h3>
 
-        <p>
-          {{ t('assistant.contactForm.invitation') }}
-        </p>
-
-        <p v-if="turnstileSiteKey">
-          <a
-            href="/Datenschutz#kontakt"
-            target="_blank"
-            rel="noopener"
-          >
-            {{ t('legal.privacy') }}
-          </a>
-        </p>
-
-        <form
-          v-if="turnstileSiteKey"
-          class="assistant-contact-form"
-          @submit.prevent="sendContactMessage"
-        >
-          <label for="pixel-contact-email">
-            {{ t('assistant.contactForm.email') }}
-          </label>
-
-          <input
-            id="pixel-contact-email"
-            v-model="contactEmail"
-            type="email"
-            autocomplete="email"
-            maxlength="254"
-            required
-            :disabled="contactState === 'sending'"
-          />
-
-          <label for="pixel-contact-message">
-            {{ t('assistant.contactForm.message') }}
-          </label>
-
-          <textarea
-            id="pixel-contact-message"
-            v-model="contactMessage"
-            rows="4"
-            maxlength="3000"
-            required
-            :disabled="contactState === 'sending'"
-          ></textarea>
-
-          <div hidden>
-            <label for="pixel-contact-website">
-              Website
-            </label>
-
-            <input
-              id="pixel-contact-website"
-              v-model="contactWebsite"
-              tabindex="-1"
-              autocomplete="off"
-            />
-          </div>
-
-          <div ref="turnstileContainer"></div>
-
-          <p
-            v-if="turnstileFailed"
-            role="status"
-          >
-            {{ t('assistant.contactForm.verificationError') }}
-          </p>
-
-          <button
-            type="submit"
-            :disabled="
-              contactState === 'sending' ||
-              !turnstileToken
-            "
-          >
-            {{
-              t(
-                contactState === 'sending'
-                  ? 'assistant.contactForm.sending'
-                  : 'assistant.contactForm.send'
-              )
-            }}
-          </button>
-        </form>
-
-        <p v-else role="status">
-          {{ t('assistant.contactForm.unavailable') }}
-        </p>
-
-        <p
-          v-if="
-            contactState === 'sent' ||
-            contactState === 'error' ||
-            contactState === 'unavailable'
-          "
-          role="status"
-        >
-          {{ t(`assistant.contactForm.${contactState}`) }}
-        </p>
-      </details>
-
+      <!-- Vorschläge und Kontakt -->
       <div
         class="assistant-suggestions"
         role="group"
@@ -700,10 +594,12 @@ async function sendContactMessage() {
         >
           {{ t(`assistant.suggestions.${suggestion}`) }}
         </button>
+
+
       </div>
 
+      <!-- Datenschutzhinweis für KI -->
       <p
-        v-if="aiPilotEnabled"
         id="pixel-ai-notice"
         class="assistant-status"
       >
@@ -718,6 +614,7 @@ async function sendContactMessage() {
         </a>
       </p>
 
+      <!-- Eigene Frage stellen -->
       <form
         class="assistant-question-form"
         @submit.prevent="
@@ -745,6 +642,117 @@ async function sendContactMessage() {
         </button>
       </form>
 
+              <details
+          class="assistant-contact"
+          @toggle="prepareContactVerification"
+        >
+          <summary>
+            {{ t('assistant.contactForm.open') }}
+          </summary>
+
+          <p>
+            {{ t('assistant.contactForm.invitation') }}
+          </p>
+
+          <p v-if="turnstileSiteKey">
+            <a
+              href="/Datenschutz#kontakt"
+              target="_blank"
+              rel="noopener"
+            >
+              {{ t('legal.privacy') }}
+            </a>
+          </p>
+
+          <form
+            v-if="turnstileSiteKey"
+            class="assistant-contact-form"
+            @submit.prevent="sendContactMessage"
+          >
+            <label for="pixel-contact-email">
+              {{ t('assistant.contactForm.email') }}
+            </label>
+
+            <input
+              id="pixel-contact-email"
+              v-model="contactEmail"
+              type="email"
+              autocomplete="email"
+              maxlength="254"
+              required
+              :disabled="contactState === 'sending'"
+            />
+
+            <label for="pixel-contact-message">
+              {{ t('assistant.contactForm.message') }}
+            </label>
+
+            <textarea
+              id="pixel-contact-message"
+              v-model="contactMessage"
+              rows="4"
+              maxlength="3000"
+              required
+              :disabled="contactState === 'sending'"
+            ></textarea>
+
+            <!-- Spam-Schutz -->
+            <div hidden>
+              <label for="pixel-contact-website">
+                Website
+              </label>
+
+              <input
+                id="pixel-contact-website"
+                v-model="contactWebsite"
+                tabindex="-1"
+                autocomplete="off"
+              />
+            </div>
+
+            <div ref="turnstileContainer"></div>
+
+            <p
+              v-if="turnstileFailed"
+              role="status"
+            >
+              {{ t('assistant.contactForm.verificationError') }}
+            </p>
+
+            <button
+              type="submit"
+              :disabled="
+                contactState === 'sending' ||
+                !turnstileToken
+              "
+            >
+              {{
+                t(
+                  contactState === 'sending'
+                    ? 'assistant.contactForm.sending'
+                    : 'assistant.contactForm.send'
+                )
+              }}
+            </button>
+          </form>
+
+          <p v-else role="status">
+            {{ t('assistant.contactForm.unavailable') }}
+          </p>
+
+          <p
+            v-if="
+              contactState === 'sent' ||
+              contactState === 'error' ||
+              contactState === 'unavailable'
+            "
+            role="status"
+          >
+            {{ t(`assistant.contactForm.${contactState}`) }}
+          </p>
+        </details>
+
+      <!-- Frage des Besuchers -->
       <p
         v-if="submittedQuestion"
         class="assistant-question"
@@ -752,12 +760,14 @@ async function sendContactMessage() {
         {{ submittedQuestion }}
       </p>
 
+      <!-- Antworten -->
       <div
         class="assistant-replies"
         aria-live="polite"
         :lang="answerLanguage"
       >
         <template v-if="submittedQuestion">
+
           <p
             v-if="aiReply && answers.length > 1"
             class="assistant-reply"
@@ -839,6 +849,7 @@ async function sendContactMessage() {
             </div>
           </article>
 
+          <!-- Antwort, wenn kein Thema erkannt wird -->
           <div
             v-if="!answers.length"
             class="assistant-reply assistant-fallback"
@@ -899,20 +910,30 @@ async function sendContactMessage() {
 </template>
 
 <style scoped>
+/* ==========================================
+   PIXEL DESIGN CE
+   Einheitliche Typografie und klare Bereiche
+   ========================================== */
+
+/* Pixel öffnen */
+
 .assistant-trigger {
   position: fixed;
   z-index: 40;
   inset-inline-start: clamp(10px, 2vw, 24px);
   bottom: clamp(10px, 2vw, 24px);
+
   display: inline-flex;
   align-items: center;
   gap: 8px;
   min-height: 44px;
   padding: 5px 16px 5px 8px;
+
   border: 1px solid var(--accent);
   border-radius: 999px;
   background: var(--surface);
   color: var(--accent);
+
   font: inherit;
   font-weight: 600;
   cursor: pointer;
@@ -922,51 +943,86 @@ async function sendContactMessage() {
   background: var(--paper);
 }
 
+/* Hauptfenster */
+
 .assistant-dialog {
   --assistant-inset: clamp(17px, 4vw, 32px);
-  --assistant-line: color-mix(in srgb, var(--accent) 22%, var(--surface));
-  --assistant-tint: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  --assistant-line: color-mix(
+    in srgb,
+    var(--accent) 25%,
+    var(--surface)
+  );
+  --assistant-tint: color-mix(
+    in srgb,
+    var(--accent) 7%,
+    var(--surface)
+  );
   --assistant-accent-ink: #fff;
+  --pixel-peach: #f0c8b5;
+  --pixel-sage: #c8e0cf;
+
   box-sizing: border-box;
   width: min(560px, calc(100% - 28px));
   max-height: min(810px, calc(100dvh - 28px));
+
   overflow: auto;
   overscroll-behavior: contain;
   padding: 0;
+
   border: 1px solid var(--assistant-line);
-  border-radius: 24px;
+  border-radius: 28px;
   background: var(--surface);
   color: var(--ink);
-  box-shadow: 0 24px 80px rgb(19 47 36 / 22%);
+
+  font-family: inherit;
+  font-size: 1rem;
+
+  box-shadow: 0 24px 70px rgb(30 50 40 / 20%);
 }
+
+/* Dunkelmodus */
 
 :global(:root[data-theme='dark']) .assistant-dialog {
   --assistant-accent-ink: var(--paper);
 }
 
+/* Hintergrund hinter Pixel */
+
 .assistant-dialog::backdrop {
-  background: rgb(20 36 30 / 41%);
+  background: rgb(20 36 30 / 43%);
   backdrop-filter: blur(3px);
 }
 
+/* Innere Abstände */
+
 .assistant-content {
   display: grid;
-  gap: 15px;
+  gap: 17px;
   padding: 0 var(--assistant-inset) var(--assistant-inset);
 }
+
+/* Kopfbereich */
 
 .assistant-header {
   position: sticky;
   z-index: 1;
   top: 0;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+
   margin-inline: calc(var(--assistant-inset) * -1);
   padding: 16px var(--assistant-inset);
+
   border-bottom: 1px solid var(--assistant-line);
-  background: var(--surface);
+
+  background: linear-gradient(
+    115deg,
+    color-mix(in srgb, #c5dfcc 72%, var(--surface)),
+    color-mix(in srgb, #f1cdbb 65%, var(--surface))
+  );
 }
 
 .assistant-identity {
@@ -975,6 +1031,8 @@ async function sendContactMessage() {
   gap: 12px;
 }
 
+/* Pixel-Avatar */
+
 .assistant-avatar {
   display: block;
   flex: 0 0 auto;
@@ -982,17 +1040,29 @@ async function sendContactMessage() {
 }
 
 .assistant-identity .assistant-avatar {
-  padding: 5px;
-  border-radius: 16px;
-  background: var(--assistant-tint);
+  padding: 6px;
+  border-radius: 20px;
+
+  background: color-mix(
+    in srgb,
+    #e9edca 55%,
+    var(--surface)
+  );
+
+  box-shadow: 0 4px 12px rgb(40 65 45 / 10%);
 }
+
+/* Pixel-Überschrift */
 
 .assistant-header h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
   line-height: 1.12;
-  letter-spacing: -.025em;
+  letter-spacing: -0.025em;
 }
+
+/* Schließen */
 
 .assistant-header button {
   display: grid;
@@ -1000,60 +1070,124 @@ async function sendContactMessage() {
   height: 44px;
   place-items: center;
   padding: 0;
+
   border: 1px solid var(--assistant-line);
   border-radius: 50%;
   background: var(--surface);
   color: var(--accent);
+
   font: inherit;
   font-size: 1.4rem;
   cursor: pointer;
 }
 
-.assistant-status {
+
+/* Pixel-Name und Entwicklungsstatus */
+
+.assistant-heading {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 3px 10px;
-  margin: 0;
-  padding: 10px 14px;
-  border: 1px solid var(--assistant-line);
-  border-inline-start: 3px solid var(--accent);
-  border-radius: 11px;
-  background: var(--assistant-tint);
-  font-size: .88rem;
-  line-height: 1.45;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
-.assistant-status strong {
+.assistant-identity {
+  min-width: 0;
+}
+
+.assistant-header-status {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.assistant-header-status strong {
   color: var(--accent);
+  font-weight: 650;
+  margin-inline-end: 5px;
 }
 
-.assistant-message,
-.assistant-reply,
-.assistant-contact {
-  margin: 0;
-  padding: 14px 16px;
-  border: 1px solid var(--assistant-line);
-  border-radius: 16px;
-  background: var(--surface);
-  line-height: 1.55;
+.assistant-header-status span {
+  opacity: 0.85;
 }
+
+/* Begrüßung ohne große Karte */
 
 .assistant-message {
-  background: var(--assistant-tint);
+  margin: 0;
+  padding: 2px 0 4px;
+
+  background: transparent;
+  color: var(--ink);
+
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.65;
 }
 
-.assistant-contact summary {
-  width: fit-content;
+/* Überschrift vor den Fragen */
+
+.assistant-section-title {
+  margin: 2px 0 -7px;
+  padding-top: 18px;
+
+  border-top: 1px solid var(--assistant-line);
+  color: var(--ink);
+
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+/* Fragevorschläge */
+
+.assistant-suggestions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 9px;
+}
+
+.assistant-suggestions > button{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 14px;
+
+  border: 1px solid var(--assistant-line);
+  border-radius: 12px;
+  background: var(--surface);
   color: var(--accent);
-  font-size: .93rem;
-  font-weight: 650;
+
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: start;
+
   cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.assistant-suggestions > button:hover {
+  background: color-mix(
+    in srgb,
+    var(--pixel-sage) 35%,
+    var(--surface)
+  );
+  transform: translateY(-1px);
 }
 
 .assistant-contact > p {
   margin: 10px 0 0;
+  line-height: 1.55;
 }
+
+/* Kontaktformular */
 
 .assistant-contact-form {
   display: grid;
@@ -1063,13 +1197,15 @@ async function sendContactMessage() {
 
 .assistant-contact-form label,
 .assistant-question-form label {
-  font-weight: 600;
-  font-size: .875rem;
+  font-size: 0.9rem;
+  font-weight: 650;
 }
 
 .assistant-contact-form textarea {
   resize: vertical;
 }
+
+/* Eingabefelder */
 
 .assistant-contact-form :is(input, textarea),
 .assistant-question-form input {
@@ -1077,87 +1213,96 @@ async function sendContactMessage() {
   min-width: 0;
   min-height: 44px;
   padding: 9px 12px;
+
   border: 1px solid var(--assistant-line);
-  border-radius: 11px;
-  background: var(--assistant-tint);
+  border-radius: 12px;
+  background: var(--surface);
   color: var(--ink);
+
   font: inherit;
 }
+
+/* Eigene Frage */
 
 .assistant-question-form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 7px 9px;
+  gap: 8px 10px;
   align-items: end;
+
+  padding-top: 17px;
+  border-top: 1px solid var(--assistant-line);
 }
 
 .assistant-question-form label {
   grid-column: 1 / -1;
+  color: var(--ink);
+  font-weight: 700;
 }
+
+.assistant-question-form input {
+  border-color: color-mix(
+    in srgb,
+    var(--accent) 40%,
+    var(--surface)
+  );
+}
+
+/* Senden-Buttons */
 
 .assistant-contact-form button,
 .assistant-question-form button {
   justify-self: start;
   min-height: 44px;
   padding: 8px 15px;
+
   border: 1px solid var(--accent);
-  border-radius: 11px;
+  border-radius: 13px;
   background: var(--accent);
   color: var(--assistant-accent-ink);
+
   font: inherit;
   font-weight: 650;
   cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.assistant-question-form button:hover,
+.assistant-contact-form button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgb(30 70 50 / 15%);
 }
 
 .assistant-contact-form button:disabled {
-  opacity: .56;
+  opacity: 0.56;
   cursor: not-allowed;
 }
 
-.assistant-suggestions,
-.assistant-answer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.assistant-suggestions button,
-.assistant-details {
-  display: inline-flex;
-  align-items: center;
-  max-width: 100%;
-  min-height: 36px;
-  padding: 6px 11px;
-  border: 1px solid var(--assistant-line);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--accent);
-  font: inherit;
-  font-size: .86rem;
-  font-weight: 550;
-  text-align: start;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.assistant-dialog :is(
-  .assistant-header button,
-  .assistant-suggestions button,
-  .assistant-details
-):hover {
-  background: var(--assistant-tint);
-}
+/* Frage des Besuchers */
 
 .assistant-question {
   justify-self: end;
   max-width: 92%;
   margin: 4px 0 0;
   padding: 9px 14px;
-  border-radius: 15px 15px 4px 15px;
-  background: var(--assistant-tint);
+
+  border: 1px solid var(--assistant-line);
+  border-radius: 18px 18px 5px 18px;
+
+  background: color-mix(
+    in srgb,
+    var(--pixel-peach) 45%,
+    var(--surface)
+  );
+
   color: var(--ink);
   overflow-wrap: anywhere;
 }
+
+/* Antworten von Pixel */
 
 .assistant-replies {
   display: grid;
@@ -1169,6 +1314,20 @@ async function sendContactMessage() {
 }
 
 .assistant-reply {
+  margin: 0;
+  padding: 14px 16px;
+
+  border: 1px solid var(--assistant-line);
+  border-inline-start: 4px solid var(--accent);
+  border-radius: 18px 18px 18px 5px;
+
+  background: color-mix(
+    in srgb,
+    var(--pixel-sage) 28%,
+    var(--surface)
+  );
+
+  line-height: 1.6;
   overflow-wrap: anywhere;
 }
 
@@ -1178,13 +1337,52 @@ async function sendContactMessage() {
 }
 
 .assistant-reply h3 {
+  color: var(--accent);
   font-size: 1.05rem;
+  font-weight: 700;
   line-height: 1.35;
 }
 
 .assistant-reply > * + * {
   margin-top: 10px;
 }
+
+/* Antwort-Links */
+
+.assistant-answer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.assistant-details {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-height: 36px;
+  padding: 6px 11px;
+
+  border: 1px solid var(--assistant-line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--accent);
+
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.assistant-dialog :is(
+  .assistant-header button,
+  .assistant-details
+):hover {
+  background: var(--assistant-tint);
+}
+
+/* Fallback-Antworten */
 
 .assistant-fallback ul {
   padding-inline-start: 20px;
@@ -1195,15 +1393,70 @@ async function sendContactMessage() {
   color: var(--accent);
 }
 
+/* Tastaturbedienung */
+
 .assistant-trigger:focus-visible,
 .assistant-dialog :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
+/* Kleine Smartphones */
+
 @media (max-width: 360px) {
   .assistant-question-form {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Reduzierte Animation */
+
+@media (prefers-reduced-motion: reduce) {
+  .assistant-dialog button {
+    transition: none;
+  }
+
+  .assistant-dialog button:hover {
+    transform: none;
+  }
+}
+
+
+/* Kontakt als dezente Footer-Option */
+
+.assistant-contact {
+  margin: 0;
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 1px solid var(--assistant-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.assistant-contact > summary {
+  display: list-item;
+  width: fit-content;
+  min-height: auto;
+  padding: 6px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.assistant-contact > summary:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.assistant-contact[open] {
+  padding: 12px 0;
+  border: 0;
+  border-top: 1px solid var(--assistant-line);
+  background: transparent;
+}
+
 </style>
