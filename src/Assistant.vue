@@ -1,3 +1,4 @@
+
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -14,11 +15,13 @@ const submittedQuestion = ref('')
 const aiPilotEnabled = import.meta.env.VITE_PIXEL_AI_PILOT === 'true'
 const aiReply = ref('')
 let aiRequest: AbortController | undefined
+
 const contactEmail = ref('')
 const contactMessage = ref('')
 const contactWebsite = ref('')
 const contactState = ref<'idle' | 'sending' | 'sent' | 'error' | 'unavailable'>('idle')
 let contactAttempt: { body: string; requestId: string } | undefined
+
 const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY?.trim()
 const turnstileContainer = ref<HTMLDivElement | null>(null)
 const turnstileToken = ref('')
@@ -46,6 +49,7 @@ function turnstileApi() {
 
 function loadTurnstile() {
   if (turnstileApi()) return Promise.resolve()
+
   turnstileScript ??= new Promise<void>((resolve, reject) => {
     const script = document.createElement('script')
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
@@ -58,36 +62,55 @@ function loadTurnstile() {
     }
     document.head.append(script)
   })
+
   return turnstileScript
 }
 
 async function prepareContactVerification(event: Event) {
-  if (!(event.currentTarget instanceof HTMLDetailsElement) || !event.currentTarget.open ||
-      !turnstileSiteKey || turnstileWidget !== undefined) return
+  if (
+    !(event.currentTarget instanceof HTMLDetailsElement) ||
+    !event.currentTarget.open ||
+    !turnstileSiteKey ||
+    turnstileWidget !== undefined
+  ) return
 
   turnstileFailed.value = false
+
   try {
     await loadTurnstile()
-    if (disposed || !turnstileContainer.value || turnstileWidget !== undefined) return
+
+    if (
+      disposed ||
+      !turnstileContainer.value ||
+      turnstileWidget !== undefined
+    ) return
+
     const api = turnstileApi()
     if (!api) throw new Error('Turnstile unavailable')
+
     turnstileWidget = api.render(turnstileContainer.value, {
       sitekey: turnstileSiteKey,
       action: 'pixel_contact',
       size: 'flexible',
+
       callback(token) {
         turnstileToken.value = token
         turnstileFailed.value = false
       },
+
       'expired-callback'() {
         turnstileToken.value = ''
       },
+
       'error-callback'() {
         turnstileToken.value = ''
         turnstileFailed.value = true
       }
     })
-    if (turnstileWidget === undefined) turnstileFailed.value = true
+
+    if (turnstileWidget === undefined) {
+      turnstileFailed.value = true
+    }
   } catch {
     turnstileFailed.value = true
   }
@@ -96,15 +119,21 @@ async function prepareContactVerification(event: Event) {
 onBeforeUnmount(() => {
   disposed = true
   aiRequest?.abort()
-  if (turnstileWidget !== undefined) turnstileApi()?.remove(turnstileWidget)
+
+  if (turnstileWidget !== undefined) {
+    turnstileApi()?.remove(turnstileWidget)
+  }
 })
 
 type AssistantTopic = ReturnType<typeof findKnowledgeTopics>[number]
 
-const projectReference = /(?<!\p{L})(?:dies(?:es|em|en) Projekt|(?:this|that) project|этот проект|этом проекте|этого проекта)(?!\p{L})/iu
+const projectReference =
+  /(?<!\p{L})(?:dies(?:es|em|en) Projekt|(?:this|that) project|этот проект|этом проекте|этого проекта)(?!\p{L})/iu
+
 const lastTopic = ref<AssistantTopic | null>(null)
 const currentTopics = ref<AssistantTopic[]>([])
 const followUp = ref<FollowUpKind | 'unknown' | null>(null)
+
 const followUpPhrases: Record<FollowUpKind, RegExp> = {
   interest: /gemocht|gefallen|mochte|spaß|motiviert|gern|\b(like|liked|enjoy|enjoyed)\b|нрав|нарв|понрав|любил/iu,
   technology: /technolog|werkzeug|tech stack|\btools?\b|технолог|инструмент/iu,
@@ -112,134 +141,327 @@ const followUpPhrases: Record<FollowUpKind, RegExp> = {
   tasks: /was .*gemacht|aufgaben|tätigkeit|what .*do|responsibilit|что .*делал|чем .*занимал|задач/iu
 }
 
-const suggestedQuestions = ['projects', 'teamwork', 'workplace'] as const
-const answerLanguage = computed(() => detectAssistantLanguage(submittedQuestion.value) ?? locale.value)
+const suggestedQuestions = [
+  'projects',
+  'teamwork',
+  'workplace'
+] as const
 
-function replyText(key: string, params: Record<string, string> = {}) {
+const answerLanguage = computed(
+  () => detectAssistantLanguage(submittedQuestion.value) ?? locale.value
+)
+
+function replyText(
+  key: string,
+  params: Record<string, string> = {}
+) {
   return t(key, params, { locale: answerLanguage.value })
 }
 
-function followUpText(topic: AssistantTopic, kind: FollowUpKind | 'unknown') {
-  const key = kind === 'unknown' ? undefined : topic.followUps?.[kind]
+function followUpText(
+  topic: AssistantTopic,
+  kind: FollowUpKind | 'unknown'
+) {
+  const key =
+    kind === 'unknown' ? undefined : topic.followUps?.[kind]
+
   if (key) return replyText(key)
+
   if (kind === 'technology' && topic.stack) {
-    return replyText('assistant.followUp.projectTechnology', { stack: topic.stack })
+    return replyText('assistant.followUp.projectTechnology', {
+      stack: topic.stack
+    })
   }
-  return replyText(kind === 'interest' ? 'assistant.followUp.interestUnknown' : 'assistant.followUp.detailUnknown')
+
+  return replyText(
+    kind === 'interest'
+      ? 'assistant.followUp.interestUnknown'
+      : 'assistant.followUp.detailUnknown'
+  )
 }
 
-const answers = computed(() => currentTopics.value.map(topic => {
-  const titleKey = topic.replyTitleKey ?? topic.titleKey
-  return {
-    title: titleKey ? replyText(titleKey) : undefined,
-    stack: followUp.value ? undefined : topic.stack,
-    detailsPath: topic.detailsPath,
-    detailsLabel: replyText(topic.detailsLabelKey ?? 'assistant.detailsLink'),
-    detailsNewTab: topic.detailsNewTab,
-    project: topic.project,
-    demoUrl: topic.project && 'demoUrl' in topic.project ? topic.project.demoUrl : undefined,
-    text: followUp.value ? followUpText(topic, followUp.value) : replyText(topic.answerKey)
-  }
-}))
+// Entfernt automatische Altersangaben aus Projektbeschreibungen.
+// Das Erstellungsdatum bleibt erhalten.
+function withoutProjectAge(text: string): string {
+  return text
+    .replace(
+      /\s+und ist somit etwa \d+ Jahr(?:e)? und \d+ Monat(?:e)? alt\.?/gi,
+      '.'
+    )
+    .replace(
+      /\s+und ist somit etwa \d+ (?:Jahr(?:e)?|Monat(?:e)?) alt\.?/gi,
+      '.'
+    )
+    .replace(
+      /\s+and is (?:therefore |thus )?(?:about |approximately )?\d+ years?(?: and \d+ months?)? old\.?/gi,
+      '.'
+    )
+    .replace(
+      /\s+и (?:поэтому |таким образом )?(?:ему |ей )?(?:около |примерно )?\d+ (?:год|года|лет)(?: и \d+ месяц(?:а|ев)?)?\.?/giu,
+      '.'
+    )
+    .replace(/\.{2,}/g, '.')
+}
 
-function openAnswerLink(event: MouseEvent, projectId?: string) {
-  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+const answers = computed(() =>
+  currentTopics.value.map(topic => {
+    const titleKey = topic.replyTitleKey ?? topic.titleKey
+
+    return {
+      title: titleKey ? replyText(titleKey) : undefined,
+      stack: followUp.value ? undefined : topic.stack,
+      detailsPath: topic.detailsPath,
+      detailsLabel: replyText(
+        topic.detailsLabelKey ?? 'assistant.detailsLink'
+      ),
+      detailsNewTab: topic.detailsNewTab,
+      project: topic.project,
+      demoUrl:
+        topic.project && 'demoUrl' in topic.project
+          ? topic.project.demoUrl
+          : undefined,
+
+      text: topic.project
+        ? withoutProjectAge(
+            followUp.value
+              ? followUpText(topic, followUp.value)
+              : replyText(topic.answerKey)
+          )
+        : followUp.value
+          ? followUpText(topic, followUp.value)
+          : replyText(topic.answerKey)
+    }
+  })
+)
+
+function openAnswerLink(
+  event: MouseEvent,
+  projectId?: string
+) {
+  if (
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  ) return
+
   const link = event.currentTarget
-  if (link instanceof HTMLAnchorElement && link.target === '_blank') return
+
+  if (
+    link instanceof HTMLAnchorElement &&
+    link.target === '_blank'
+  ) return
 
   assistantDialog.value?.close()
-  if (projectId) emit('openProject', event, projectId)
+
+  if (projectId) {
+    emit('openProject', event, projectId)
+  }
 }
 
-async function requestPilotAnswer(question: string, topics: string[]) {
+async function requestPilotAnswer(
+  question: string,
+  topics: string[]
+) {
   const request = new AbortController()
   aiRequest = request
-  const timeout = window.setTimeout(() => request.abort(), 12000)
+
+  const timeout = window.setTimeout(
+    () => request.abort(),
+    12000
+  )
+
   aiReply.value = replyText('assistant.aiLoading')
 
   try {
     const response = await fetch('/api/pixel-chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, topics, language: answerLanguage.value }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        question,
+        topics,
+        language: answerLanguage.value
+      }),
       signal: request.signal
     })
-    if (!response.ok) throw new Error('Pixel AI unavailable')
+
+    if (!response.ok) {
+      throw new Error('Pixel AI unavailable')
+    }
+
     const { answer } = await response.json()
+
     if (aiRequest === request) {
-      aiReply.value = typeof answer === 'string' ? answer : replyText('assistant.aiUnknown')
+      aiReply.value =
+        typeof answer === 'string'
+          ? topics.some(topic =>
+              topic.startsWith('assistant.projectReplies.')
+            )
+            ? withoutProjectAge(answer)
+            : answer
+          : replyText('assistant.aiUnknown')
     }
   } catch {
-    if (aiRequest === request && !disposed) aiReply.value = replyText('assistant.aiUnavailable')
+    if (aiRequest === request && !disposed) {
+      aiReply.value = replyText('assistant.aiUnavailable')
+    }
   } finally {
     window.clearTimeout(timeout)
-    if (aiRequest === request) aiRequest = undefined
+
+    if (aiRequest === request) {
+      aiRequest = undefined
+    }
   }
 }
 
 function sendAssistantQuestion(input: string) {
   const question = input.trim()
+
   if (!question || question.length > 500) return
+
   aiRequest?.abort()
   aiRequest = undefined
   aiReply.value = ''
 
   const matches = findKnowledgeTopics(question)
   const refersToProject = projectReference.test(question)
-  const refersBack = refersToProject || /(?<!\p{L})(dort|dabei|there|там)(?!\p{L})/iu.test(question)
+
+  const refersBack =
+    refersToProject ||
+    /(?<!\p{L})(dort|dabei|there|там)(?!\p{L})/iu.test(question)
 
   const previous = lastTopic.value
-  if (refersBack && previous && (!refersToProject || previous.project) &&
-      matches.every(topic => topic.overview || topic.answerKey === previous.answerKey)) {
+
+  if (
+    refersBack &&
+    previous &&
+    (!refersToProject || previous.project) &&
+    matches.every(
+      topic =>
+        topic.overview ||
+        topic.answerKey === previous.answerKey
+    )
+  ) {
     currentTopics.value = [previous]
-    const kinds = Object.keys(followUpPhrases) as FollowUpKind[]
-    followUp.value = kinds.find(kind => followUpPhrases[kind].test(question)) ?? 'unknown'
+
+    const kinds = Object.keys(
+      followUpPhrases
+    ) as FollowUpKind[]
+
+    followUp.value =
+      kinds.find(kind =>
+        followUpPhrases[kind].test(question)
+      ) ?? 'unknown'
   } else {
     followUp.value = null
-    currentTopics.value = refersToProject && matches.every(topic => topic.overview) ? [] : matches
+
+    currentTopics.value =
+      refersToProject &&
+      matches.every(topic => topic.overview)
+        ? []
+        : matches
+
     const [topic] = currentTopics.value
-    lastTopic.value = currentTopics.value.length === 1 && topic && !topic.overview ? topic : null
+
+    lastTopic.value =
+      currentTopics.value.length === 1 &&
+      topic &&
+      !topic.overview
+        ? topic
+        : null
   }
 
   submittedQuestion.value = question
   assistantQuestion.value = ''
-  const topics = currentTopics.value.map(topic => topic.answerKey)
+
+  const topics = currentTopics.value.map(
+    topic => topic.answerKey
+  )
+
   const kind = followUp.value
-  const usePreparedFollowUp = kind === 'interest' ||
-    (kind && kind !== 'unknown' && currentTopics.value.some(topic => topic.followUps?.[kind]))
-  if (aiPilotEnabled && topics.length >= 1 && topics.length <= 3 && !usePreparedFollowUp &&
-      topics.every(key => /^(assistant\.(projectReplies|educationReplies|experienceReplies)\.|assistant\.educationAnswer$|assistant\.overview\.experience$)/.test(key))) {
+
+  const usePreparedFollowUp =
+    kind === 'interest' ||
+    (
+      kind &&
+      kind !== 'unknown' &&
+      currentTopics.value.some(
+        topic => topic.followUps?.[kind]
+      )
+    )
+
+  if (
+    aiPilotEnabled &&
+    topics.length >= 1 &&
+    topics.length <= 3 &&
+    !usePreparedFollowUp &&
+    topics.every(key =>
+      /^(assistant\.(projectReplies|educationReplies|experienceReplies)\.|assistant\.educationAnswer$|assistant\.overview\.experience$)/.test(key)
+    )
+  ) {
     void requestPilotAnswer(question, topics)
   }
 }
 
 async function sendContactMessage() {
-  if (contactState.value === 'sending' || !turnstileToken.value) return
+  if (
+    contactState.value === 'sending' ||
+    !turnstileToken.value
+  ) return
+
   const email = contactEmail.value.trim()
   const message = contactMessage.value.trim()
+
   if (!email || !message) {
     contactState.value = 'error'
     return
   }
 
-  const fields = { email, message, website: contactWebsite.value }
+  const fields = {
+    email,
+    message,
+    website: contactWebsite.value
+  }
+
   const body = JSON.stringify(fields)
-  if (contactAttempt?.body !== body) contactAttempt = { body, requestId: crypto.randomUUID() }
+
+  if (contactAttempt?.body !== body) {
+    contactAttempt = {
+      body,
+      requestId: crypto.randomUUID()
+    }
+  }
 
   contactState.value = 'sending'
+
   try {
     const response = await fetch('/api/pixel-contact', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...fields, requestId: contactAttempt.requestId, turnstileToken: turnstileToken.value })
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        ...fields,
+        requestId: contactAttempt.requestId,
+        turnstileToken: turnstileToken.value
+      })
     })
-    if (response.status === 503 || response.status === 404 ||
-        !response.headers.get('Content-Type')?.includes('application/json')) {
+
+    if (
+      response.status === 503 ||
+      response.status === 404 ||
+      !response.headers
+        .get('Content-Type')
+        ?.includes('application/json')
+    ) {
       contactState.value = 'unavailable'
       return
     }
 
     const result = await response.json()
+
     if (!response.ok || result?.ok !== true) {
       contactState.value = 'error'
       return
@@ -254,7 +476,10 @@ async function sendContactMessage() {
     contactState.value = 'error'
   } finally {
     turnstileToken.value = ''
-    if (turnstileWidget !== undefined) turnstileApi()?.reset(turnstileWidget)
+
+    if (turnstileWidget !== undefined) {
+      turnstileApi()?.reset(turnstileWidget)
+    }
   }
 }
 </script>
@@ -267,7 +492,13 @@ async function sendContactMessage() {
     aria-controls="portfolio-assistant"
     @click="assistantDialog?.showModal()"
   >
-    <img class="assistant-avatar" src="/images/pixel-avatar.png" alt="" width="32" height="32" />
+    <img
+      class="assistant-avatar"
+      src="/images/pixel-avatar.png"
+      alt=""
+      width="32"
+      height="32"
+    />
     {{ t('assistant.title') }}
   </button>
 
@@ -281,30 +512,74 @@ async function sendContactMessage() {
     <div class="assistant-content">
       <header class="assistant-header">
         <div class="assistant-identity">
-          <img class="assistant-avatar" src="/images/pixel-avatar.png" alt="" width="56" height="56" />
-          <h2 id="assistant-title">{{ t('assistant.name') }}</h2>
+          <img
+            class="assistant-avatar"
+            src="/images/pixel-avatar.png"
+            alt=""
+            width="56"
+            height="56"
+          />
+          <h2 id="assistant-title">
+            {{ t('assistant.name') }}
+          </h2>
         </div>
+
         <form method="dialog">
-          <button type="submit" autofocus :aria-label="t('galleryControls.close')">×</button>
+          <button
+            type="submit"
+            autofocus
+            :aria-label="t('galleryControls.close')"
+          >
+            ×
+          </button>
         </form>
       </header>
 
       <p class="assistant-status">
-        <strong>{{ t('assistant.status') }}</strong>
-        <span>{{ t('assistant.statusNote') }}</span>
-      </p>
-      <p class="assistant-message">
-        {{ t('assistant.greeting') }} <span aria-hidden="true">🙂</span>
+        <strong>
+          {{ t('assistant.status') }}
+        </strong>
+        <span>
+          {{ t('assistant.statusNote') }}
+        </span>
       </p>
 
-      <details class="assistant-contact" @toggle="prepareContactVerification">
-        <summary>{{ t('assistant.contactForm.open') }}</summary>
-        <p>{{ t('assistant.contactForm.invitation') }}</p>
-        <p v-if="turnstileSiteKey">
-          <a href="/Datenschutz#kontakt" target="_blank" rel="noopener">{{ t('legal.privacy') }}</a>
+      <p class="assistant-message">
+        {{ t('assistant.greeting') }}
+        <span aria-hidden="true">🙂</span>
+      </p>
+
+      <details
+        class="assistant-contact"
+        @toggle="prepareContactVerification"
+      >
+        <summary>
+          {{ t('assistant.contactForm.open') }}
+        </summary>
+
+        <p>
+          {{ t('assistant.contactForm.invitation') }}
         </p>
-        <form v-if="turnstileSiteKey" class="assistant-contact-form" @submit.prevent="sendContactMessage">
-          <label for="pixel-contact-email">{{ t('assistant.contactForm.email') }}</label>
+
+        <p v-if="turnstileSiteKey">
+          <a
+            href="/Datenschutz#kontakt"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ t('legal.privacy') }}
+          </a>
+        </p>
+
+        <form
+          v-if="turnstileSiteKey"
+          class="assistant-contact-form"
+          @submit.prevent="sendContactMessage"
+        >
+          <label for="pixel-contact-email">
+            {{ t('assistant.contactForm.email') }}
+          </label>
+
           <input
             id="pixel-contact-email"
             v-model="contactEmail"
@@ -314,7 +589,11 @@ async function sendContactMessage() {
             required
             :disabled="contactState === 'sending'"
           />
-          <label for="pixel-contact-message">{{ t('assistant.contactForm.message') }}</label>
+
+          <label for="pixel-contact-message">
+            {{ t('assistant.contactForm.message') }}
+          </label>
+
           <textarea
             id="pixel-contact-message"
             v-model="contactMessage"
@@ -322,80 +601,270 @@ async function sendContactMessage() {
             maxlength="3000"
             required
             :disabled="contactState === 'sending'"
-          />
+          ></textarea>
+
           <div hidden>
-            <label for="pixel-contact-website">Website</label>
-            <input id="pixel-contact-website" v-model="contactWebsite" tabindex="-1" autocomplete="off" />
+            <label for="pixel-contact-website">
+              Website
+            </label>
+
+            <input
+              id="pixel-contact-website"
+              v-model="contactWebsite"
+              tabindex="-1"
+              autocomplete="off"
+            />
           </div>
+
           <div ref="turnstileContainer"></div>
-          <p v-if="turnstileFailed" role="status">{{ t('assistant.contactForm.verificationError') }}</p>
-          <button type="submit" :disabled="contactState === 'sending' || !turnstileToken">
-            {{ t(contactState === 'sending' ? 'assistant.contactForm.sending' : 'assistant.contactForm.send') }}
+
+          <p
+            v-if="turnstileFailed"
+            role="status"
+          >
+            {{ t('assistant.contactForm.verificationError') }}
+          </p>
+
+          <button
+            type="submit"
+            :disabled="
+              contactState === 'sending' ||
+              !turnstileToken
+            "
+          >
+            {{
+              t(
+                contactState === 'sending'
+                  ? 'assistant.contactForm.sending'
+                  : 'assistant.contactForm.send'
+              )
+            }}
           </button>
         </form>
-        <p v-else role="status">{{ t('assistant.contactForm.unavailable') }}</p>
-        <p v-if="contactState === 'sent' || contactState === 'error' || contactState === 'unavailable'" role="status">
+
+        <p v-else role="status">
+          {{ t('assistant.contactForm.unavailable') }}
+        </p>
+
+        <p
+          v-if="
+            contactState === 'sent' ||
+            contactState === 'error' ||
+            contactState === 'unavailable'
+          "
+          role="status"
+        >
           {{ t(`assistant.contactForm.${contactState}`) }}
         </p>
       </details>
 
-      <div class="assistant-suggestions" role="group" :aria-label="t('assistant.suggestionLabel')">
+      <div
+        class="assistant-suggestions"
+        role="group"
+        :aria-label="t('assistant.suggestionLabel')"
+      >
         <button
           v-for="suggestion in suggestedQuestions"
           :key="suggestion"
           type="button"
-          @click="sendAssistantQuestion(t(`assistant.suggestions.${suggestion}`))"
+          @click="
+            sendAssistantQuestion(
+              t(`assistant.suggestions.${suggestion}`)
+            )
+          "
         >
           {{ t(`assistant.suggestions.${suggestion}`) }}
         </button>
       </div>
 
-      <p v-if="aiPilotEnabled" id="pixel-ai-notice" class="assistant-status">
+      <p
+        v-if="aiPilotEnabled"
+        id="pixel-ai-notice"
+        class="assistant-status"
+      >
         {{ t('assistant.aiNotice') }}
-        <a href="/Datenschutz#pixel-ki" target="_blank" rel="noopener">{{ t('legal.privacy') }}</a>
+
+        <a
+          href="/Datenschutz#pixel-ki"
+          target="_blank"
+          rel="noopener"
+        >
+          {{ t('legal.privacy') }}
+        </a>
       </p>
-      <form class="assistant-question-form" @submit.prevent="sendAssistantQuestion(assistantQuestion)">
-        <label for="assistant-question">{{ t('assistant.questionLabel') }}</label>
-        <input id="assistant-question" v-model="assistantQuestion" type="text" maxlength="500"
-          :aria-describedby="aiPilotEnabled ? 'pixel-ai-notice' : undefined" />
-        <button type="submit">{{ t('assistant.send') }}</button>
+
+      <form
+        class="assistant-question-form"
+        @submit.prevent="
+          sendAssistantQuestion(assistantQuestion)
+        "
+      >
+        <label for="assistant-question">
+          {{ t('assistant.questionLabel') }}
+        </label>
+
+        <input
+          id="assistant-question"
+          v-model="assistantQuestion"
+          type="text"
+          maxlength="500"
+          :aria-describedby="
+            aiPilotEnabled
+              ? 'pixel-ai-notice'
+              : undefined
+          "
+        />
+
+        <button type="submit">
+          {{ t('assistant.send') }}
+        </button>
       </form>
 
-      <p v-if="submittedQuestion" class="assistant-question">{{ submittedQuestion }}</p>
-      <div class="assistant-replies" aria-live="polite" :lang="answerLanguage">
+      <p
+        v-if="submittedQuestion"
+        class="assistant-question"
+      >
+        {{ submittedQuestion }}
+      </p>
+
+      <div
+        class="assistant-replies"
+        aria-live="polite"
+        :lang="answerLanguage"
+      >
         <template v-if="submittedQuestion">
-          <p v-if="aiReply && answers.length > 1" class="assistant-reply">{{ aiReply }}</p>
-          <article v-for="(answer, index) in answers" :key="index" class="assistant-reply">
-            <h3 v-if="answer.title">{{ answer.title }}</h3>
-            <p v-if="!aiReply || answers.length === 1">{{ aiReply || answer.text }}</p>
-            <p v-if="answer.stack">
-              <strong>{{ replyText('experiencePage.techStack') }}</strong> · {{ answer.stack }}
+          <p
+            v-if="aiReply && answers.length > 1"
+            class="assistant-reply"
+          >
+            {{ aiReply }}
+          </p>
+
+          <article
+            v-for="(answer, index) in answers"
+            :key="index"
+            class="assistant-reply"
+          >
+            <h3 v-if="answer.title">
+              {{ answer.title }}
+            </h3>
+
+            <p
+              v-if="
+                !aiReply ||
+                answers.length === 1
+              "
+            >
+              {{ aiReply || answer.text }}
             </p>
-            <div v-if="answer.detailsPath" class="assistant-answer-links">
+
+            <p v-if="answer.stack">
+              <strong>
+                {{ replyText('experiencePage.techStack') }}
+              </strong>
+              · {{ answer.stack }}
+            </p>
+
+            <div
+              v-if="answer.detailsPath"
+              class="assistant-answer-links"
+            >
               <a
                 class="assistant-details"
                 :href="answer.detailsPath"
-                :target="answer.detailsNewTab ? '_blank' : undefined"
-                :rel="answer.detailsNewTab ? 'noopener noreferrer' : undefined"
-                @click="openAnswerLink($event, answer.project?.id)"
+                :target="
+                  answer.detailsNewTab
+                    ? '_blank'
+                    : undefined
+                "
+                :rel="
+                  answer.detailsNewTab
+                    ? 'noopener noreferrer'
+                    : undefined
+                "
+                @click="
+                  openAnswerLink(
+                    $event,
+                    answer.project?.id
+                  )
+                "
               >
                 {{ answer.detailsLabel }}
               </a>
-              <a v-if="answer.project" class="assistant-details" :href="answer.project.url" target="_blank" rel="noopener noreferrer">
+
+              <a
+                v-if="answer.project"
+                class="assistant-details"
+                :href="answer.project.url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {{ replyText('projectLink') }}
               </a>
-              <a v-if="answer.demoUrl" class="assistant-details" :href="answer.demoUrl" target="_blank" rel="noopener noreferrer">
+
+              <a
+                v-if="answer.demoUrl"
+                class="assistant-details"
+                :href="answer.demoUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {{ replyText('assistant.projectDemoLink') }}
               </a>
             </div>
           </article>
-          <div v-if="!answers.length" class="assistant-reply assistant-fallback">
-            <p>{{ replyText(projectReference.test(submittedQuestion) ? 'assistant.whichProject' : 'assistant.fallbackAnswer') }}</p>
+
+          <div
+            v-if="!answers.length"
+            class="assistant-reply assistant-fallback"
+          >
+            <p>
+              {{
+                replyText(
+                  projectReference.test(submittedQuestion)
+                    ? 'assistant.whichProject'
+                    : 'assistant.fallbackAnswer'
+                )
+              }}
+            </p>
+
             <ul>
-              <li><a href="/#projects" @click="openAnswerLink($event)">{{ replyText('nav.1') }}</a></li>
-              <li><a href="/Ausbildung" @click="openAnswerLink($event)">{{ replyText('educationPage.title') }}</a></li>
-              <li><a href="/Berufserfahrung" @click="openAnswerLink($event)">{{ replyText('experiencePage.title') }}</a></li>
-              <li><a :href="cvPath" target="_blank" rel="noopener noreferrer">{{ replyText('cvDownload') }}</a></li>
+              <li>
+                <a
+                  href="/#projects"
+                  @click="openAnswerLink($event)"
+                >
+                  {{ replyText('nav.1') }}
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="/Ausbildung"
+                  @click="openAnswerLink($event)"
+                >
+                  {{ replyText('educationPage.title') }}
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="/Berufserfahrung"
+                  @click="openAnswerLink($event)"
+                >
+                  {{ replyText('experiencePage.title') }}
+                </a>
+              </li>
+
+              <li>
+                <a
+                  :href="cvPath"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{ replyText('cvDownload') }}
+                </a>
+              </li>
             </ul>
           </div>
         </template>
@@ -646,7 +1115,11 @@ async function sendContactMessage() {
   cursor: pointer;
 }
 
-.assistant-dialog :is(.assistant-header button, .assistant-suggestions button, .assistant-details):hover {
+.assistant-dialog :is(
+  .assistant-header button,
+  .assistant-suggestions button,
+  .assistant-details
+):hover {
   background: var(--assistant-tint);
 }
 
