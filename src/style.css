@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+@import url('/fonts/ibm-plex.css');
 :root {
   font-family: 'IBM Plex Sans', system-ui, sans-serif;
   color: var(--ink);
@@ -171,7 +171,7 @@ select:focus-visible {
 .hero-grid {
   display: grid;
   grid-template-columns: 1.55fr repeat(3, 1fr);
-  grid-template-rows: 280px 225px 180px;
+  grid-template-rows: 280px auto 180px;
   gap: clamp(16px, 1.6vw, 24px);
 }
 
@@ -329,22 +329,42 @@ select:focus-visible {
   transform: translateY(-4px);
 }
 
-.tile-yoganow {
-  grid-column: 2;
+.latest-projects {
+  grid-column: 2 / -1;
   grid-row: 2;
-  background: var(--mist);
+  min-width: 0;
 }
 
-.tile-uno {
-  grid-column: 3;
-  grid-row: 2;
-  background: var(--lilac);
+.latest-projects-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 14px;
 }
 
-.tile-kaffeehaus {
-  grid-column: 4;
-  grid-row: 2;
-  background: var(--slate);
+.latest-projects h2 {
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.latest-projects-link {
+  color: var(--accent);
+  font-size: .875rem;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+.latest-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 1.6vw, 24px);
+}
+
+.latest-projects-grid > .project-tile {
+  min-height: 200px;
+  min-width: 0;
 }
 
 .tile-project-image {
@@ -895,7 +915,7 @@ select:focus-visible {
 
   .hero-grid {
     grid-template-columns: 1.3fr repeat(3, 1fr);
-    grid-template-rows: 250px 200px 175px;
+    grid-template-rows: 250px auto 175px;
     gap: 12px;
   }
 
@@ -973,6 +993,11 @@ select:focus-visible {
     grid-auto-flow: row;
   }
 
+  .latest-projects {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
   .hero-grid > .portrait-tile,
   .hero-grid > .intro-tile,
   .hero-grid > .expertise-tile,
@@ -984,12 +1009,6 @@ select:focus-visible {
     max-width: 100%;
   }
 
-  .hero-grid > .project-tile {
-    grid-column: auto;
-    grid-row: auto;
-    width: 100%;
-    min-width: 0;
-  }
 
   .portrait-tile {
     min-height: 370px;
@@ -1082,11 +1101,6 @@ select:focus-visible {
     grid-row: auto;
   }
 
-  .hero-grid > .project-tile {
-    grid-column: auto;
-    grid-row: auto;
-    min-width: 0;
-  }
 
   .portrait-tile {
     grid-row: auto;
@@ -1178,12 +1192,6 @@ select:focus-visible {
     min-width: 0;
   }
 
-  .hero-grid > .project-tile {
-    grid-column: auto;
-    grid-row: auto;
-    width: 100%;
-    min-width: 0;
-  }
 
   .portrait-tile {
     min-height: 320px;
@@ -1326,4 +1334,10 @@ select:focus-visible {
     animation-duration: 0.01ms !important;
   }
 
+}
+
+@media (max-width: 600px) {
+  .latest-projects-grid {
+    grid-template-columns: 1fr;
+  }
 }

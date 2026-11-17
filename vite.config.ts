@@ -5,6 +5,10 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 const siteUrl = 'https://ekschedl.pages.dev'
+const legalPages = [
+  { path: '/Impressum', title: 'Impressum und Offenlegung', description: 'Offenlegung zum Portfolio von Ekaterina Schedlberger.' },
+  { path: '/Datenschutz', title: 'Datenschutzerklärung', description: 'Datenschutzinformationen zum Portfolio von Ekaterina Schedlberger.' }
+]
 const portfolioPages = [
   {
     path: '/Ausbildung',
@@ -30,7 +34,7 @@ function portfolioSeo(): Plugin {
           this.error('The portfolio build did not emit index.html.')
         }
 
-        for (const page of portfolioPages) {
+        for (const page of [...portfolioPages, ...legalPages]) {
           const url = siteUrl + page.path
           const html = home.source
             .replace(/<title>.*?<\/title>/, `<title>${page.title}</title>`)

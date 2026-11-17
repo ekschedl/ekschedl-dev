@@ -256,6 +256,9 @@ async function sendContactMessage() {
       <details class="assistant-contact" @toggle="prepareContactVerification">
         <summary>{{ t('assistant.contactForm.open') }}</summary>
         <p>{{ t('assistant.contactForm.invitation') }}</p>
+        <p v-if="turnstileSiteKey">
+          <a href="/Datenschutz#kontakt" target="_blank" rel="noopener">{{ t('legal.privacy') }}</a>
+        </p>
         <form v-if="turnstileSiteKey" class="assistant-contact-form" @submit.prevent="sendContactMessage">
           <label for="pixel-contact-email">{{ t('assistant.contactForm.email') }}</label>
           <input

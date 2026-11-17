@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import EducationPage from './EducationPage.vue'
 import ExperiencePage from './ExperiencePage.vue'
 import { useI18n } from 'vue-i18n'
 import Assistant from './Assistant.vue'
+import LegalPage from './LegalPage.vue'
 import { cvPath, hotelConsoleImage, projects, shopDemoUrl, skillGroups, todoDemoUrl, unoWebCover, unoWebDemoUrl } from './portfolioData'
 
 const { locale, t, tm, rt } = useI18n({ useScope: 'global' })
@@ -14,18 +15,22 @@ const languages: Language[] = ['DE', 'EN', 'RU']
 const language = computed(() => locale.value.toUpperCase())
 
 const educationPath = '/Ausbildung'
+const imprintPath = '/Impressum'
+const privacyPath = '/Datenschutz'
+const legalPage = /^\/impressum\/?$/i.test(window.location.pathname) ? 'imprint'
+  : /^\/datenschutz\/?$/i.test(window.location.pathname) ? 'privacy' : null
 const experiencePath = '/Berufserfahrung'
 const isExperience = /^\/berufserfahrung\/?$/i.test(window.location.pathname)
 const isEducation = /^\/ausbildung\/?$/i.test(window.location.pathname)
 const portfolioName = computed(() => t('portfolioName'))
 
 function homeLink(hash: string) {
-  return isEducation || isExperience ? '/' + hash : hash
+  return isEducation || isExperience || legalPage ? '/' + hash : hash
 }
 
 function updatePageLanguage() {
   document.documentElement.lang = locale.value
-  const pageTitle = isEducation ? 'educationPage.title' : isExperience ? 'experiencePage.title' : null
+  const pageTitle = legalPage ? `legal.${legalPage}` : isEducation ? 'educationPage.title' : isExperience ? 'experiencePage.title' : null
   document.title = pageTitle ? t(pageTitle) + ' | ' + portfolioName.value : t('homePageTitle', { separator: '|' })
 }
 const menuOpen = ref(false)
@@ -54,12 +59,16 @@ watch(locale, updatePageLanguage, { immediate: true })
 watch(darkMode, (enabled) => {
   const theme = enabled ? 'dark' : 'light'
   document.documentElement.dataset.theme = theme
+})
+
+function toggleTheme() {
+  darkMode.value = !darkMode.value
   try {
-    localStorage.setItem('portfolio-theme', theme)
+    localStorage.setItem('portfolio-theme', darkMode.value ? 'dark' : 'light')
   } catch {
     // Keep the selected theme for this visit.
   }
-})
+}
 
 
 const aboutSections = computed(() => tm('aboutSections'))
@@ -166,7 +175,53 @@ const activeGallery = computed(() => {
 const hotelGallery = ref<HTMLDialogElement | null>(null)
 const galleryVideo = ref<HTMLVideoElement | null>(null)
 const hotelSlideIndex = ref(0)
+type DemoChoice = 'allow' | 'deny'
+const demoChoice = ref<DemoChoice | null>(null)
+const demoSettings = ref<HTMLDialogElement | null>(null)
+const demoConsentKey = 'portfolio-demo-consent-v1'
+const unoDemoOrigin = new URL(unoWebDemoUrl, window.location.origin).origin
+const demoConsentScope = unoDemoOrigin + '|'
+const demoHosts = [new URL(todoDemoUrl).hostname, new URL(unoDemoOrigin).hostname].join(', ')
+
+function readDemoChoice(value: string | null) {
+  if (value === demoConsentScope + 'allow') return 'allow'
+  if (value === demoConsentScope + 'deny') return 'deny'
+  return null
+}
+
+function syncDemoChoice(event: StorageEvent) {
+  if (event.key === demoConsentKey || event.key === null) {
+    demoChoice.value = readDemoChoice(event.newValue)
+  }
+}
+
+onMounted(() => {
+  try {
+    demoChoice.value = readDemoChoice(localStorage.getItem(demoConsentKey))
+  } catch {
+    // The choice can still be used until the page is closed.
+  }
+  window.addEventListener('storage', syncDemoChoice)
+})
+
+onUnmounted(() => window.removeEventListener('storage', syncDemoChoice))
+
+function setDemoChoice(choice: DemoChoice) {
+  demoChoice.value = choice
+  try {
+    localStorage.setItem(demoConsentKey, demoConsentScope + choice)
+  } catch {
+    // Keep the choice in memory when browser storage is unavailable.
+  }
+  demoSettings.value?.close()
+}
 const hotelSlide = computed(() => activeGallery.value.slides[hotelSlideIndex.value] ?? activeGallery.value.slides[0])
+watch(hotelSlide, (slide) => {
+  if ('embed' in slide && hotelGallery.value?.open && demoChoice.value === null) {
+    demoSettings.value?.showModal()
+  }
+})
+
 const hotelSlideCaption = computed(() => t(`galleryCaptions.${hotelSlide.value.captionKey}`))
 
 function openProjectGallery(project: keyof typeof projectGalleries, startAt = 0) {
@@ -180,8 +235,9 @@ function changeHotelSlide(direction: number) {
   if (count > 1) hotelSlideIndex.value = (hotelSlideIndex.value + direction + count) % count
 }
 
-const featuredProjects = computed(() => projects
-  .filter(({ id }) => id === 'yoganow' || id === 'uno' || id === 'kaffeehaus')
+const latestProjects = computed(() => [...projects]
+  .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
+  .slice(0, 3)
   .map(project => ({ ...project, title: t(`projectTitles.${project.id}`) }))
 )
 
@@ -397,7 +453,7 @@ function scrollToTop() {
           :aria-label="darkMode ? t('switchToLight') : t('switchToDark')"
           :aria-pressed="darkMode"
           :title="darkMode ? t('switchToLight') : t('switchToDark')"
-          @click="darkMode = !darkMode"
+          @click="toggleTheme"
         >
           <span aria-hidden="true">{{ darkMode ? '☼' : '☾' }}</span>
         </button>
@@ -438,6 +494,7 @@ function scrollToTop() {
 
     <EducationPage v-if="isEducation" />
     <ExperiencePage v-else-if="isExperience" />
+    <LegalPage v-else-if="legalPage" :page="legalPage" />
     <main v-else class="portfolio-home">
       <a class="education-milestone" :href="educationPath">
         <div class="education-milestone-headline">
@@ -484,27 +541,36 @@ function scrollToTop() {
           </div>
         </a>
 
-        <a
-          v-for="project in featuredProjects"
-          :key="project.id"
-          :href="'#' + project.id"
-          @click="openProject($event, project.id)"
-          class="tile project-tile"
-          :data-area="project.area"
-          :class="'tile-' + project.id"
-        >
-          <span class="tile-type tile-type-full">{{ t(`projectTypes.${project.area}`) }}</span>
-          <span class="tile-type tile-type-compact">{{ t(`projectTypesShort.${project.area}`) }}</span>
-
-          <div class="tile-project-image">
-            <img v-if="project.image" :src="project.image" :alt="project.title" loading="lazy" />
+        <section class="latest-projects" aria-labelledby="latest-projects-heading">
+          <div class="latest-projects-header">
+            <h2 id="latest-projects-heading" class="eyebrow">{{ t('latestProjects') }}</h2>
+            <a class="latest-projects-link" href="#projects">
+              {{ t('allProjectsLink') }} <span aria-hidden="true">↗</span>
+            </a>
           </div>
+          <div class="latest-projects-grid">
+            <a
+              v-for="project in latestProjects"
+              :key="project.id"
+              :href="'#' + project.id"
+              @click="openProject($event, project.id)"
+              class="tile project-tile"
+              :data-area="project.area"
+            >
+              <span class="tile-type tile-type-full">{{ t(`projectTypes.${project.area}`) }}</span>
+              <span class="tile-type tile-type-compact">{{ t(`projectTypesShort.${project.area}`) }}</span>
 
-          <div class="tile-bottom">
-            <h3>{{ project.title }}</h3>
-            <span aria-hidden="true">↗</span>
+              <div class="tile-project-image">
+                <img v-if="project.image" :src="project.image" :alt="project.title" loading="lazy" />
+              </div>
+
+              <div class="tile-bottom">
+                <h3>{{ project.title }}</h3>
+                <span aria-hidden="true">↗</span>
+              </div>
+            </a>
           </div>
-        </a>
+        </section>
 
         <a href="#technologies" class="tile expertise-tile">
           <span class="tile-type">{{ t('whatIUse') }}</span>
@@ -695,7 +761,7 @@ function scrollToTop() {
                 <span class="tech-icon" aria-hidden="true">
                   <img
                     v-if="skill.icon"
-                    :src="`https://cdn.simpleicons.org/${skill.icon}/${skill.color}`"
+                    :src="`/icons/${skill.icon}-${skill.color}.svg`"
                     alt=""
                     loading="lazy"
                     @load="handleSkillIconLoad"
@@ -800,17 +866,27 @@ function scrollToTop() {
       @keydown.left.prevent="changeHotelSlide(-1)" @keydown.right.prevent="changeHotelSlide(1)">
       <div class="hotel-gallery-header">
         <strong>{{ activeGallery.title }}</strong>
+        <button v-if="'embed' in hotelSlide && demoChoice === 'allow'" type="button"
+          class="demo-settings-shortcut" @click="demoSettings?.showModal()">
+          {{ t('legal.demoSettings') }}
+        </button>
         <button type="button" autofocus :aria-label="t('galleryControls.close')" @click="hotelGallery?.close()">×</button>
       </div>
       <figure aria-live="polite" @click.self="hotelGallery?.close()">
         <video v-if="'video' in hotelSlide" ref="galleryVideo" :src="hotelSlide.video"
           :poster="hotelSlide.poster"
           :aria-label="hotelSlideCaption" controls muted playsinline preload="none" @keydown.left.stop @keydown.right.stop />
-        <iframe v-else-if="'embed' in hotelSlide" class="todo-demo-frame" :src="hotelSlide.embed"
-          :title="activeGallery.title"
+        <template v-else-if="'embed' in hotelSlide">
+          <iframe v-if="demoChoice === 'allow'" class="todo-demo-frame" :src="hotelSlide.embed"
+          :title="activeGallery.title" referrerpolicy="no-referrer"
           :sandbox="galleryProject === 'uno-web'
             ? 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox'
             : 'allow-scripts allow-same-origin'" />
+          <div v-else class="demo-placeholder">
+            <p>{{ t('legal.demoInactive') }}</p>
+            <button type="button" @click="demoSettings?.showModal()">{{ t('legal.demoSettings') }}</button>
+          </div>
+        </template>
         <button v-else-if="activeGallery.slides.length > 1" type="button" class="hotel-gallery-image"
           :aria-label="t('galleryControls.next')" @click="changeHotelSlide(1)">
           <img :src="hotelSlide.image" alt="" />
@@ -830,9 +906,34 @@ function scrollToTop() {
       <p v-if="galleryProject === 'yoganow'" class="yoga-gallery-access">{{ t('yogaDemo.access') }}</p>
     </dialog>
 
+    <dialog ref="demoSettings" class="hotel-gallery demo-settings" aria-labelledby="demo-settings-title">
+      <div class="hotel-gallery-header">
+        <h2 id="demo-settings-title">{{ t('legal.demoSettings') }}</h2>
+        <button type="button" autofocus :aria-label="t('galleryControls.close')" @click="demoSettings?.close()">×</button>
+      </div>
+      <p>{{ t('legal.demoNotice', { hosts: demoHosts }) }}</p>
+      <p>
+        {{ t('legal.demoDetails') }}
+        <a :href="privacyPath + '#projekt-demos'" target="_blank" rel="noopener">{{ t('legal.demosTitle') }}</a>.
+      </p>
+      <div class="demo-settings-actions">
+        <button type="button" :aria-pressed="demoChoice === 'allow'" @click="setDemoChoice('allow')">
+          {{ t('legal.allowDemos') }}
+        </button>
+        <button type="button" :aria-pressed="demoChoice === 'deny'" @click="setDemoChoice('deny')">
+          {{ t('legal.denyDemos') }}
+        </button>
+      </div>
+    </dialog>
+
     <footer class="footer">
       <span>{{ t('footerCopyright') }}</span>
       <span>{{ t('footerMade') }}</span>
+      <nav class="footer-legal" :aria-label="t('legal.navigation')">
+        <a :href="imprintPath" :aria-current="legalPage === 'imprint' ? 'page' : undefined">{{ t('legal.imprint') }}</a>
+        <a :href="privacyPath" :aria-current="legalPage === 'privacy' ? 'page' : undefined">{{ t('legal.privacy') }}</a>
+        <button type="button" @click="demoSettings?.showModal()">{{ t('legal.demoSettings') }}</button>
+      </nav>
     </footer>
 
     <Assistant @open-project="openProject" />
@@ -1203,7 +1304,7 @@ function scrollToTop() {
   width: 100%;
   height: auto;
   aspect-ratio: 3 / 2;
-  padding: clamp(5px, 1.4vw, 16px);
+  padding: clamp(10px, 2.5vw, 28px);
   border: 0;
   color: var(--ink);
 }
@@ -1593,6 +1694,61 @@ function scrollToTop() {
   display: inline;
 }
 
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+}
+
+.footer-legal a,
+.footer-legal button {
+  text-decoration: underline;
+}
+
+.footer-legal button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.hotel-gallery button.demo-settings-shortcut {
+  margin-inline-start: auto;
+  padding-inline: 8px;
+  border-color: transparent;
+  background: none;
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.demo-settings {
+  width: min(92vw, 560px);
+  text-align: start;
+}
+
+.demo-settings h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.demo-settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.demo-settings-actions button,
+.demo-placeholder button {
+  padding-inline: 12px;
+  cursor: pointer;
+}
+
+.demo-settings-actions button[aria-pressed='true'] {
+  border-color: var(--accent);
+}
+
 .back-to-top {
   position: fixed;
   z-index: 40;
@@ -1603,17 +1759,16 @@ function scrollToTop() {
   height: 44px;
   place-items: center;
   padding: 0;
-  border: 0;
+  border: 1px solid var(--accent);
   border-radius: 50%;
-  background: transparent;
+  background: var(--surface);
   color: var(--accent);
   cursor: pointer;
-  opacity: .82;
-  transition: opacity .18s ease, transform .18s ease;
+  transition: background-color .18s ease, transform .18s ease;
 }
 
 .back-to-top:hover {
-  opacity: 1;
+  background: var(--paper);
   transform: translateY(-2px);
 }
 
