@@ -169,6 +169,8 @@ select:focus-visible {
 
 /* HERO BENTO */
 .hero-grid {
+  --project-inset: 18px;
+  --hero-arrow-size: 32px;
   display: grid;
   grid-template-columns: 1.55fr repeat(3, 1fr);
   grid-template-rows: 280px auto 180px;
@@ -231,7 +233,8 @@ select:focus-visible {
 .intro-tile {
   grid-column: 2 / 5;
   grid-row: 1;
-  padding: 38px 48px;
+  --intro-inline-padding: 48px;
+  padding: 38px var(--intro-inline-padding);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -301,8 +304,9 @@ select:focus-visible {
 .round-arrow {
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
+  width: var(--hero-arrow-size);
+  height: var(--hero-arrow-size);
+  margin-inline-end: calc(var(--project-inset) - var(--intro-inline-padding));
   flex-shrink: 0;
   border: 1px solid transparent;
   border-radius: 50%;
@@ -321,7 +325,7 @@ select:focus-visible {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 18px;
+  padding: var(--project-inset);
   transition: transform .25s ease;
 }
 
@@ -342,6 +346,7 @@ select:focus-visible {
   justify-content: space-between;
   gap: 8px 16px;
   margin-bottom: 14px;
+  padding-inline: var(--project-inset);
 }
 
 .latest-projects h2 {
@@ -354,6 +359,11 @@ select:focus-visible {
   font-size: .875rem;
   text-decoration: underline;
   text-underline-offset: .2em;
+}
+
+.latest-projects-link > span {
+  font-size: inherit;
+  vertical-align: middle;
 }
 
 .latest-projects-grid {
@@ -396,13 +406,17 @@ select:focus-visible {
 }
 
 .tile-bottom h3 {
+  min-width: 0;
   margin: 0;
+  hyphens: auto;
+  overflow-wrap: anywhere;
   font-family: 'IBM Plex Sans', system-ui, sans-serif;
   font-size: clamp(15px, 1.6vw, 22px);
   font-weight: 600;
 }
 
 .tile-bottom > span {
+  align-self: end;
   font-size: 23px;
 }
 
@@ -455,7 +469,7 @@ select:focus-visible {
 
 .tile-corner-arrow {
   position: absolute;
-  right: 22px;
+  inset-inline-end: var(--project-inset);
   bottom: 20px;
   font-size: 25px;
 }
@@ -463,6 +477,7 @@ select:focus-visible {
 /* MATCHING ARROW INTERACTIONS */
 .tile-bottom > span,
 .tile-corner-arrow,
+.latest-projects-link > span,
 :is(.header-contact, .primary-link, .secondary-link) > span[aria-hidden="true"] {
   display: inline-grid;
   place-items: center;
@@ -475,8 +490,16 @@ select:focus-visible {
   transition: background .2s, color .2s, border-color .2s, transform .2s;
 }
 
+.tile-bottom > span,
+.tile-corner-arrow,
+.latest-projects-link > span {
+  width: var(--hero-arrow-size);
+  height: var(--hero-arrow-size);
+}
+
 .project-tile:is(:hover, :focus-visible) .tile-bottom > span,
 .tile:is(:hover, :focus-visible) .tile-corner-arrow,
+.latest-projects-link:is(:hover, :focus-visible) > span,
 :is(.primary-link, .secondary-link):is(:hover, :focus-visible) > span[aria-hidden="true"] {
   background: var(--ink);
   color: var(--on-ink);
@@ -920,7 +943,8 @@ select:focus-visible {
   }
 
   .intro-tile {
-    padding: 28px;
+    --intro-inline-padding: 28px;
+    padding: 28px var(--intro-inline-padding);
   }
 
   .intro-tile h1 {
@@ -1015,7 +1039,8 @@ select:focus-visible {
   }
 
   .intro-tile {
-    padding: 24px;
+    --intro-inline-padding: 24px;
+    padding: 24px var(--intro-inline-padding);
   }
 
   .intro-tile h1 {
@@ -1039,8 +1064,6 @@ select:focus-visible {
   }
 
   .round-arrow {
-    width: 40px;
-    height: 40px;
     font-size: 21px;
   }
 
@@ -1091,6 +1114,7 @@ select:focus-visible {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: auto;
     gap: 14px;
+    --project-inset: 13px;
   }
 
   .hero-grid > .portrait-tile,
@@ -1119,7 +1143,6 @@ select:focus-visible {
 
   .project-tile {
     min-height: 180px;
-    padding: 13px;
   }
 
   .tile-project-image img {
@@ -1180,6 +1203,8 @@ select:focus-visible {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: auto;
     grid-auto-flow: row;
+    --project-inset: 10px;
+    --hero-arrow-size: 26px;
   }
 
   .hero-grid > .portrait-tile,
@@ -1199,7 +1224,8 @@ select:focus-visible {
 
   .intro-tile {
     min-height: 210px;
-    padding: 18px 16px;
+    --intro-inline-padding: 16px;
+    padding: 18px var(--intro-inline-padding);
   }
 
   .intro-tile h1 {
@@ -1223,12 +1249,6 @@ select:focus-visible {
     overflow-wrap: break-word;
   }
 
-  .round-arrow {
-    flex: 0 0 34px;
-    width: 34px;
-    height: 34px;
-  }
-
   .project-tile,
   .expertise-tile,
   .about-tile {
@@ -1237,7 +1257,6 @@ select:focus-visible {
 
   .project-tile {
     min-height: 145px;
-    padding: 8px;
   }
 
   .tile-type-full {
@@ -1265,13 +1284,10 @@ select:focus-visible {
   }
 
   .tile-bottom h3 {
-    min-width: 0;
     font-size: 11px;
-    overflow-wrap: anywhere;
   }
 
   .tile-bottom > span {
-    flex: 0 0 18px;
     font-size: 18px;
     text-align: center;
   }
