@@ -101,11 +101,12 @@ onBeforeUnmount(() => {
 
 type AssistantTopic = ReturnType<typeof findKnowledgeTopics>[number]
 
+const projectReference = /(?<!\p{L})(?:dies(?:es|em|en) Projekt|(?:this|that) project|этот проект|этом проекте|этого проекта)(?!\p{L})/iu
 const lastTopic = ref<AssistantTopic | null>(null)
 const currentTopics = ref<AssistantTopic[]>([])
 const followUp = ref<FollowUpKind | 'unknown' | null>(null)
 const followUpPhrases: Record<FollowUpKind, RegExp> = {
-  interest: /gemocht|gefallen|mochte|spaß|motiviert|gern|\b(like|liked|enjoy|enjoyed)\b|нрав|понрав|любил/iu,
+  interest: /gemocht|gefallen|mochte|spaß|motiviert|gern|\b(like|liked|enjoy|enjoyed)\b|нрав|нарв|понрав|любил/iu,
   technology: /technolog|werkzeug|tech stack|\btools?\b|технолог|инструмент/iu,
   duration: /wie lange|welcher zeitraum|von wann|bis wann|how long|when did|как долго|сколько времени|когда/iu,
   tasks: /was .*gemacht|aufgaben|tätigkeit|what .*do|responsibilit|что .*делал|чем .*занимал|задач/iu
@@ -150,7 +151,7 @@ function openAnswerLink(event: MouseEvent, projectId?: string) {
   if (projectId) emit('openProject', event, projectId)
 }
 
-async function requestPilotAnswer(question: string) {
+async function requestPilotAnswer(question: string, topics: string[]) {
   const request = new AbortController()
   aiRequest = request
   const timeout = window.setTimeout(() => request.abort(), 12000)
@@ -160,7 +161,7 @@ async function requestPilotAnswer(question: string) {
     const response = await fetch('/api/pixel-chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, project: 'yoganow', language: answerLanguage.value }),
+      body: JSON.stringify({ question, topics, language: answerLanguage.value }),
       signal: request.signal
     })
     if (!response.ok) throw new Error('Pixel AI unavailable')
@@ -184,24 +185,31 @@ function sendAssistantQuestion(input: string) {
   aiReply.value = ''
 
   const matches = findKnowledgeTopics(question)
-  const refersBack = /(?<!\p{L})(dort|dabei|there|that project|там|в этом проекте)(?!\p{L})/iu.test(question)
+  const refersToProject = projectReference.test(question)
+  const refersBack = refersToProject || /(?<!\p{L})(dort|dabei|there|там)(?!\p{L})/iu.test(question)
 
   const previous = lastTopic.value
-  if (refersBack && previous && matches.every(topic => topic.overview || topic.answerKey === previous.answerKey)) {
+  if (refersBack && previous && (!refersToProject || previous.project) &&
+      matches.every(topic => topic.overview || topic.answerKey === previous.answerKey)) {
     currentTopics.value = [previous]
     const kinds = Object.keys(followUpPhrases) as FollowUpKind[]
     followUp.value = kinds.find(kind => followUpPhrases[kind].test(question)) ?? 'unknown'
   } else {
     followUp.value = null
-    currentTopics.value = matches
-    const [topic] = matches
-    lastTopic.value = matches.length === 1 && topic && !topic.overview ? topic : null
+    currentTopics.value = refersToProject && matches.every(topic => topic.overview) ? [] : matches
+    const [topic] = currentTopics.value
+    lastTopic.value = currentTopics.value.length === 1 && topic && !topic.overview ? topic : null
   }
 
   submittedQuestion.value = question
   assistantQuestion.value = ''
-  if (aiPilotEnabled && currentTopics.value.length === 1 && currentTopics.value[0]?.project?.id === 'yoganow') {
-    void requestPilotAnswer(question)
+  const topics = currentTopics.value.map(topic => topic.answerKey)
+  const kind = followUp.value
+  const usePreparedFollowUp = kind === 'interest' ||
+    (kind && kind !== 'unknown' && currentTopics.value.some(topic => topic.followUps?.[kind]))
+  if (aiPilotEnabled && topics.length >= 1 && topics.length <= 3 && !usePreparedFollowUp &&
+      topics.every(key => /^(assistant\.(projectReplies|educationReplies|experienceReplies)\.|assistant\.educationAnswer$|assistant\.overview\.experience$)/.test(key))) {
+    void requestPilotAnswer(question, topics)
   }
 }
 
@@ -356,9 +364,10 @@ async function sendContactMessage() {
       <p v-if="submittedQuestion" class="assistant-question">{{ submittedQuestion }}</p>
       <div class="assistant-replies" aria-live="polite" :lang="answerLanguage">
         <template v-if="submittedQuestion">
+          <p v-if="aiReply && answers.length > 1" class="assistant-reply">{{ aiReply }}</p>
           <article v-for="(answer, index) in answers" :key="index" class="assistant-reply">
             <h3 v-if="answer.title">{{ answer.title }}</h3>
-            <p>{{ aiReply || answer.text }}</p>
+            <p v-if="!aiReply || answers.length === 1">{{ aiReply || answer.text }}</p>
             <p v-if="answer.stack">
               <strong>{{ replyText('experiencePage.techStack') }}</strong> · {{ answer.stack }}
             </p>
@@ -381,7 +390,7 @@ async function sendContactMessage() {
             </div>
           </article>
           <div v-if="!answers.length" class="assistant-reply assistant-fallback">
-            <p>{{ replyText('assistant.fallbackAnswer') }}</p>
+            <p>{{ replyText(projectReference.test(submittedQuestion) ? 'assistant.whichProject' : 'assistant.fallbackAnswer') }}</p>
             <ul>
               <li><a href="/#projects" @click="openAnswerLink($event)">{{ replyText('nav.1') }}</a></li>
               <li><a href="/Ausbildung" @click="openAnswerLink($event)">{{ replyText('educationPage.title') }}</a></li>

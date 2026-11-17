@@ -23,8 +23,8 @@ const germanWords = new Set([
 ])
 
 const englishWords = new Set([
-  'who', 'what', 'where', 'how', 'which', 'why', 'when', 'is', 'are', 'did',
-  'does', 'has', 'have', 'worked', 'built', 'developed', 'tell', 'about',
+  'who', 'what', 'where', 'how', 'which', 'why', 'when', 'is', 'are', 'were', 'did',
+  'does', 'has', 'have', 'worked', 'built', 'developed', 'responsible', 'tell', 'about',
   'your', 'please', 'and', 'education', 'experience', 'projects', 'hello', 'thanks', 'strengths', 'weaknesses', 'teamwork', 'hours', 'permit', 'hobbies', 'resume', 'résumé'
 ])
 
