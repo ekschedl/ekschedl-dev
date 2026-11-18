@@ -1,22 +1,9 @@
-import de from '../../src/locales/de.ts'
-import { projects } from '../../src/portfolioData.ts'
+import { getPixelSources } from '../../src/pixelSources.ts'
 
 const MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast'
 const LANGUAGES = new Map([['de', 'German'], ['en', 'English'], ['ru', 'Russian']])
 const MAX_BODY_BYTES = 4096
-const sourcesByTopic = new Map([
-  ...projects.map(({ id, createdAt }) => [
-    `assistant.projectReplies.${id}`, `${de.projectTitles[id]}: ${de.projectDescriptions[id]}\nListed creation month (YYYY-MM): ${createdAt}.`
-  ]),
-  ...Object.entries(de.assistant.educationReplies).map(([id, description]) => [
-    `assistant.educationReplies.${id}`, description
-  ]),
-  ...Object.entries(de.assistant.experienceReplies).map(([id, description]) => [
-    `assistant.experienceReplies.${id}`, description
-  ]),
-  ['assistant.educationAnswer', de.assistant.educationAnswer],
-  ['assistant.overview.experience', de.assistant.overview.experience]
-])
+const sourcesByTopic = getPixelSources()
 
 function json(body, status = 200) {
   return Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } })
@@ -63,7 +50,8 @@ export async function onRequestPost({ request, env }) {
       topics.length < 1 || topics.length > 3 || topics.some(topic => !sourcesByTopic.has(topic))) {
     return json({ error: 'input' }, 400)
   }
-  const sources = [...new Set(topics)].map(topic => sourcesByTopic.get(topic))
+  const localizedSources = getPixelSources(input.language)
+  const sources = [...new Set(topics)].map(topic => localizedSources.get(topic))
 
   try {
     const result = await env.AI.run(MODEL, {

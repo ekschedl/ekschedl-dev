@@ -2,32 +2,44 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+// Erkennt das Thema einer Frage und sucht passende Antworten im FAQ-Katalog.
 import {
   findKnowledgeTopics,
   findEmployerFaqAnswer,
   type FollowUpKind
 } from './assistantKnowledge'
+// Erkennt DE/EN/RU aus der Frage. Die Sprache der Website wird dabei nicht umgestellt.
 import { detectAssistantLanguage } from './assistantLanguage'
 import { cvPath } from './portfolioData'
 
+// i18n liefert die gewählte Website-Sprache und die übersetzten Texte.
 const { locale, t } = useI18n({ useScope: 'global' })
+// Meldet der übergeordneten Seite, dass ein Projekt geöffnet werden soll.
 const emit = defineEmits<{ openProject: [event: MouseEvent, projectId: string] }>()
 
+// Dialog, aktuelle Eingabe und zuletzt abgeschickte Frage für die Anzeige.
 const assistantDialog = ref<HTMLDialogElement | null>(null)
 const assistantQuestion = ref('')
 const submittedQuestion = ref('')
 
+// Enthält eine direkte Antwort aus den 350 Arbeitgeberfragen der erkannten Sprache.
 const employerFaqReply = ref<string | null>(null)
 
+// Dieser Build-Schalter aktiviert KI-Anfragen. Auch der Server muss den Pilot freigeben.
 const aiPilotEnabled = import.meta.env.VITE_PIXEL_AI_PILOT === 'true'
+// Eine erfolgreiche KI-Antwort ergänzt die Anzeige. aiRequest erlaubt das Abbrechen alter Anfragen.
 const aiReply = ref('')
 let aiRequest: AbortController | undefined
+// Eigenständiges Kontaktformular. Die Nachricht geht über die Server-Schnittstelle an Resend.
 const contactEmail = ref('')
 const contactMessage = ref('')
+// Für Besucher unsichtbares Feld zum Erkennen automatisch ausgefüllter Spam-Nachrichten.
 const contactWebsite = ref('')
 const contactState = ref<'idle' | 'sending' | 'sent' | 'error' | 'unavailable'>('idle')
+// Gleicher Inhalt behält beim Wiederholen dieselbe Kennung, damit Resend Doppelversand vermeiden kann.
 let contactAttempt: { body: string; requestId: string } | undefined
 
+// Turnstile prüft das Kontaktformular vor dem Versand. Der Token wird mit der Nachricht gesendet.
 const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY?.trim()
 const turnstileContainer = ref<HTMLDivElement | null>(null)
 const turnstileToken = ref('')
@@ -53,6 +65,7 @@ function turnstileApi() {
   return (window as Window & { turnstile?: Turnstile }).turnstile
 }
 
+// Lädt das Turnstile-Skript bei Bedarf und teilt einen laufenden Ladevorgang zwischen Aufrufen.
 function loadTurnstile() {
   if (turnstileApi()) return Promise.resolve()
 
@@ -72,6 +85,7 @@ function loadTurnstile() {
   return turnstileScript
 }
 
+// Startet die Sicherheitsprüfung beim Aufklappen des Kontaktbereichs.
 async function prepareContactVerification(event: Event) {
   if (
     !(event.currentTarget instanceof HTMLDetailsElement) ||
@@ -122,6 +136,7 @@ async function prepareContactVerification(event: Event) {
   }
 }
 
+// Beim Entfernen des Vue-Bausteins laufende KI-Anfragen abbrechen und Turnstile aufräumen.
 onBeforeUnmount(() => {
   disposed = true
   aiRequest?.abort()
@@ -133,13 +148,16 @@ onBeforeUnmount(() => {
 
 type AssistantTopic = ReturnType<typeof findKnowledgeTopics>[number]
 
+// Erkennt Rückverweise wie „dieses Projekt“ für Anschlussfragen.
 const projectReference =
   /(?<!\p{L})(?:dies(?:es|em|en) Projekt|(?:this|that) project|этот проект|этом проекте|этого проекта)(?!\p{L})/iu
 
+// Merkt sich das letzte eindeutige Thema und die Themen der aktuellen Antwort.
 const lastTopic = ref<AssistantTopic | null>(null)
 const currentTopics = ref<AssistantTopic[]>([])
 const followUp = ref<FollowUpKind | 'unknown' | null>(null)
 
+// Unterscheidet Anschlussfragen nach Interesse, Technologien, Zeitraum und Aufgaben.
 const followUpPhrases: Record<FollowUpKind, RegExp> = {
   interest: /gemocht|gefallen|mochte|spaß|motiviert|gern|\b(like|liked|enjoy|enjoyed)\b|нрав|нарв|понрав|любил/iu,
   technology: /technolog|werkzeug|tech stack|\btools?\b|технолог|инструмент/iu,
@@ -147,16 +165,33 @@ const followUpPhrases: Record<FollowUpKind, RegExp> = {
   tasks: /was .*gemacht|aufgaben|tätigkeit|what .*do|responsibilit|что .*делал|чем .*занимал|задач/iu
 }
 
+// Diese Einträge steuern die drei Vorschlagsbuttons. Die Texte stehen in den Sprachdateien.
 const suggestedQuestions = [
   'projects',
   'teamwork',
   'workplace'
 ] as const
 
+// Hier zusätzliche Themen für den KI-Pilot freigeben. Die Einträge sind i18n-Antwortschlüssel.
+// Einzelne Projekte, Ausbildungen und Berufsstationen werden zusätzlich weiter unten freigegeben.
+const aiAnswerTopics = new Set([
+  'assistant.educationAnswer', // Ausbildung im Überblick
+  'assistant.learningAnswer', // Inhalte der Ausbildung
+  'assistant.overview.experience', // Beruflicher Werdegang
+  'assistant.overview.technologies', // Fähigkeiten und Technologien
+  'assistant.personalReplies.softwareExperience.answer', // Praktische Entwicklungserfahrung
+  'assistant.personalReplies.languages.answer', // Gesprochene Sprachen
+  'assistant.personalReplies.teamwork.answer', // Zusammenarbeit
+  'assistant.personalReplies.hours.answer', // Gewünschte Wochenstunden
+  'assistant.personalReplies.workplace.answer' // Büro, Hybrid oder Remote
+])
+
+// Die Frage bestimmt die Antwortsprache. Ohne Sprachhinweis gilt die Website-Sprache.
 const answerLanguage = computed(
-  () => employerFaqReply.value ? 'de' : detectAssistantLanguage(submittedQuestion.value) ?? locale.value
+  () => detectAssistantLanguage(submittedQuestion.value) ?? locale.value
 )
 
+// Holt einen Text per i18n-Schlüssel aus de.ts, en.ts oder ru.ts in der ermittelten Antwortsprache.
 function replyText(
   key: string,
   params: Record<string, string> = {}
@@ -164,6 +199,7 @@ function replyText(
   return t(key, params, { locale: answerLanguage.value })
 }
 
+// Wählt eine hinterlegte Antwort zur Anschlussfrage oder einen Hinweis auf fehlende Angaben.
 function followUpText(
   topic: AssistantTopic,
   kind: FollowUpKind | 'unknown'
@@ -209,6 +245,7 @@ function withoutProjectAge(text: string): string {
     .replace(/\.{2,}/g, '.')
 }
 
+// Baut aus den gefundenen Themen die sichtbaren Antworten mit Überschrift, Text und Links.
 const answers = computed(() =>
   currentTopics.value.map(topic => {
     const titleKey = topic.replyTitleKey ?? topic.titleKey
@@ -240,6 +277,7 @@ const answers = computed(() =>
   })
 )
 
+// Schließt Pixel beim normalen Öffnen eines Links und meldet Projektlinks an die übergeordnete Seite.
 function openAnswerLink(
   event: MouseEvent,
   projectId?: string
@@ -265,6 +303,8 @@ function openAnswerLink(
   }
 }
 
+// Sendet Frage, Themenkennungen und Sprache an /api/pixel-chat.
+// Der Server holt dazu die hinterlegten Fakten und ruft Cloudflare Workers AI auf.
 async function requestPilotAnswer(
   question: string,
   topics: string[]
@@ -272,6 +312,7 @@ async function requestPilotAnswer(
   const request = new AbortController()
   aiRequest = request
 
+  // Nach zwölf Sekunden abbrechen. Währenddessen ist die vorbereitete Antwort bereits sichtbar.
   const timeout = window.setTimeout(
     () => request.abort(),
     12000
@@ -312,12 +353,13 @@ async function requestPilotAnswer(
 }
 
 
+// Hauptablauf für eigene Fragen und Vorschlagsbuttons.
 function sendAssistantQuestion(input: string) {
   const question = input.trim()
 
   if (!question || question.length > 500) return
 
-  // Vorherige Anfrage beenden
+  // Vorherige KI-Anfrage abbrechen, damit ihre Antwort die neue Frage nicht überschreibt.
   aiRequest?.abort()
   aiRequest = undefined
 
@@ -327,11 +369,9 @@ function sendAssistantQuestion(input: string) {
   submittedQuestion.value = question
   assistantQuestion.value = ''
 
-  // Ein deutscher FAQ-Treffer kann auch bei einer anderssprachigen Website vorliegen.
+  // Zuerst in den FAQ der erkannten Sprache suchen. Ohne Sprachhinweis gilt die Website-Sprache.
   const detectedLanguage = detectAssistantLanguage(question)
-  const employerAnswer = !detectedLanguage || detectedLanguage === 'de'
-    ? findEmployerFaqAnswer(question)
-    : null
+  const employerAnswer = findEmployerFaqAnswer(question, detectedLanguage ?? locale.value)
 
   if (employerAnswer) {
     employerFaqReply.value = employerAnswer
@@ -341,15 +381,17 @@ function sendAssistantQuestion(input: string) {
     return
   }
 
-  // Bestehende Pixel-Wissensbasis verwenden
+  // Ohne FAQ-Treffer passende Themen über Wörter und Muster in assistantKnowledge.ts suchen.
   const matches = findKnowledgeTopics(question)
 
   const refersToProject = projectReference.test(question)
 
+  // Wörter wie „dort“ oder „dabei“ können sich auf das zuletzt erkannte Thema beziehen.
   const refersBack =
     refersToProject ||
     /(?<!\p{L})(dort|dabei|there|там)(?!\p{L})/iu.test(question)
 
+  // Das vorherige Thema nur übernehmen, wenn kein neues konkretes Thema dagegen spricht.
   const previous = lastTopic.value
 
   if (
@@ -391,12 +433,14 @@ function sendAssistantQuestion(input: string) {
         : null
   }
 
+  // Die KI erhält die Kennungen der erkannten Themen. Daraus wählt der Server seine Quellen.
   const topics = currentTopics.value.map(
     topic => topic.answerKey
   )
 
   const kind = followUp.value
 
+  // Vorbereitete Anschlussantworten haben bei diesen Rückfragen Vorrang vor der KI.
   const usePreparedFollowUp =
     kind === 'interest' ||
     (
@@ -407,15 +451,16 @@ function sendAssistantQuestion(input: string) {
       )
     )
 
-  // Cloudflare Workers AI weiterhin verwenden,
-  // wenn keine direkte FAQ-Antwort gefunden wurde.
+  // KI nur bei aktivem Pilot und ein bis drei freigegebenen Themen aufrufen.
+  // Bei fehlender Themenerkennung wird die KI hier nicht gestartet.
   if (
     aiPilotEnabled &&
     topics.length >= 1 &&
     topics.length <= 3 &&
     !usePreparedFollowUp &&
     topics.every(key =>
-      /^(assistant\.(projectReplies|educationReplies|experienceReplies)\.|assistant\.educationAnswer$|assistant\.overview\.experience$)/.test(key)
+      aiAnswerTopics.has(key) ||
+      /^assistant\.(projectReplies|educationReplies|experienceReplies)\./.test(key)
     )
   ) {
     void requestPilotAnswer(question, topics)
@@ -423,6 +468,7 @@ function sendAssistantQuestion(input: string) {
 }
 
 
+// Prüft die Kontaktdaten und sendet Nachricht, Turnstile-Token und Versandkennung an den Server.
 async function sendContactMessage() {
   if (
     contactState.value === 'sending' ||
@@ -493,6 +539,7 @@ async function sendContactMessage() {
   } catch {
     contactState.value = 'error'
   } finally {
+    // Für einen weiteren Versand muss Turnstile einen neuen Token ausstellen.
     turnstileToken.value = ''
 
     if (turnstileWidget !== undefined) {

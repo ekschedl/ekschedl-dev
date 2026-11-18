@@ -15,6 +15,7 @@
  */
 
 const germanWords = new Set([
+  'war', 'lernt', 'nach', 'ihrem', 'wozu', 'woher', 'verwendet', 'die', 'wäre', 'bevorzugt', 'können', 'wir', 'ihr', 'einen',
   'wer', 'was', 'wie', 'wo', 'woran', 'welche', 'welcher', 'welches', 'warum', 'wann',
   'ist', 'sind', 'hat', 'hast', 'arbeitet', 'gearbeitet', 'entwickelt', 'gebaut',
   'deine', 'dein', 'ihre', 'über', 'ueber', 'erzähle', 'erzähl', 'bitte', 'und',
@@ -27,6 +28,7 @@ const germanWords = new Set([
 ])
 
 const englishWords = new Set([
+  'would', 'could', 'her', 'a', 'at', 'into', 'will', 'first', 'client',
   'who', 'what', 'can', 'she', 'learned', 'learnt', 'studied', 'earn', 'salary',
   'salaries', 'pay', 'compensation', 'skills', 'abilities', 'technologies', 'programming',
   'qualifications', 'where', 'how', 'which', 'why', 'when', 'is', 'are', 'were', 'did',
