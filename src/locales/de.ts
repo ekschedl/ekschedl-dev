@@ -83,9 +83,17 @@ export default {
         },
         detailsLink: 'Vollständige Informationen ansehen',
         personalReplies: {
+            softwareExperience: {
+                title: 'Praktische Erfahrung in der Softwareentwicklung',
+                answer: 'Ekaterina begann ihren Weg in die Softwareentwicklung mit einer Weiterbildung zur Web Developerin am WIFI Steiermark. Als Diplomprojekt entwickelte sie für einen Lutscherhersteller die Website Feta mit einem eigenen responsiven WordPress-Theme, Produktkatalog und Kontaktformular. Anschließend vertiefte sie ihre Kenntnisse in der Softwareentwicklung an der FH CAMPUS 02 und sammelte von September 2025 bis Oktober 2026 bei JAWA Management Software praktische Erfahrung mit PHP, SQL, Xdebug und der Analyse bestehender Anwendungen. Darüber hinaus setzte sie verschiedene Ausbildungs- und Praxisprojekte um, unter anderem mit Java, Vue, C# und Swift.'
+            },
             personality: {
                 title: "Persönlichkeit und Arbeitsweise",
                 answer: "Ekaterina ist offen und kontaktfreudig. Bei der Arbeit setzt sie sich gern klare Ziele und erledigt ihre Aufgaben sorgfältig und termingerecht. Sie schätzt den Austausch mit Menschen, die positiv an Dinge herangehen und eigene Ziele verfolgen.",
+            },
+            languages: {
+               title: 'Sprachkenntnisse',
+               answer: 'Ekaterina verfügt über Kenntnisse in Russisch (ihre Muttersprache), Deutsch, Englisch und Italienisch. Sie hat Deutsch bis zum Niveau C1 gelernt und Englischkurse auf den Niveaus A2 und B1 besucht. Deutsch, Italienisch und Russisch waren Teil ihres Studiums der Transkulturellen Kommunikation an der Universität Graz. Außerdem hat sie ehrenamtlich ins Russische gedolmetscht.'
             },
             teamwork: {
                 title: "Zusammenarbeit im Team",

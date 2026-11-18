@@ -83,10 +83,24 @@ export default {
         },
         detailsLink: 'View full details',
         personalReplies: {
+            softwareExperience: {
+                title: 'Practical software development experience',
+                answer: 'Ekaterina started with web development training at WIFI Steiermark. For her diploma project, she built Feta, a website for a lollipop manufacturer, with a custom responsive WordPress theme, a product catalogue and a contact form. She continued her software development studies at FH CAMPUS 02 and gained practical experience with PHP, SQL, Xdebug and existing applications at JAWA Management Software from September 2025 to October 2026. Her training and portfolio projects include Java, Vue, C# and Swift.',
+            },
+
+            juniorProfile: {
+                 title: 'Junior Software Developer',
+                  answer: 'Ekaterina is an early-career software developer. She completed her academic software development programme at FH CAMPUS 02 in October 2026 and previously trained in Web Development at WIFI Steiermark. She also gained 14 months of practical experience at JAWA Management Software. Her goal is to write code regularly, deepen her skills and take on increasingly independent development tasks.'
+            },
+
             personality: {
                 title: "Personality and working style",
                 answer: "Ekaterina is open and sociable. At work, she likes to set clear goals, pay attention to detail and finish on time. She enjoys connecting with positive people who have goals of their own.",
             },
+            languages: {
+                title: 'Language skills',
+                answer: 'Ekaterina has knowledge of Russian, German, English and Italian. She studied German up to C1 level and attended English courses at A2 and B1 levels. German, Italian and Russian were part of her degree in Transcultural Communication at the University of Graz. She also volunteered as a Russian interpreter.'
+                },
             teamwork: {
                 title: "Teamwork",
                 answer: "Ekaterina enjoys working in a team. She likes to keep colleagues up to date, share what she learns and lend a hand. Mutual support matters to her.",

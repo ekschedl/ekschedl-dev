@@ -2,7 +2,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { findKnowledgeTopics, type FollowUpKind } from './assistantKnowledge'
+import {
+  findKnowledgeTopics,
+  findEmployerFaqAnswer,
+  type FollowUpKind
+} from './assistantKnowledge'
 import { detectAssistantLanguage } from './assistantLanguage'
 import { cvPath } from './portfolioData'
 
@@ -12,10 +16,12 @@ const emit = defineEmits<{ openProject: [event: MouseEvent, projectId: string] }
 const assistantDialog = ref<HTMLDialogElement | null>(null)
 const assistantQuestion = ref('')
 const submittedQuestion = ref('')
+
+const employerFaqReply = ref<string | null>(null)
+
 const aiPilotEnabled = import.meta.env.VITE_PIXEL_AI_PILOT === 'true'
 const aiReply = ref('')
 let aiRequest: AbortController | undefined
-
 const contactEmail = ref('')
 const contactMessage = ref('')
 const contactWebsite = ref('')
@@ -335,16 +341,46 @@ async function requestPilotAnswer(
   }
 }
 
+
 function sendAssistantQuestion(input: string) {
   const question = input.trim()
 
   if (!question || question.length > 500) return
 
+  // Vorherige Anfrage beenden
   aiRequest?.abort()
   aiRequest = undefined
-  aiReply.value = ''
 
+  aiReply.value = ''
+  employerFaqReply.value = null
+
+  // Sprache der Frage bestimmen
+  const questionLanguage =
+    detectAssistantLanguage(question) ?? locale.value
+
+  // Zuerst die Arbeitgeber-Wissensbasis prüfen.
+  // Der FAQ-Katalog enthält derzeit deutsche Antworten.
+  if (questionLanguage === 'de') {
+    const employerAnswer = findEmployerFaqAnswer(question)
+
+    if (employerAnswer) {
+      employerFaqReply.value = employerAnswer
+
+      submittedQuestion.value = question
+      assistantQuestion.value = ''
+
+      // Alte Suchergebnisse entfernen
+      currentTopics.value = []
+      followUp.value = null
+      lastTopic.value = null
+
+      return
+    }
+  }
+
+  // Bestehende Pixel-Wissensbasis verwenden
   const matches = findKnowledgeTopics(question)
+
   const refersToProject = projectReference.test(question)
 
   const refersBack =
@@ -411,6 +447,8 @@ function sendAssistantQuestion(input: string) {
       )
     )
 
+  // Cloudflare Workers AI weiterhin verwenden,
+  // wenn keine direkte FAQ-Antwort gefunden wurde.
   if (
     aiPilotEnabled &&
     topics.length >= 1 &&
@@ -423,6 +461,7 @@ function sendAssistantQuestion(input: string) {
     void requestPilotAnswer(question, topics)
   }
 }
+
 
 async function sendContactMessage() {
   if (
@@ -659,6 +698,14 @@ async function sendContactMessage() {
       >
         <template v-if="submittedQuestion">
 
+            <article
+            v-if="employerFaqReply"
+            class="assistant-reply"
+            >
+            <p>{{ employerFaqReply }}</p>
+            </article>
+
+
           <p
             v-if="aiReply && answers.length > 1"
             class="assistant-reply"
@@ -742,7 +789,7 @@ async function sendContactMessage() {
 
           <!-- Antwort, wenn kein Thema erkannt wird -->
           <div
-            v-if="!answers.length"
+            v-if="!answers.length && !employerFaqReply"
             class="assistant-reply assistant-fallback"
           >
             <p>
