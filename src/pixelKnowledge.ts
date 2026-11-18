@@ -1,7 +1,11 @@
 // Shared facts. Translated sentences belong in locales/de.ts, en.ts and ru.ts.
 // Project dates, stacks and links remain in the shared portfolioData.ts.
 export const pixelFacts = {
-  jawa: { start: '2025-09', end: '2026-10' },
+  jawa: {
+    start: '2025-09',
+    end: '2026-10',
+    technologies: ['Vue', 'PHP', 'Xdebug', 'SQL', 'Jira Service Management']
+  },
   softwareEngineering: { completed: '2026-10' },
   hoursPerWeek: { min: 20, max: 35 }
 } as const

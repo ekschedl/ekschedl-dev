@@ -87,6 +87,8 @@ export async function onRequestPost({ request, env }) {
 
           // Berufserfahrung
           'Distinguish professional employment from education and learning projects.',
+          'For technology questions, include documented professional use as well as portfolio examples when relevant.',
+          'Do not claim that a list of examples is an exhaustive count of all her projects.',
           'Do not exaggerate Ekaterina’s experience, seniority or responsibilities.',
           'Never describe participation in a project as sole ownership or independent development.',
           'Do not claim she led a team or developed an entire client platform unless explicitly documented.',

@@ -2,6 +2,7 @@ import { employerFaq as germanFaq } from './locales/de'
 import { employerFaq as englishFaq } from './locales/en'
 import { employerFaq as russianFaq } from './locales/ru'
 import { i18n } from './i18n'
+import { pixelFacts } from './pixelKnowledge'
 import { cvPath, projects, skillGroups } from './portfolioData'
 
 export type FollowUpKind = 'interest' | 'technology' | 'duration' | 'tasks'
@@ -204,7 +205,7 @@ const topics: KnowledgeTopic[] = [
   }),
   {
     keywords: ['jawa', 'inforum', 'джава', 'джава менеджмент', '2025-09'],
-    technologies: ['php', 'xdebug', 'sql', 'jira', 'jira service management', 'php debug*', 'debug php', 'отладка php'],
+    technologies: [...pixelFacts.jawa.technologies, 'jira', 'php debug*', 'debug php', 'отладка php'],
     detailsPath: '/Berufserfahrung',
     answerKey: 'assistant.experienceReplies.2025-09',
     followUps: {
@@ -454,6 +455,8 @@ function normalizeEmployerQuestion(value: string): string {
 }
 
 const employerQuestionAliases: Record<string, number> = {
+  'welche projekte hat sie mit vue': 63,
+  'welche projekte auf vue': 63,
   'welche erfahrung hat ekaterina in der softwareentwicklung': 41,
   'welche erfahrung hat sie in der softwareentwicklung': 41,
   'welche erfahrung bringt sie in der softwareentwicklung mit': 41,
@@ -507,12 +510,17 @@ const faqIndexes = new Map([
 
 const translatedAliases = {
   en: {
+    'which projects use vue': 63,
+    'what are her vue projects': 63,
     'which languages does she speak': 159,
     'what languages does she speak': 159,
     'what did she do at jawa': 46,
     'how long did ekaterina work at jawa': 42
   },
   ru: {
+    'какие проекты на vue': 63,
+    'какие проект на vue': 63,
+    'какие у нее проекты на vue': 63,
     'какие языки она знает': 159,
     'какие языки она говорит': 159,
     'что она делала в jawa': 46,

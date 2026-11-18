@@ -4,6 +4,9 @@ const jawaStart = formatKnowledgeMonth(pixelFacts.jawa.start, 'en')
 const jawaEnd = formatKnowledgeMonth(pixelFacts.jawa.end, 'en')
 const softwareEngineeringCompletion = formatKnowledgeMonth(pixelFacts.softwareEngineering.completed, 'en')
 
+// Vom Nutzer bestätigte Berufserfahrung. Die Dauer stammt aus den gemeinsamen Fakten.
+const jawaVueExperience = `Ekaterina worked with Vue at JAWA Management Software GmbH for ${jawaExperienceMonths} months.`
+
 const messages = {
   latestProjects: 'Recently built',
   allProjectsLink: 'All projects',
@@ -50,9 +53,9 @@ const messages = {
         projectDemoLink: 'Open live demo',
         followUp: {
             jawaInterest: 'Ekaterina writes that getting to the root of bugs in the code motivated her at JAWA. She doesn’t describe her overall experience there in more detail.',
-            jawaTechnology: 'At JAWA, Ekaterina worked with PHP, Xdebug, SQL and Jira Service Management. She used Xdebug to investigate issues in PHP code.',
+            jawaTechnology: jawaVueExperience + " " + 'At JAWA, Ekaterina worked with PHP, Xdebug, SQL and Jira Service Management. She used Xdebug to investigate issues in PHP code.',
             jawaDuration: `Ekaterina worked at JAWA in Graz from ${jawaStart} to ${jawaEnd}.`,
-            jawaTasks: 'At JAWA, Ekaterina contributed to client projects and the INFORUM management platform. Her tasks included investigating issues and troubleshooting PHP code.',
+            jawaTasks: jawaVueExperience + " " + 'At JAWA, Ekaterina contributed to client projects and the INFORUM management platform. Her tasks included investigating issues and troubleshooting PHP code.',
             projectTechnology: 'Here are the technologies used in this project: {stack}.',
             interestUnknown: 'The portfolio doesn’t say what Ekaterina liked about that experience.',
             detailUnknown: 'I couldn’t find a more specific answer to that follow-up in the portfolio. Feel free to ask about a particular detail.',
@@ -79,7 +82,7 @@ const messages = {
         personalReplies: {
             softwareExperience: {
                 title: 'Practical software development experience',
-                answer: `Ekaterina started with web development training at WIFI Steiermark. For her diploma project, she built Feta, a website for a lollipop manufacturer, with a custom responsive WordPress theme, a product catalogue and a contact form. She continued her software development studies at FH CAMPUS 02 and gained practical experience with PHP, SQL, Xdebug and existing applications at JAWA Management Software from ${jawaStart} to ${jawaEnd}. Her training and portfolio projects include Java, Vue, C# and Swift.`,
+                answer: jawaVueExperience + " " + `Ekaterina started with web development training at WIFI Steiermark. For her diploma project, she built Feta, a website for a lollipop manufacturer, with a custom responsive WordPress theme, a product catalogue and a contact form. She continued her software development studies at FH CAMPUS 02 and gained practical experience with PHP, SQL, Xdebug and existing applications at JAWA Management Software from ${jawaStart} to ${jawaEnd}. Her training and portfolio projects include Java, Vue, C# and Swift.`,
             },
 
             juniorProfile: {
@@ -143,7 +146,7 @@ const messages = {
         overview: {
             experience: "Ekaterina worked in securities, hospitality and interpreting before moving into software development. You can explore each stage in the Work experience section.",
             projects: "Ekaterina’s portfolio includes YogaNow Studio, a to-do app, a shop demo, hotel and gift management apps, websites for Feta and Café Mokka, and two versions of UNO. Feel free to try the available demos.",
-            technologies: 'Ekaterina has built web apps with Vue and TypeScript and a hotel management application with Java. At JAWA, she worked on existing software using PHP and SQL.',
+            technologies: jawaVueExperience + " " + 'Ekaterina has built web apps with Vue and TypeScript and a hotel management application with Java. At JAWA, she worked on existing software using PHP and SQL.',
             contact: "You can find Ekaterina’s GitHub profile in the contact section. She would be happy to hear about interesting projects and software development roles.",
             python: "Ekaterina wants to explore how models learn from data and how to tell whether their results are reliable. She plans to start with a Python course in Hagen in late November 2026.",
             ai: "Ekaterina uses AI to try more ideas and narrow down the causes of bugs. She checks suggestions against the code and decides which approach to pursue.",
@@ -183,7 +186,7 @@ const messages = {
             "2014-04": "Ekaterina volunteered as a Russian interpreter at the Caritas Marienambulanz from April 2014 to October 2015.",
             "2015-12": "Ekaterina was on parental leave from December 2015 to January 2020. She then went on to work in hospitality.",
             "2020-08": "Ekaterina worked at the front desk of Boutiquehotel Dom in Graz for four years, from August 2020 to July 2024.",
-            "2025-09": `From ${jawaStart} to ${jawaEnd}, Ekaterina worked in software development at JAWA Management Software GmbH in Graz. She contributed to client projects and the modular management platform INFORUM. She investigated issues, used Xdebug to troubleshoot PHP code and worked with SQL and Jira Service Management.`,
+            "2025-09": jawaVueExperience + " " + `From ${jawaStart} to ${jawaEnd}, Ekaterina worked in software development at JAWA Management Software GmbH in Graz. She contributed to client projects and the modular management platform INFORUM. She investigated issues, used Xdebug to troubleshoot PHP code and worked with SQL and Jira Service Management.`,
         },
     },
     welcome: 'Welcome',
@@ -529,6 +532,7 @@ const messages = {
         "2025-09": {
           role: "Software development",
           tasks: [
+            "Worked with Vue",
             "Contributed to client projects and the modular INFORUM platform",
             "Investigated issues and debugged PHP with Xdebug",
             "Worked with SQL and Jira Service Management"
@@ -635,7 +639,7 @@ export const employerFaq = [
   { id: 45, question: "How many client projects was she involved in?",
     answer: "She reports working with code from 16 manufacturing-industry client projects. This does not mean she independently developed or led them." },
   { id: 46, question: "What were her tasks at JAWA?",
-    answer: "She investigated reported issues, analysed PHP code and worked with databases, using Jira Service Management in client-project work." },
+    answer: jawaVueExperience + " " + "She investigated reported issues, analysed PHP code and worked with databases, using Jira Service Management in client-project work." },
   { id: 47, question: "Has she worked with PHP?",
     answer: "Yes. At JAWA she used PHP, particularly to trace and investigate existing application code." },
   { id: 48, question: "Has she worked with SQL?",
@@ -657,7 +661,7 @@ export const employerFaq = [
   { id: 56, question: "What did she particularly enjoy at JAWA?",
     answer: "She enjoyed investigating error causes and understanding technical relationships, especially tracing how an application behaves during debugging." },
   { id: 57, question: "Did she gain frontend or backend experience at JAWA?",
-    answer: "Her documented JAWA work included PHP, SQL and debugging an existing application. Frontend experience also comes from her training and personal projects." },
+    answer: jawaVueExperience + " " + "Her professional work at JAWA included Vue, PHP, SQL and debugging existing applications." },
   { id: 58, question: "Has she worked with production business software?",
     answer: "Yes. JAWA involved code from client projects and an existing modular management platform, beyond purely academic exercises." },
   { id: 59, question: "Was Ekaterina a team lead at JAWA?",
@@ -669,7 +673,7 @@ export const employerFaq = [
   { id: 62, question: "Which web development technologies does she use?",
     answer: "Her web projects include HTML, CSS, JavaScript, Vue 3, TypeScript, Pinia and REST APIs, as well as WordPress and PHP." },
   { id: 63, question: "Does Ekaterina have Vue 3 experience?",
-    answer: "Yes. Her Vue 3 projects include the to-do app and ShopPlatzi. Her portfolio website also uses Vue." },
+    answer: "Her Vue 3 projects include the to-do app and ShopPlatzi. Her portfolio website also uses Vue." + " " + jawaVueExperience },
   { id: 64, question: "Does she know TypeScript?",
     answer: "TypeScript is used in her projects, including Vue applications. Project use alone does not establish mastery of every TypeScript feature." },
   { id: 65, question: "Does she have JavaScript experience?",
@@ -1151,7 +1155,7 @@ export const employerFaq = [
   { id: 303, question: "Would she suit maintenance and further development work?",
     answer: "PHP, Xdebug and SQL experience can provide a starting point. New technologies and more complex requirements would require further learning." },
   { id: 304, question: "Would she suit a frontend-only role?",
-    answer: "Her web projects with Vue, JavaScript, HTML and CSS provide relevant foundations and examples for a junior frontend role." },
+    answer: jawaVueExperience + " " + "Her web projects with Vue, JavaScript, HTML and CSS complement her professional experience and provide a foundation for a junior frontend role." },
   { id: 305, question: "Would a junior backend role suit her?",
     answer: "She has studied and applied backend and database programming. A junior role with suitable onboarding could fit her goals." },
   { id: 306, question: "Would she suit PHP development?",
