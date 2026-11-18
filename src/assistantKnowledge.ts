@@ -2174,29 +2174,25 @@ const employerIndex = employerFaq.map(entry => ({
 }))
 
 /** Liefert eine nachweislich hinterlegte deutsche Antwort oder null. */
+
+/** Liefert eine nachweislich hinterlegte deutsche Antwort oder null. */
 export function findEmployerFaqAnswer(question: string): string | null {
   const normalized = normalizeEmployerQuestion(question)
+
   if (!normalized) return null
+
   const aliasedId = employerQuestionAliases[normalized]
-  if (aliasedId !== undefined) return employerFaq[aliasedId - 1].answer
-  const exact = employerIndex.find(item => item.normalized === normalized)
+
+  if (aliasedId !== undefined) {
+    const entry = employerFaq[aliasedId - 1]
+    return entry?.answer ?? null
+  }
+
+  const exact = employerIndex.find(
+    item => item.normalized === normalized
+  )
+
   if (exact) return exact.entry.answer
 
-  // Paraphrasen nur bei eindeutigem, hohem Wortüberlappungsgrad beantworten.
-  // Bei Unsicherheit lieber die vorhandene Themen-/KI-Logik verwenden.
-  const terms = new Set(normalized.split(' ').filter(
-    w => w.length >= 4 && !['ekaterina', 'schedlberger', 'welche', 'welcher', 'welches', 'diese', 'ihrer', 'ihrem', 'ihren', 'einer', 'einen', 'kannst', 'konnen'].includes(w)
-  ))
-  if (terms.size < 2) return null
-  const ranked = employerIndex.map(item => {
-    const intersection = [...terms].filter(term => item.terms.has(term)).length
-    const union = new Set([...terms, ...item.terms]).size
-    return { item, intersection, score: intersection / Math.max(1, union) }
-  }).sort((a, b) => b.score - a.score)
-  const [best, second] = ranked
-  if (best && best.intersection >= 2 && best.score >= 0.8 &&
-      (!second || best.score - second.score >= 0.12)) {
-    return best.item.entry.answer
-  }
   return null
 }
