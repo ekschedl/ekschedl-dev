@@ -232,7 +232,16 @@ const topics: KnowledgeTopic[] = [
     }
   }),
   {
-    keywords: ['ausbildung', 'studium', 'education', 'qualification*', 'образован*', 'учила*', 'училась', 'университет*'],
+
+    keywords: [
+      'ausbildung', 'studium', 'education', 'qualification*',
+      'образован*', 'учила*', 'училась', 'университет*',
+      'was hat sie gelernt',
+      'was hat ekaterina gelernt',
+      'was hat sie in der ausbildung gelernt',
+      'welche fächer hat sie gelernt',
+      'welche kenntnisse hat sie erworben'
+    ],
     titleKey: 'educationPage.title',
     overview: true,
     detailsPath: '/Ausbildung',
@@ -254,8 +263,18 @@ const topics: KnowledgeTopic[] = [
     answerKey: 'assistant.overview.projects'
   },
   {
+
     keywords: [
-      'technologien', 'technologies', 'tech stack', 'skills', 'kenntnisse', 'технолог*', 'навык*', 'инструмент*',
+      'technologien', 'technologies', 'tech stack',
+      'skills', 'kenntnisse', 'технолог*', 'навык*',
+      'инструмент*',
+      'was kann sie',
+      'was kann ekaterina',
+      'was kann sie programmieren',
+      'welche fähigkeiten hat sie',
+      'welche programmiersprachen kennt sie',
+      'welche kenntnisse bringt sie mit',
+      'was beherrscht sie',
       ...skills
     ],
     titleKey: 'technologiesTitle',
