@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { pixelFacts } from './pixelKnowledge'
 
 const { locale, t, tm, rt } = useI18n({ useScope: 'global' })
 
@@ -174,7 +175,7 @@ function formatMonth(value: string) {
           <li v-for="(task, index) in tm(`experiencePage.entries.${entry.start}.tasks`)" :key="index">{{ rt(task) }}</li>
         </ul>
         <ul v-if="entry.institution === 'JAWA Management Software GmbH'" class="experience-stack" :aria-label="t('experiencePage.techStack')">
-          <li v-for="tool in ['PHP', 'Xdebug', 'SQL', 'Jira Service Management', 'INFORUM']" :key="tool">
+          <li v-for="tool in [...pixelFacts.jawa.technologies, 'INFORUM']" :key="tool">
             {{ tool }}
           </li>
         </ul>
