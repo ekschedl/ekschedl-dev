@@ -48,7 +48,7 @@ export async function onRequestPost({ request, env }) {
   const topics = input?.topics ?? (Array.isArray(input?.projects) ? input.projects : [input?.project])
     .map(id => typeof id === 'string' ? `assistant.projectReplies.${id}` : null)
   if (!question || question.length > 500 || !language || !Array.isArray(topics) ||
-      topics.length < 1 || topics.length > 3 || topics.some(topic => !sourcesByTopic.has(topic))) {
+      topics.length < 1 || topics.length > 5 || topics.some(topic => !sourcesByTopic.has(topic))) {
     return json({ error: 'input' }, 400)
   }
   const localizedSources = getPixelSources(input.language)

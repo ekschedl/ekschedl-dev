@@ -89,6 +89,14 @@ export const projects = [
     url: 'https://github.com/ekschedl/NowaUno',
     demoUrl: unoWebDemoUrl,
     stack: 'HTML · CSS · JavaScript · Node.js · Express · REST-API'
+  },
+  {
+    id: 'portfolio',
+    createdAt: '2026-11',
+    area: 'web',
+    image: '/images/pixel-avatar.png',
+    url: 'https://github.com/ekschedl/ekschedl-dev',
+    stack: 'Vue 3 · TypeScript · Cloudflare Workers AI'
   }
 ] as const
 

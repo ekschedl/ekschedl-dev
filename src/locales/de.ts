@@ -6,6 +6,9 @@ const jawaEnd = formatKnowledgeMonth(pixelFacts.jawa.end, 'de')
 const softwareEngineeringCompletion = formatKnowledgeMonth(pixelFacts.softwareEngineering.completed, 'de')
 
 // Vom Nutzer bestätigte Berufserfahrung. Die Dauer stammt aus den gemeinsamen Fakten.
+// Gemeinsame Projektantwort für Pixel und die zugehörigen FAQ.
+const portfolioAssistantReply = "Der KI-Assistent gehört zu Ekaterinas Portfolio-Website, die sie mit Unterstützung von KI entwickelt und schrittweise erweitert. Die Website nutzt Vue 3, TypeScript, Vue I18n und Vite und stellt ihre Projekte, Ausbildung und Berufserfahrung auf Deutsch, Englisch und Russisch vor. Pixel verbindet vorbereitete FAQ-Antworten mit einer optionalen KI-Funktion über Cloudflare Pages Functions und Workers AI. Zum Kontaktformular gehören die Spam-Prüfung mit Turnstile und der E-Mail-Versand über Resend."
+
 const jawaVueExperience = `Ekaterina hat ${jawaExperienceMonths} Monate bei JAWA Management Software GmbH mit Vue gearbeitet.`
 
 export default {
@@ -122,11 +125,11 @@ export default {
                 answer: "Ekaterina ist schon mehrmals einen Halbmarathon gelaufen. Sie trainiert Pole Sport, tanzt gern Hip-Hop und liebt es, zu reisen und dabei Neues kennenzulernen.",
             },
         },
-        name: 'Pixel',
+        name: "KI-Assistent",
         title: 'KI-Assistent',
-        status: 'Ich bin noch in Bearbeitung.',
-        statusNote: 'Ende dieser Woche bin ich perfekt!',
-        greeting: 'Guten Tag! Ich bin Pixel, Ekaterinas Assistent. Ich erzähle Ihnen gern von ihren Projekten, ihrer Ausbildung und ihrer Berufserfahrung oder helfe Ihnen, die passende Seite zu finden.',
+        status: "Testversion",
+        statusNote: "Bitte wichtige Angaben prüfen.",
+        greeting: "Dieser KI-Assistent beantwortet Fragen zu Ekaterinas Projekten, Ausbildung und Berufserfahrung und hilft, passende Informationen auf der Website zu finden.",
         questionLabel: 'Ihre Frage',
         send: 'Senden',
         whichProject: "Welches Projekt meinen Sie? Nennen Sie mir gern den Projektnamen.",
@@ -144,13 +147,14 @@ export default {
         },
         overview: {
             experience: "Ekaterinas Weg führte vom Wertpapierbereich über die Hotellerie und das Dolmetschen in die Softwareentwicklung. Heute bringt sie diese Erfahrungen in ihre Arbeit ein. In der Rubrik Berufserfahrung finden Sie die einzelnen Stationen.",
-            projects: "Ekaterinas Projekte reichen von der Yoga-App YogaNow Studio über eine Aufgabenliste und eine Shop-Demo bis zur Hotel- und Geschenkeverwaltung. Sie finden dort auch die Websites für Feta und das Kaffeehaus Mokka sowie zwei Varianten von UNO. Probieren Sie gern eine der verfügbaren Demos aus.",
+            projects: "Ekaterinas Projekte reichen von der Yoga-App YogaNow Studio über eine Aufgabenliste und eine Shop-Demo bis zur Hotel- und Geschenkeverwaltung. Sie finden dort auch die Websites für Feta und das Kaffeehaus Mokka sowie zwei Varianten von UNO. Probieren Sie gern eine der verfügbaren Demos aus." + " Dazu gehört auch ihre eigene mehrsprachige Portfolio-Website mit dem KI-Assistenten Pixel.",
             technologies: jawaVueExperience + " " + 'Ekaterina hat mit Vue und TypeScript Webanwendungen umgesetzt, mit Java eine Hotelverwaltung gebaut und bei JAWA mit PHP und SQL an bestehender Software gearbeitet.',
             contact: "Wenn Sie mit Ekaterina in Kontakt treten möchten, finden Sie ihr GitHub-Profil im Kontaktbereich des Portfolios. Sie freut sich über interessante Projekte und passende Stellenangebote in der Softwareentwicklung.",
             python: "Ekaterina möchte selbst ausprobieren, wie Modelle aus Daten lernen und woran sich verlässliche Ergebnisse erkennen lassen. Ihr Einstieg ist ein Python-Kurs in Hagen, der für Ende November 2026 geplant ist.",
             ai: "Ekaterina nutzt KI, um beim Entwickeln mehr Ideen auszuprobieren und Fehler gezielter einzugrenzen. Sie prüft die Vorschläge am Code und entscheidet selbst, welchen Ansatz sie weiterverfolgt.",
         },
         projectReplies: {
+            portfolio: portfolioAssistantReply,
             yoganow: "YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team hat Ekaterina das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform übernommen. Die Galerie zeigt Ihnen, wie die Buchung abläuft.",
             todo: "In Ekaterinas To-do-App können Sie Aufgaben hinzufügen, abhaken und löschen. Pinia speichert die Aufgaben im Browser. Probieren Sie die Demo gern mit ein paar eigenen Aufgaben aus.",
             shopplatzi: "In der Shop-Demo können Sie Produkte suchen, nach Kategorien filtern, Favoriten markieren und Artikel in den Warenkorb legen. Die Produktdaten kommen aus der Platzi Fake Store API.",
@@ -258,7 +262,19 @@ export default {
         'Ich freue mich über interessante Projekte, neue Herausforderungen und berufliche Möglichkeiten in der Softwareentwicklung.',
     github: 'Mein GitHub',
     email: 'E-Mail schreiben',
+    portfolioDetails: {
+    "open": "Projekt kennenlernen",
+    "intro": "Die Website verbindet Projektgalerien, Live-Demos und Informationen zu Ausbildung und Berufserfahrung. Ein integrierter KI-Assistent hilft Besuchern, passende Antworten zu finden.",
+    "interface": "Oberfläche, Projektfilter, Galerien und interaktive Funktionen.",
+    "languages": "Deutsche, englische und russische Sprachversionen mit gemeinsamen Fakten und übersetzten Texten.",
+    "ai": "Vorbereitete FAQ-Antworten und eine optionale KI-Funktion auf Basis der hinterlegten Portfolioinformationen.",
+    "contact": "Spam-Prüfung für das Kontaktformular und Versand der Nachrichten per E-Mail.",
+    "development": "Mit Unterstützung von KI entwickelt und schrittweise erweitert.",
+    "exploreHint": "Stöbern Sie durch die Website, probieren Sie den Assistenten aus und machen Sie sich selbst ein Bild.",
+    "explore": "Website erkunden"
+},
     projectDescriptions: {
+        portfolio: "Interaktive Portfolio-Website mit Projektgalerien, Live-Demos und Kontaktformular. Der KI-Assistent beantwortet Fragen zu Projekten, Ausbildung und Berufserfahrung auf Deutsch, Englisch und Russisch. Mit Unterstützung von KI entwickelt und schrittweise erweitert.",
         yoganow: "YogaNow Studio verbindet eine frei zugängliche Yoga-Bibliothek mit der Buchung von Studiokursen. Im Team war ich für das Design, die Datenbankanbindung mit Supabase und die Kursbuchungsplattform zuständig.",
         uno: "Im Team entwickeltes UNO-Kartenspiel für die Java-Konsole. Karten, Spieler und Spielrunden sind als Java-Klassen modelliert. Das Spiel prüft die Spielzüge und unterstützt Aktionskarten wie „Aussetzen“ und „Richtungswechsel“. Über JDBC speichert das Spiel die Punktestände in SQLite und ruft die Bestenliste per SQL ab.",
         kaffeehaus: "Kaffeehaus-Website mit Speisekarte, Bildergalerie und Kontaktformular, entstanden als Übungsprojekt an der FH CAMPUS 02. Der überschaubare Umfang ließ Raum für die Grundlagen der Webentwicklung: Seiten mit HTML strukturieren, Layouts mit CSS Grid und Flexbox an verschiedene Bildschirmgrößen anpassen und eine Bildergalerie mit JavaScript und Swiper einbinden.",
@@ -273,6 +289,7 @@ export default {
     inlineDemo: 'Demo hier testen',
     projectLink: 'Projekt auf GitHub ansehen',
     projectTitles: {
+        portfolio: "Portfolio & KI-Assistent",
         yoganow: 'YogaNow Studio',
         uno: 'UNO-Kartenspiel',
         kaffeehaus: 'Kaffeehaus Mokka',
@@ -288,6 +305,7 @@ export default {
     backToTop: 'Nach oben',
 
     galleryCaptions: {
+    portfolioPixel: "KI-Assistent der Portfolio-Website",
     // Hotelverwaltung
     hotelOverview: 'Konsolenausgabe · Zimmerübersicht mit Kategorie, Preis und Verfügbarkeit',
     hotelPrices: 'Zimmer nach Preis',
@@ -1926,7 +1944,7 @@ export const employerFaq = [
   {
     "id": 277,
     "question": "Ist ihre Portfolio-Website selbst ein Projekt?",
-    "answer": "Ja. Ekaterina entwickelt ihre Portfolio-Website weiter und nutzt sie, um ihre Projekte, ihren Lernfortschritt und ihre technischen Interessen zu präsentieren. Der Assistent Pixel ist ein Teil dieser Weiterentwicklung."
+    "answer": "Ja. " + portfolioAssistantReply
   },
   {
     "id": 278,
@@ -1936,7 +1954,7 @@ export const employerFaq = [
   {
     "id": 279,
     "question": "Welche Technologien nutzt Pixel?",
-    "answer": "Die Portfolio-Oberfläche verwendet Vue, während die optionale KI-Antwortfunktion über eine Cloudflare Pages Function mit Workers AI verbunden ist. Daneben gibt es vorbereitete Antworten und eine Kontaktfunktion."
+    "answer": portfolioAssistantReply
   },
   {
     "id": 280,

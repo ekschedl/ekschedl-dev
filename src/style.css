@@ -395,6 +395,12 @@ select:focus-visible {
   transition: transform .3s ease;
 }
 
+/* Dezentes Symbol für das Portfolio-Projekt im Bereich „Zuletzt gebaut“. */
+.project-tile[href="#portfolio"] .tile-project-image img {
+  width: clamp(40px, 6vw, 72px);
+  height: clamp(40px, 6vw, 72px);
+}
+
 .project-tile:hover img {
   transform: scale(1.05);
 }

@@ -6,6 +6,9 @@ const jawaEnd = formatKnowledgeMonth(pixelFacts.jawa.end, 'en')
 const softwareEngineeringCompletion = formatKnowledgeMonth(pixelFacts.softwareEngineering.completed, 'en')
 
 // Vom Nutzer bestätigte Berufserfahrung. Die Dauer stammt aus den gemeinsamen Fakten.
+// Gemeinsame Projektantwort für Pixel und die zugehörigen FAQ.
+const portfolioAssistantReply = "The AI assistant is part of Ekaterina’s portfolio website, developed with AI assistance and expanded step by step. Built with Vue 3, TypeScript, Vue I18n and Vite, the website presents her projects, education and experience in German, English and Russian. Pixel combines prepared FAQ answers with optional AI through Cloudflare Pages Functions and Workers AI. The contact form uses Turnstile for spam protection and Resend for email delivery."
+
 const jawaVueExperience = `Ekaterina worked with Vue at JAWA Management Software GmbH for ${jawaExperienceMonths} months.`
 
 const messages = {
@@ -124,11 +127,11 @@ const messages = {
                 answer: "Ekaterina has run several half marathons. She practises pole sport, enjoys hip-hop dance and loves travelling and learning new things along the way.",
             },
         },
-        name: 'Pixel',
+        name: "AI Assistant",
         title: 'AI assistant',
-        status: 'I’m still a work in progress.',
-        statusNote: 'I’ll be perfect by the end of the week!',
-        greeting: 'Hi! I’m Pixel, Ekaterina’s assistant. I can tell you about her projects, education and work experience or help you find the right page.',
+        status: "Test version",
+        statusNote: "Please verify important details.",
+        greeting: "This AI assistant answers questions about Ekaterina’s projects, education and work experience and helps visitors find information on the website.",
         questionLabel: 'Your question',
         send: 'Send',
         whichProject: "Which project do you mean? Please tell me its name.",
@@ -146,13 +149,14 @@ const messages = {
         },
         overview: {
             experience: "Ekaterina worked in securities, hospitality and interpreting before moving into software development. You can explore each stage in the Work experience section.",
-            projects: "Ekaterina’s portfolio includes YogaNow Studio, a to-do app, a shop demo, hotel and gift management apps, websites for Feta and Café Mokka, and two versions of UNO. Feel free to try the available demos.",
+            projects: "Ekaterina’s portfolio includes YogaNow Studio, a to-do app, a shop demo, hotel and gift management apps, websites for Feta and Café Mokka, and two versions of UNO. Feel free to try the available demos." + " Her own multilingual portfolio website with the AI assistant Pixel is also one of her projects.",
             technologies: jawaVueExperience + " " + 'Ekaterina has built web apps with Vue and TypeScript and a hotel management application with Java. At JAWA, she worked on existing software using PHP and SQL.',
             contact: "You can find Ekaterina’s GitHub profile in the contact section. She would be happy to hear about interesting projects and software development roles.",
             python: "Ekaterina wants to explore how models learn from data and how to tell whether their results are reliable. She plans to start with a Python course in Hagen in late November 2026.",
             ai: "Ekaterina uses AI to try more ideas and narrow down the causes of bugs. She checks suggestions against the code and decides which approach to pursue.",
         },
         projectReplies: {
+            portfolio: portfolioAssistantReply,
             yoganow: "YogaNow Studio combines a free yoga library with studio class booking. On the team, Ekaterina was responsible for the design, the Supabase database integration and the booking platform. The gallery shows you how booking works.",
             todo: "In Ekaterina’s to-do app, you can add, complete and delete tasks. Pinia saves them in the browser. Feel free to try the demo with a few tasks of your own.",
             shopplatzi: "The shop demo lets you search for products, filter by category, save favourites and add items to your cart. It loads product data from the Platzi Fake Store API.",
@@ -260,7 +264,19 @@ const messages = {
       'I am open to interesting projects, new challenges and career opportunities in software development.',
     github: 'My GitHub',
     email: 'Send an email',
+    portfolioDetails: {
+    "open": "Explore this project",
+    "intro": "The website combines project galleries, live demos and information about education and work experience. An integrated AI assistant helps visitors find relevant answers.",
+    "interface": "The interface, project filters, galleries and interactive features.",
+    "languages": "German, English and Russian versions using shared facts and translated text.",
+    "ai": "Prepared FAQ answers and optional AI responses based on the documented portfolio information.",
+    "contact": "Spam protection for the contact form and delivery of messages by email.",
+    "development": "Developed with AI assistance and expanded step by step.",
+    "exploreHint": "Browse the website, try the assistant and form your own impression.",
+    "explore": "Explore the website"
+},
     projectDescriptions: {
+        portfolio: "Interactive portfolio website with project galleries, live demos and a contact form. The AI assistant answers questions about projects, education and work experience in German, English and Russian. Developed with AI assistance and expanded step by step.",
         yoganow: "YogaNow Studio combines a free yoga library with studio class booking. In the team, I was responsible for the design, the Supabase database integration and the class booking platform.",
         uno: "A Java console version of UNO developed as a team. Cards, players and rounds are modelled as Java classes. The game validates moves and supports action cards such as Skip and Reverse. The game stores scores in SQLite via JDBC and retrieves the leaderboard with SQL.",
         kaffeehaus: "A coffee house website with a menu, photo gallery and contact form, built as a coursework project at FH CAMPUS 02. The small scope left room to practise the fundamentals: structuring pages with HTML, adapting layouts to different screen sizes with CSS Grid and Flexbox, and integrating an image gallery with JavaScript and Swiper.",
@@ -275,6 +291,7 @@ const messages = {
     inlineDemo: 'Try the demo here',
     projectLink: 'View project on GitHub',
     projectTitles: {
+        portfolio: "Portfolio & AI Assistant",
         yoganow: 'YogaNow Studio',
         uno: 'UNO Card Game',
         kaffeehaus: 'Mokka Coffee House',
@@ -290,6 +307,7 @@ const messages = {
     backToTop: 'Back to top',
 
     galleryCaptions: {
+    portfolioPixel: "The portfolio website’s AI assistant",
     // Hotel Management
     hotelOverview: 'Console output · Room overview with categories, prices and availability',
     hotelPrices: 'Rooms by price',
@@ -1102,11 +1120,11 @@ export const employerFaq = [
   { id: 276, question: "Has she extended projects beyond their original training scope?",
     answer: "Her individual extension of CAMPUS02 ColorSpiel added a backend, her own graphics and a winter mode." },
   { id: 277, question: "Is her portfolio website itself a project?",
-    answer: "She continues developing her portfolio to present projects, learning progress and technical interests. Pixel is part of that development." },
+    answer: "Yes. " + portfolioAssistantReply },
   { id: 278, question: "Why did she add an AI assistant to her website?",
     answer: "Pixel helps visitors find education, experience and project information, while providing practice integrating AI into a web application." },
   { id: 279, question: "Which technologies does Pixel use?",
-    answer: "The portfolio uses Vue, with optional AI answers via a Cloudflare Pages Function and Workers AI, alongside prepared answers and a contact function." },
+    answer: portfolioAssistantReply },
   { id: 280, question: "What is Ekaterina learning by developing Pixel?",
     answer: "Pixel combines interfaces, languages, API requests and reliable information handling. She explores natural responses that avoid unsupported claims." },
   { id: 281, question: "What finance experience does Ekaterina have?",

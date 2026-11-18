@@ -111,6 +111,11 @@ const fetaSlides = [
 ] as const
 
 const projectGalleries = {
+  portfolio: {
+    slides: [
+      { image: '/images/pixel-avatar.png', captionKey: 'portfolioPixel' }
+    ]
+  },
   geschenkeverwaltung: {
     slides: [
       { image: '/images/geschenkeverwaltung-vorschau.png', captionKey: 'giftsOverview' },
@@ -687,7 +692,7 @@ function scrollToTop() {
             class="project-card"
           >
             <button class="project-visual project-cover" :data-area="project.area"
-              type="button" aria-haspopup="dialog" :aria-label="(project.title) + ' · ' + t('galleryControls.open')"
+              type="button" aria-haspopup="dialog" :aria-label="project.title + ' · ' + t(project.id === 'portfolio' ? 'portfolioDetails.open' : 'galleryControls.open')"
               @click="openProjectGallery(project.id)">
               <span class="project-cover-frame">
                 <img :src="project.image" alt="" loading="lazy" />
@@ -720,7 +725,7 @@ function scrollToTop() {
               <div v-else class="project-card-actions">
                 <button type="button" aria-haspopup="dialog"
                   @click="openProjectGallery(project.id, project.id === 'yoganow' ? yogaSlides.length - 1 : 0)">
-                  {{ project.id === 'yoganow' ? t('yogaDemo.action') : t('galleryControls.open') }}
+                  {{ project.id === 'portfolio' ? t('portfolioDetails.open') : project.id === 'yoganow' ? t('yogaDemo.action') : t('galleryControls.open') }}
                   <span aria-hidden="true">↗</span>
                 </button>
               </div>
@@ -861,6 +866,7 @@ function scrollToTop() {
 
     <dialog ref="hotelGallery" class="hotel-gallery" :class="{
       'hotel-gallery--hotel': galleryProject === 'hotelverwaltung',
+      'hotel-gallery--portfolio': galleryProject === 'portfolio',
       'hotel-gallery-video': 'video' in hotelSlide,
       'hotel-gallery-video-wide': galleryProject === 'uno' && 'video' in hotelSlide
     }" :aria-label="activeGallery.title"
@@ -875,6 +881,33 @@ function scrollToTop() {
         </button>
         <button type="button" autofocus :aria-label="t('galleryControls.close')" @click="hotelGallery?.close()">×</button>
       </div>
+      <div v-if="galleryProject === 'portfolio'" class="portfolio-details">
+        <p>{{ t('portfolioDetails.intro') }}</p>
+        <dl>
+          <div>
+            <dt>Vue 3 · TypeScript</dt>
+            <dd>{{ t('portfolioDetails.interface') }}</dd>
+          </div>
+          <div>
+            <dt>Vue I18n</dt>
+            <dd>{{ t('portfolioDetails.languages') }}</dd>
+          </div>
+          <div>
+            <dt>Cloudflare Pages Functions · Workers AI</dt>
+            <dd>{{ t('portfolioDetails.ai') }}</dd>
+          </div>
+          <div>
+            <dt>Turnstile · Resend</dt>
+            <dd>{{ t('portfolioDetails.contact') }}</dd>
+          </div>
+        </dl>
+        <p>{{ t('portfolioDetails.development') }}</p>
+        <p>{{ t('portfolioDetails.exploreHint') }}</p>
+        <a class="primary-link" :href="homeLink('#home')" @click="hotelGallery?.close()">
+          {{ t('portfolioDetails.explore') }} ↗
+        </a>
+      </div>
+      <template v-else>
       <figure aria-live="polite" @click.self="hotelGallery?.close()">
         <video v-if="'video' in hotelSlide" ref="galleryVideo" :src="hotelSlide.video"
           :poster="hotelSlide.poster"
@@ -907,6 +940,7 @@ function scrollToTop() {
       </div>
       <a v-if="'image' in hotelSlide" :href="hotelSlide.image" target="_blank" rel="noopener">{{ t('galleryControls.full') }} ↗</a>
       <p v-if="galleryProject === 'yoganow'" class="yoga-gallery-access">{{ t('yogaDemo.access') }}</p>
+      </template>
     </dialog>
 
     <dialog ref="demoSettings" class="hotel-gallery demo-settings" aria-labelledby="demo-settings-title">
@@ -1330,6 +1364,18 @@ function scrollToTop() {
   object-position: center;
 }
 
+/* Das Pixel-Icon bleibt klein und mittig im gemeinsamen Kartenrahmen. */
+#portfolio .project-cover-frame {
+  display: grid;
+  place-items: center;
+}
+
+#portfolio .project-cover-frame > img {
+  width: min(35%, 96px);
+  height: auto;
+  object-fit: contain;
+}
+
 .project-cover-expand {
   position: absolute;
   inset-block-start: 6px;
@@ -1390,6 +1436,44 @@ function scrollToTop() {
   height: auto;
   margin-inline: auto;
   border-radius: 8px;
+}
+
+.hotel-gallery--portfolio {
+  width: min(92vw, 720px);
+  text-align: start;
+}
+
+.portfolio-details p {
+  line-height: 1.6;
+}
+
+.portfolio-details dl {
+  margin: 20px 0;
+}
+
+.portfolio-details dl > div {
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) 2fr;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.portfolio-details dt {
+  font-weight: 600;
+}
+
+.portfolio-details dd {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+@media (max-width: 520px) {
+  .portfolio-details dl > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }
 
 .hotel-gallery-image {

@@ -451,12 +451,12 @@ function sendAssistantQuestion(input: string) {
       )
     )
 
-  // KI nur bei aktivem Pilot und ein bis drei freigegebenen Themen aufrufen.
+  // KI nur bei aktivem Pilot und ein bis fünf freigegebenen Themen aufrufen.
   // Bei fehlender Themenerkennung wird die KI hier nicht gestartet.
   if (
     aiPilotEnabled &&
     topics.length >= 1 &&
-    topics.length <= 3 &&
+    topics.length <= 5 &&
     !usePreparedFollowUp &&
     topics.every(key =>
       aiAnswerTopics.has(key) ||
@@ -614,7 +614,6 @@ async function sendContactMessage() {
       <!-- Begrüßung -->
       <p class="assistant-message">
         {{ t('assistant.greeting') }}
-        <span aria-hidden="true">🙂</span>
       </p>
 
       <!-- Abschnittsüberschrift -->

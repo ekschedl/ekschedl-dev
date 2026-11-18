@@ -26,6 +26,11 @@ interface KnowledgeTopic {
 }
 
 const projectAliases = {
+  portfolio: [
+    'pixel', 'portfolio website', 'portfolio webseite', 'portfolio mit pixel',
+    'diese website', 'this website', 'this portfolio website',
+    'этот сайт', 'сайт портфолио', 'портфолио с pixel'
+  ],
   yoganow: ['yoganow', 'yoga', 'ios', 'йог*'],
   todo: ['to do', 'todo', 'aufgaben*', 'task list', 'список задач', 'списка задач', 'задачник*'],
   shopplatzi: ['shopplatzi', 'platzi', 'shop demo', 'warenkorb', 'shopping cart', 'магазин*', 'корзин*'],
