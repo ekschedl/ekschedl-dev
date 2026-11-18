@@ -37,13 +37,13 @@ export default {
     assistant: {
         open: 'Lieber persönlich Kontakt aufnehmen?',
         errors: {
-            quota: 'My free AI allowance for today has unfortunately been used up. I will be back tomorrow! In the meantime, you are welcome to explore Ekaterina’s projects.',
-            capacity: 'Things are quite busy at the moment. Please try again in a few minutes.',
-            offline: 'My AI feature is taking a short break. You can still explore Ekaterina’s portfolio.',
-            input: 'I could not process your question. Please make it a little shorter and try again.',
-            timeout: 'The response is taking longer than expected. Please try again.',
-            network: 'Unfortunately, I could not establish a connection. Please check your internet connection and try again.',
-            general: 'Sorry, something went wrong. Please try again later.'
+            quota: 'Mein kostenloses KI-Kontingent ist für heute leider aufgebraucht. Schauen Sie morgen gerne wieder vorbei! Bis dahin können Sie Ekaterinas Projekte entdecken.',
+            capacity: 'Im Moment ist ziemlich viel los. Versuchen Sie es bitte in ein paar Minuten erneut.',
+            offline: 'Meine KI-Funktion ist gerade nicht verfügbar. Ekaterinas Portfolio können Sie natürlich trotzdem erkunden.',
+            input: 'Ich konnte Ihre Frage leider nicht verarbeiten. Formulieren Sie sie bitte etwas kürzer und versuchen Sie es erneut.',
+            timeout: 'Die Antwort dauert länger als erwartet. Versuchen Sie es bitte noch einmal.',
+            network: 'Ich konnte leider keine Verbindung herstellen. Prüfen Sie bitte Ihre Internetverbindung und versuchen Sie es erneut.',
+            general: 'Entschuldigung, da ist etwas schiefgelaufen. Versuchen Sie es bitte später erneut.'
         },
         aiNotice: "Testversion des KI-Assistenten. Fragen zu Projekten, Ausbildung und Berufserfahrung können zur Beantwortung an Cloudflare Workers AI gesendet werden. Antworten können Fehler enthalten. Bitte geben Sie keine persönlichen Daten ein.",
         aiLoading: "Pixel formuliert eine Antwort …",

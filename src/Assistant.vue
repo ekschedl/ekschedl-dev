@@ -642,116 +642,7 @@ async function sendContactMessage() {
         </button>
       </form>
 
-              <details
-          class="assistant-contact"
-          @toggle="prepareContactVerification"
-        >
-          <summary>
-            {{ t('assistant.contactForm.open') }}
-          </summary>
-
-          <p>
-            {{ t('assistant.contactForm.invitation') }}
-          </p>
-
-          <p v-if="turnstileSiteKey">
-            <a
-              href="/Datenschutz#kontakt"
-              target="_blank"
-              rel="noopener"
-            >
-              {{ t('legal.privacy') }}
-            </a>
-          </p>
-
-          <form
-            v-if="turnstileSiteKey"
-            class="assistant-contact-form"
-            @submit.prevent="sendContactMessage"
-          >
-            <label for="pixel-contact-email">
-              {{ t('assistant.contactForm.email') }}
-            </label>
-
-            <input
-              id="pixel-contact-email"
-              v-model="contactEmail"
-              type="email"
-              autocomplete="email"
-              maxlength="254"
-              required
-              :disabled="contactState === 'sending'"
-            />
-
-            <label for="pixel-contact-message">
-              {{ t('assistant.contactForm.message') }}
-            </label>
-
-            <textarea
-              id="pixel-contact-message"
-              v-model="contactMessage"
-              rows="4"
-              maxlength="3000"
-              required
-              :disabled="contactState === 'sending'"
-            ></textarea>
-
-            <!-- Spam-Schutz -->
-            <div hidden>
-              <label for="pixel-contact-website">
-                Website
-              </label>
-
-              <input
-                id="pixel-contact-website"
-                v-model="contactWebsite"
-                tabindex="-1"
-                autocomplete="off"
-              />
-            </div>
-
-            <div ref="turnstileContainer"></div>
-
-            <p
-              v-if="turnstileFailed"
-              role="status"
-            >
-              {{ t('assistant.contactForm.verificationError') }}
-            </p>
-
-            <button
-              type="submit"
-              :disabled="
-                contactState === 'sending' ||
-                !turnstileToken
-              "
-            >
-              {{
-                t(
-                  contactState === 'sending'
-                    ? 'assistant.contactForm.sending'
-                    : 'assistant.contactForm.send'
-                )
-              }}
-            </button>
-          </form>
-
-          <p v-else role="status">
-            {{ t('assistant.contactForm.unavailable') }}
-          </p>
-
-          <p
-            v-if="
-              contactState === 'sent' ||
-              contactState === 'error' ||
-              contactState === 'unavailable'
-            "
-            role="status"
-          >
-            {{ t(`assistant.contactForm.${contactState}`) }}
-          </p>
-        </details>
-
+  
       <!-- Frage des Besuchers -->
       <p
         v-if="submittedQuestion"
@@ -905,6 +796,116 @@ async function sendContactMessage() {
           </div>
         </template>
       </div>
+            <details
+          class="assistant-contact"
+          @toggle="prepareContactVerification"
+        >
+          <summary>
+            {{ t('assistant.contactForm.open') }}
+          </summary>
+
+          <p>
+            {{ t('assistant.contactForm.invitation') }}
+          </p>
+
+          <p v-if="turnstileSiteKey">
+            <a
+              href="/Datenschutz#kontakt"
+              target="_blank"
+              rel="noopener"
+            >
+              {{ t('legal.privacy') }}
+            </a>
+          </p>
+
+          <form
+            v-if="turnstileSiteKey"
+            class="assistant-contact-form"
+            @submit.prevent="sendContactMessage"
+          >
+            <label for="pixel-contact-email">
+              {{ t('assistant.contactForm.email') }}
+            </label>
+
+            <input
+              id="pixel-contact-email"
+              v-model="contactEmail"
+              type="email"
+              autocomplete="email"
+              maxlength="254"
+              required
+              :disabled="contactState === 'sending'"
+            />
+
+            <label for="pixel-contact-message">
+              {{ t('assistant.contactForm.message') }}
+            </label>
+
+            <textarea
+              id="pixel-contact-message"
+              v-model="contactMessage"
+              rows="4"
+              maxlength="3000"
+              required
+              :disabled="contactState === 'sending'"
+            ></textarea>
+
+            <!-- Spam-Schutz -->
+            <div hidden>
+              <label for="pixel-contact-website">
+                Website
+              </label>
+
+              <input
+                id="pixel-contact-website"
+                v-model="contactWebsite"
+                tabindex="-1"
+                autocomplete="off"
+              />
+            </div>
+
+            <div ref="turnstileContainer"></div>
+
+            <p
+              v-if="turnstileFailed"
+              role="status"
+            >
+              {{ t('assistant.contactForm.verificationError') }}
+            </p>
+
+            <button
+              type="submit"
+              :disabled="
+                contactState === 'sending' ||
+                !turnstileToken
+              "
+            >
+              {{
+                t(
+                  contactState === 'sending'
+                    ? 'assistant.contactForm.sending'
+                    : 'assistant.contactForm.send'
+                )
+              }}
+            </button>
+          </form>
+
+          <p v-else role="status">
+            {{ t('assistant.contactForm.unavailable') }}
+          </p>
+
+          <p
+            v-if="
+              contactState === 'sent' ||
+              contactState === 'error' ||
+              contactState === 'unavailable'
+            "
+            role="status"
+          >
+            {{ t(`assistant.contactForm.${contactState}`) }}
+          </p>
+        </details>
+
     </div>
   </dialog>
 </template>
@@ -1424,14 +1425,19 @@ async function sendContactMessage() {
 
 /* Kontakt als dezente Footer-Option */
 
+
 .assistant-contact {
+  position: static;
   margin: 0;
-  padding: 12px 0 0;
+  padding: 14px 0 0;
+
   border: 0;
   border-top: 1px solid var(--assistant-line);
   border-radius: 0;
+
   background: transparent;
 }
+
 
 .assistant-contact > summary {
   display: list-item;
