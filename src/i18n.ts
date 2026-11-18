@@ -1,4 +1,4 @@
-
+// Sprachverwaltung. Registriert Deutsch, Englisch und Russisch und legt die Standardsprache fest.
 import { createI18n } from 'vue-i18n'
 
 import de from './locales/de'

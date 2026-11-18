@@ -1,3 +1,4 @@
+// Server-Schnittstelle für Kontaktanfragen. Prüft den Turnstile-Nachweis und versendet die Nachricht über Resend.
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const MAX_BODY_BYTES = 16000
 

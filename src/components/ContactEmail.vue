@@ -1,3 +1,4 @@
+<!-- Wiederverwendbare Kontakt-Schaltfläche. Öffnet das E-Mail-Programm mit der Kontaktadresse. -->
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 

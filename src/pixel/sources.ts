@@ -1,7 +1,8 @@
-import de, { employerFaq as germanFaq } from './locales/de'
-import en, { employerFaq as englishFaq } from './locales/en'
-import ru, { employerFaq as russianFaq } from './locales/ru'
-import { projects } from './portfolioData'
+// Vorhandene Sprachtexte und Projektdaten als Wissensquellen für die KI-Schnittstelle sammeln.
+import de, { employerFaq as germanFaq } from '../locales/de'
+import en, { employerFaq as englishFaq } from '../locales/en'
+import ru, { employerFaq as russianFaq } from '../locales/ru'
+import { projects } from '../data/portfolioData'
 
 const messages = { de, en, ru }
 const faqByLanguage = { de: germanFaq, en: englishFaq, ru: russianFaq }

@@ -1,3 +1,4 @@
+// Sprache einer Frage erkennen. Pixel kann dadurch auf Deutsch, Englisch oder Russisch antworten.
 /**
  * Schätzt anhand der Frage, in welcher Sprache Pixel antworten soll.
  *

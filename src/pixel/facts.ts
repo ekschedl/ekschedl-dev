@@ -1,5 +1,6 @@
-// Shared facts. Translated sentences belong in locales/de.ts, en.ts and ru.ts.
-// Project dates, stacks and links remain in the shared portfolioData.ts.
+// Gemeinsame Zahlen und Daten für Pixel und die Website. Hier stehen Zeiträume, Wochenstunden und JAWA-Technologien.
+// Übersetzte Sätze stehen in locales/de.ts, en.ts und ru.ts.
+// Projektdaten und Links werden in data/portfolioData.ts gepflegt.
 export const pixelFacts = {
   jawa: {
     start: '2025-09',

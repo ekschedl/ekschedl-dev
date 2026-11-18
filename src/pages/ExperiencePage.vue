@@ -1,7 +1,8 @@
+<!-- Berufserfahrungsseite. Zeigt berufliche Stationen, Aufgaben und eingesetzte Technologien. -->
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { pixelFacts } from './pixelKnowledge'
+import { pixelFacts } from '../pixel/facts'
 
 const { locale, t, tm, rt } = useI18n({ useScope: 'global' })
 

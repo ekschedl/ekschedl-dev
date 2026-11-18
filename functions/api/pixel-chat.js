@@ -1,4 +1,5 @@
-import { getPixelSources } from '../../src/pixelSources.ts'
+// Server-Schnittstelle für KI-Antworten. Prüft Anfragen, lädt passende Wissensquellen und ruft Cloudflare Workers AI auf.
+import { getPixelSources } from '../../src/pixel/sources.ts'
 
 const MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast'
 const LANGUAGES = new Map([['de', 'German'], ['en', 'English'], ['ru', 'Russian']])

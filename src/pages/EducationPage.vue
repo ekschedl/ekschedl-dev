@@ -1,3 +1,4 @@
+<!-- Ausbildungsseite. Zeigt Abschlüsse und Kurse mit Filter- und Sortiermöglichkeiten. -->
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'

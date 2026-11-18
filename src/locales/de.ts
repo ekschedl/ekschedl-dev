@@ -1,4 +1,5 @@
-import { pixelFacts, jawaExperienceMonths, formatKnowledgeMonth } from '../pixelKnowledge'
+// Deutsche Texte für die Oberfläche und Pixel sowie die 350 deutschen Arbeitgeberfragen.
+import { pixelFacts, jawaExperienceMonths, formatKnowledgeMonth } from '../pixel/facts'
 
 const jawaStart = formatKnowledgeMonth(pixelFacts.jawa.start, 'de')
 const jawaEnd = formatKnowledgeMonth(pixelFacts.jawa.end, 'de')

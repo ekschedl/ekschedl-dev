@@ -1,12 +1,13 @@
+<!-- Hauptansicht der Website. Verbindet Navigation, Portfolio, Unterseiten und das Pixel-Fenster. -->
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
-import EducationPage from './EducationPage.vue'
-import ExperiencePage from './ExperiencePage.vue'
+import EducationPage from './pages/EducationPage.vue'
+import ExperiencePage from './pages/ExperiencePage.vue'
 import { useI18n } from 'vue-i18n'
-import Assistant from './Assistant.vue'
-import LegalPage from './LegalPage.vue'
-import ContactEmail from './ContactEmail.vue'
-import { cvPath, hotelConsoleImage, projects, shopDemoUrl, skillGroups, todoDemoUrl, unoWebCover, unoWebDemoUrl } from './portfolioData'
+import Assistant from './pixel/Assistant.vue'
+import LegalPage from './pages/LegalPage.vue'
+import ContactEmail from './components/ContactEmail.vue'
+import { cvPath, hotelConsoleImage, projects, shopDemoUrl, skillGroups, todoDemoUrl, unoWebCover, unoWebDemoUrl } from './data/portfolioData'
 
 const { locale, t, tm, rt } = useI18n({ useScope: 'global' })
 

@@ -1,9 +1,10 @@
-import { employerFaq as germanFaq } from './locales/de'
-import { employerFaq as englishFaq } from './locales/en'
-import { employerFaq as russianFaq } from './locales/ru'
-import { i18n } from './i18n'
-import { pixelFacts } from './pixelKnowledge'
-import { cvPath, projects, skillGroups } from './portfolioData'
+// Fragen erkennen und passende Themen oder FAQ-Antworten in Deutsch, Englisch und Russisch finden.
+import { employerFaq as germanFaq } from '../locales/de'
+import { employerFaq as englishFaq } from '../locales/en'
+import { employerFaq as russianFaq } from '../locales/ru'
+import { i18n } from '../i18n'
+import { pixelFacts } from './facts'
+import { cvPath, projects, skillGroups } from '../data/portfolioData'
 
 export type FollowUpKind = 'interest' | 'technology' | 'duration' | 'tasks'
 

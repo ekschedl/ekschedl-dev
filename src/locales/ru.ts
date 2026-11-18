@@ -1,4 +1,5 @@
-import { pixelFacts, jawaExperienceMonths, formatKnowledgeMonth } from '../pixelKnowledge'
+// Russische Texte für die Oberfläche und Pixel sowie die 350 russischen Arbeitgeberfragen.
+import { pixelFacts, jawaExperienceMonths, formatKnowledgeMonth } from '../pixel/facts'
 
 const jawaStart = formatKnowledgeMonth(pixelFacts.jawa.start, 'ru', 'genitive')
 const jawaEnd = formatKnowledgeMonth(pixelFacts.jawa.end, 'ru')

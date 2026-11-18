@@ -1,3 +1,4 @@
+// Gemeinsame Portfoliodaten. Enthält Projekte, Technologien sowie Links zu Lebenslauf und Demos.
 export const cvPath = '/cv/Schedlberger_Lebenslauf_Softwareentwicklerin_12_26.pdf'
 
 export const todoDemoUrl = 'https://ekschedl.github.io/jawa_todo/todo/'

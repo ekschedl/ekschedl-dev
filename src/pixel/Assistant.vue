@@ -1,4 +1,4 @@
-
+<!-- Pixel-Fenster und Bedienung. Verarbeitet Fragen, zeigt Antworten und bietet das Kontaktformular an. -->
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -7,10 +7,10 @@ import {
   findKnowledgeTopics,
   findEmployerFaqAnswer,
   type FollowUpKind
-} from './assistantKnowledge'
+} from './questionMatching'
 // Erkennt DE/EN/RU aus der Frage. Die Sprache der Website wird dabei nicht umgestellt.
-import { detectAssistantLanguage } from './assistantLanguage'
-import { cvPath } from './portfolioData'
+import { detectAssistantLanguage } from './language'
+import { cvPath } from '../data/portfolioData'
 
 // i18n liefert die gewählte Website-Sprache und die übersetzten Texte.
 const { locale, t } = useI18n({ useScope: 'global' })
@@ -381,7 +381,7 @@ function sendAssistantQuestion(input: string) {
     return
   }
 
-  // Ohne FAQ-Treffer passende Themen über Wörter und Muster in assistantKnowledge.ts suchen.
+  // Ohne FAQ-Treffer passende Themen über Wörter und Muster in questionMatching.ts suchen.
   const matches = findKnowledgeTopics(question)
 
   const refersToProject = projectReference.test(question)

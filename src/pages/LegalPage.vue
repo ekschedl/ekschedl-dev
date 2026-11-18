@@ -1,6 +1,7 @@
+<!-- Rechtliche Seiten. Zeigt je nach Aufruf das Impressum oder die Datenschutzerklärung. -->
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import ContactEmail from './ContactEmail.vue'
+import ContactEmail from '../components/ContactEmail.vue'
 
 defineProps<{ page: 'imprint' | 'privacy' }>()
 
