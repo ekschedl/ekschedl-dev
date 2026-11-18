@@ -82,15 +82,19 @@ export default {
             workplace: 'Welches Arbeitsmodell passt für Ekaterina?',
         },
         detailsLink: 'Vollständige Informationen ansehen',
+        softwareExperience: {
+            title: 'Praktische Erfahrung in der Softwareentwicklung',
+            answer: 'Ekaterina begann ihren Weg in die Softwareentwicklung mit einer Weiterbildung zur Web Developerin am WIFI Steiermark. Als Diplomprojekt entwickelte sie für einen Lutscherhersteller die Website Feta mit einem eigenen responsiven WordPress-Theme, Produktkatalog und Kontaktformular. Anschließend vertiefte sie ihre Kenntnisse in der Softwareentwicklung an der FH CAMPUS 02 und sammelte von September 2025 bis Oktober 2026 bei JAWA Management Software praktische Erfahrung mit PHP, SQL, Xdebug und der Analyse bestehender Anwendungen. Darüber hinaus setzte sie verschiedene Ausbildungs- und Praxisprojekte um, unter anderem mit Java, Vue, C# und Swift.'
+        },
         personalReplies: {
-            softwareExperience: {
-                title: 'Praktische Erfahrung in der Softwareentwicklung',
-                answer: 'Ekaterina begann ihren Weg in die Softwareentwicklung mit einer Weiterbildung zur Web Developerin am WIFI Steiermark. Als Diplomprojekt entwickelte sie für einen Lutscherhersteller die Website Feta mit einem eigenen responsiven WordPress-Theme, Produktkatalog und Kontaktformular. Anschließend vertiefte sie ihre Kenntnisse in der Softwareentwicklung an der FH CAMPUS 02 und sammelte von September 2025 bis Oktober 2026 bei JAWA Management Software praktische Erfahrung mit PHP, SQL, Xdebug und der Analyse bestehender Anwendungen. Darüber hinaus setzte sie verschiedene Ausbildungs- und Praxisprojekte um, unter anderem mit Java, Vue, C# und Swift.'
-            },
             personality: {
                 title: "Persönlichkeit und Arbeitsweise",
                 answer: "Ekaterina ist offen und kontaktfreudig. Bei der Arbeit setzt sie sich gern klare Ziele und erledigt ihre Aufgaben sorgfältig und termingerecht. Sie schätzt den Austausch mit Menschen, die positiv an Dinge herangehen und eigene Ziele verfolgen.",
             },
+        juniorProfile: {
+              title: 'Junior Softwareentwicklerin',
+              answer: 'Ekaterina ist eine Softwareentwicklerin am Anfang ihrer beruflichen Entwicklerlaufbahn. Sie hat im Oktober 2026 ihre akademische Ausbildung an der FH CAMPUS 02 abgeschlossen und zuvor bereits eine Weiterbildung zur Web Developerin am WIFI Steiermark absolviert. Zusätzlich sammelte sie 14 Monate praktische Erfahrung bei JAWA Management Software. Jetzt möchte sie regelmäßig programmieren, ihre Kenntnisse vertiefen und zunehmend selbstständig Entwicklungsaufgaben übernehmen.'
+        },
             languages: {
                title: 'Sprachkenntnisse',
                answer: 'Ekaterina verfügt über Kenntnisse in Russisch (ihre Muttersprache), Deutsch, Englisch und Italienisch. Sie hat Deutsch bis zum Niveau C1 gelernt und Englischkurse auf den Niveaus A2 und B1 besucht. Deutsch, Italienisch und Russisch waren Teil ihres Studiums der Transkulturellen Kommunikation an der Universität Graz. Außerdem hat sie ehrenamtlich ins Russische gedolmetscht.'
