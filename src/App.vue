@@ -553,6 +553,13 @@ function scrollToTop() {
           </div>
         </a>
 
+        <!-- Auf dem Handy führt ein kompakter Portfolio-Block zur vollständigen Projektübersicht. -->
+        <a href="#projects" class="tile mobile-portfolio-link">
+          <span class="tile-type">{{ t('allProjectsLink') }}</span>
+          <h3>{{ t('nav.1') }}</h3>
+          <span class="tile-corner-arrow" aria-hidden="true">↗</span>
+        </a>
+
         <section class="latest-projects" aria-labelledby="latest-projects-heading">
           <div class="latest-projects-header">
             <h2 id="latest-projects-heading" class="eyebrow">{{ t('latestProjects') }}</h2>

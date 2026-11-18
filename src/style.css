@@ -321,6 +321,10 @@ select:focus-visible {
   transform: rotate(45deg);
 }
 
+.mobile-portfolio-link {
+  display: none;
+}
+
 /* PROJECT TILES */
 .project-tile {
   display: flex;
@@ -1355,8 +1359,31 @@ select:focus-visible {
 
 }
 
+/* Eine klare Navigation zur Projektübersicht ersetzt die großen Vorschaukarten auf dem Handy. */
 @media (max-width: 600px) {
-  .latest-projects-grid {
-    grid-template-columns: 1fr;
+  .latest-projects {
+    display: none;
+  }
+
+  .hero-grid > .mobile-portfolio-link {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    grid-column: 1 / -1;
+    grid-row: auto;
+    gap: 10px;
+    min-height: 120px;
+    padding: 20px;
+    background: var(--slate);
+    color: var(--ink);
+  }
+
+  .mobile-portfolio-link h3 {
+    margin: 0;
+    font-size: clamp(22px, 6vw, 28px);
+  }
+
+  .mobile-portfolio-link .tile-type {
+    font-size: 11px;
   }
 }
