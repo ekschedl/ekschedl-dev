@@ -1331,7 +1331,7 @@ export const employerFaq = [
   {
     "id": 159,
     "question": "Welche Sprachen spricht Ekaterina?",
-    "answer": "Ekaterina verfügt über Kenntnisse in Russisch, Deutsch, Englisch und Italienisch. Deutsch hat sie bis zum Niveau C1 gelernt, Englischkurse besuchte sie auf A2- und B1-Niveau. Deutsch, Italienisch und Russisch waren zudem Teil ihres Studiums der Transkulturellen Kommunikation."
+    "answer": "Russisch ist Ekaterinas Muttersprache. Außerdem verfügt sie über Kenntnisse in Deutsch, Englisch und Italienisch. Deutsch hat sie bis zum Niveau C1 gelernt, Englischkurse besuchte sie auf A2- und B1-Niveau. Deutsch, Italienisch und Russisch waren zudem Teil ihres Studiums der Transkulturellen Kommunikation."
   },
   {
     "id": 160,
@@ -1341,7 +1341,7 @@ export const employerFaq = [
   {
     "id": 161,
     "question": "Spricht sie Russisch?",
-    "answer": "Ja. Russisch gehört zu ihren Sprachen. Sie hat außerdem ehrenamtlich bei Caritas Marienambulanz beim Dolmetschen ins Russische unterstützt."
+    "answer": "Ja. Russisch ist Ekaterinas Muttersprache. Sie hat außerdem ehrenamtlich bei Caritas Marienambulanz beim Dolmetschen ins Russische unterstützt."
   },
   {
     "id": 162,
@@ -2001,7 +2001,7 @@ export const employerFaq = [
   {
     "id": 293,
     "question": "Wie hilfreich sind ihre Sprachkenntnisse?",
-    "answer": "Ekaterina hat Deutsch, Russisch, Englisch und Italienisch in unterschiedlichen Zusammenhängen gelernt beziehungsweise verwendet. Für eine bestimmte Stelle sollte geprüft werden, welches aktive Niveau jeweils benötigt wird."
+    "answer": "Russisch ist Ekaterinas Muttersprache. Deutsch, Englisch und Italienisch hat sie in unterschiedlichen Zusammenhängen gelernt beziehungsweise verwendet. Für eine bestimmte Stelle sollte geprüft werden, welches aktive Niveau der Fremdsprachen benötigt wird."
   },
   {
     "id": 294,

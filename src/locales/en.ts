@@ -93,7 +93,7 @@ const messages = {
             },
             languages: {
                 title: 'Language skills',
-                answer: 'Ekaterina has knowledge of Russian, German, English and Italian. She studied German up to C1 level and attended English courses at A2 and B1 levels. German, Italian and Russian were part of her degree in Transcultural Communication at the University of Graz. She also volunteered as a Russian interpreter.'
+                answer: 'Russian is Ekaterina’s native language. She also has knowledge of German, English and Italian. She studied German up to C1 level and attended English courses at A2 and B1 levels. German, Italian and Russian were part of her degree in Transcultural Communication at the University of Graz. She also volunteered as a Russian interpreter.'
                 },
             teamwork: {
                 title: "Teamwork",
@@ -865,7 +865,7 @@ export const employerFaq = [
   { id: 160, question: "Does she speak German?",
     answer: "Yes. She lives in Graz, studied German to C1 level, and German was part of her Transcultural Communication studies." },
   { id: 161, question: "Does she speak Russian?",
-    answer: "Yes. Russian is among her languages, and she also volunteered as a Russian interpreter at Caritas Marienambulanz." },
+    answer: "Yes. Russian is her native language, and she also volunteered as a Russian interpreter at Caritas Marienambulanz." },
   { id: 162, question: "Does she speak English?",
     answer: "She studied English in A2 and B1 courses. Her current active proficiency should be checked with her if needed." },
   { id: 163, question: "Does she speak Italian?",
@@ -1129,7 +1129,7 @@ export const employerFaq = [
   { id: 292, question: "Does she have documentation experience?",
     answer: "Documentation appeared in earlier roles. She also documents software projects, including some data models and architecture diagrams." },
   { id: 293, question: "How useful are her language skills?",
-    answer: "She has learned or used German, Russian, English and Italian in different settings. Current active proficiency should be assessed for the particular role." },
+    answer: "Russian is her native language. She has learned or used German, English and Italian in different settings. Active foreign-language proficiency should be assessed for the particular role." },
   { id: 294, question: "Has she helped people overcome language barriers?",
     answer: "She volunteered at Caritas Marienambulanz, helping with interpreting into Russian." },
   { id: 295, question: "What advantage does she have over someone with no previous work experience?",
