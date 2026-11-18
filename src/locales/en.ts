@@ -7,7 +7,7 @@ const softwareEngineeringCompletion = formatKnowledgeMonth(pixelFacts.softwareEn
 
 // Vom Nutzer bestätigte Berufserfahrung. Die Dauer stammt aus den gemeinsamen Fakten.
 // Gemeinsame Projektantwort für Pixel und die zugehörigen FAQ.
-const portfolioAssistantReply = "The AI assistant is part of Ekaterina’s portfolio website, developed with AI assistance and expanded step by step. Built with Vue 3, TypeScript, Vue I18n and Vite, the website presents her projects, education and experience in German, English and Russian. Pixel combines prepared FAQ answers with optional AI through Cloudflare Pages Functions and Workers AI. The contact form uses Turnstile for spam protection and Resend for email delivery."
+const portfolioAssistantReply = "The AI assistant is part of Ekaterina’s portfolio website, developed with AI assistance and expanded step by step. Built with Vue 3, TypeScript, Vue I18n and Vite, the website presents her projects, education and experience in German, English and Russian. The assistant combines prepared FAQ answers with optional AI through Cloudflare Pages Functions and Workers AI. The contact form uses Turnstile for spam protection and Resend for email delivery."
 
 const jawaVueExperience = `Ekaterina worked with Vue at JAWA Management Software GmbH for ${jawaExperienceMonths} months.`
 
@@ -149,7 +149,7 @@ const messages = {
         },
         overview: {
             experience: "Ekaterina worked in securities, hospitality and interpreting before moving into software development. You can explore each stage in the Work experience section.",
-            projects: "Ekaterina’s portfolio includes YogaNow Studio, a to-do app, a shop demo, hotel and gift management apps, websites for Feta and Café Mokka, and two versions of UNO. Feel free to try the available demos." + " Her own multilingual portfolio website with the AI assistant Pixel is also one of her projects.",
+            projects: "Ekaterina’s portfolio includes YogaNow Studio, a to-do app, a shop demo, hotel and gift management apps, websites for Feta and Café Mokka, and two versions of UNO. Feel free to try the available demos." + " Her own multilingual portfolio website with an integrated AI assistant is also one of her projects.",
             technologies: jawaVueExperience + " " + 'Ekaterina has built web apps with Vue and TypeScript and a hotel management application with Java. At JAWA, she worked on existing software using PHP and SQL.',
             contact: "You can find Ekaterina’s GitHub profile in the contact section. She would be happy to hear about interesting projects and software development roles.",
             python: "Ekaterina wants to explore how models learn from data and how to tell whether their results are reliable. She plans to start with a Python course in Hagen in late November 2026.",

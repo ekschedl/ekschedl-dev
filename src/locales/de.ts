@@ -7,7 +7,7 @@ const softwareEngineeringCompletion = formatKnowledgeMonth(pixelFacts.softwareEn
 
 // Vom Nutzer bestätigte Berufserfahrung. Die Dauer stammt aus den gemeinsamen Fakten.
 // Gemeinsame Projektantwort für Pixel und die zugehörigen FAQ.
-const portfolioAssistantReply = "Der KI-Assistent gehört zu Ekaterinas Portfolio-Website, die sie mit Unterstützung von KI entwickelt und schrittweise erweitert. Die Website nutzt Vue 3, TypeScript, Vue I18n und Vite und stellt ihre Projekte, Ausbildung und Berufserfahrung auf Deutsch, Englisch und Russisch vor. Pixel verbindet vorbereitete FAQ-Antworten mit einer optionalen KI-Funktion über Cloudflare Pages Functions und Workers AI. Zum Kontaktformular gehören die Spam-Prüfung mit Turnstile und der E-Mail-Versand über Resend."
+const portfolioAssistantReply = "Der KI-Assistent gehört zu Ekaterinas Portfolio-Website, die sie mit Unterstützung von KI entwickelt und schrittweise erweitert. Die Website nutzt Vue 3, TypeScript, Vue I18n und Vite und stellt ihre Projekte, Ausbildung und Berufserfahrung auf Deutsch, Englisch und Russisch vor. Der Assistent verbindet vorbereitete FAQ-Antworten mit einer optionalen KI-Funktion über Cloudflare Pages Functions und Workers AI. Zum Kontaktformular gehören die Spam-Prüfung mit Turnstile und der E-Mail-Versand über Resend."
 
 const jawaVueExperience = `Ekaterina hat ${jawaExperienceMonths} Monate bei JAWA Management Software GmbH mit Vue gearbeitet.`
 
@@ -147,7 +147,7 @@ export default {
         },
         overview: {
             experience: "Ekaterinas Weg führte vom Wertpapierbereich über die Hotellerie und das Dolmetschen in die Softwareentwicklung. Heute bringt sie diese Erfahrungen in ihre Arbeit ein. In der Rubrik Berufserfahrung finden Sie die einzelnen Stationen.",
-            projects: "Ekaterinas Projekte reichen von der Yoga-App YogaNow Studio über eine Aufgabenliste und eine Shop-Demo bis zur Hotel- und Geschenkeverwaltung. Sie finden dort auch die Websites für Feta und das Kaffeehaus Mokka sowie zwei Varianten von UNO. Probieren Sie gern eine der verfügbaren Demos aus." + " Dazu gehört auch ihre eigene mehrsprachige Portfolio-Website mit dem KI-Assistenten Pixel.",
+            projects: "Ekaterinas Projekte reichen von der Yoga-App YogaNow Studio über eine Aufgabenliste und eine Shop-Demo bis zur Hotel- und Geschenkeverwaltung. Sie finden dort auch die Websites für Feta und das Kaffeehaus Mokka sowie zwei Varianten von UNO. Probieren Sie gern eine der verfügbaren Demos aus." + " Dazu gehört auch ihre eigene mehrsprachige Portfolio-Website mit integriertem KI-Assistenten.",
             technologies: jawaVueExperience + " " + 'Ekaterina hat mit Vue und TypeScript Webanwendungen umgesetzt, mit Java eine Hotelverwaltung gebaut und bei JAWA mit PHP und SQL an bestehender Software gearbeitet.',
             contact: "Wenn Sie mit Ekaterina in Kontakt treten möchten, finden Sie ihr GitHub-Profil im Kontaktbereich des Portfolios. Sie freut sich über interessante Projekte und passende Stellenangebote in der Softwareentwicklung.",
             python: "Ekaterina möchte selbst ausprobieren, wie Modelle aus Daten lernen und woran sich verlässliche Ergebnisse erkennen lassen. Ihr Einstieg ist ein Python-Kurs in Hagen, der für Ende November 2026 geplant ist.",
