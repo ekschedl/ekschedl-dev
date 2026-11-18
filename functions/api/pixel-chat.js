@@ -142,7 +142,7 @@ export async function onRequestPost({ request, env }) {
           // Tatsächliche Portfolio-Informationen
           `Portfolio sources:\n${sources.join('\n')}`
         ].join('\n')
-      }
+      },
 
         { role: 'user', content: question }
       ],
