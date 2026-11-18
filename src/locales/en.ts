@@ -137,6 +137,8 @@ export default {
         fallbackAnswer: 'I don’t have a precise answer for that yet. One of these sections of the portfolio may have what you’re looking for.',
         profileAnswer: 'Ekaterina Schedlberger is a software developer based in Graz. Her portfolio covers her education, work experience and projects, from a to-do app to a hotel management system. You can also play UNO and try her project demos here. Ekaterina likes setting clear goals and takes care to finish her work on time. She would be happy to hear about software development roles that might be a good fit.',
         educationAnswer: 'Ekaterina completed the Software Engineering programme at CAMPUS 02 University of Applied Sciences in October 2026. Before that, she studied Transcultural Communication at the University of Graz and earned a qualification in economics and management in Irkutsk.',
+        learningAnswer: 'In the Software Engineering programme at CAMPUS 02, Ekaterina studied object-oriented programming, databases, software architecture and quality assurance. She also studied web development at WIFI Steiermark, where she built a WordPress site for her diploma project.',
+        salaryAnswer: 'The portfolio gives no confirmed salary expectation. Please discuss compensation directly with Ekaterina.',
         contactAnswer: 'You can find Ekaterina’s GitHub profile in the contact section of her portfolio.',
         replyTitles: {
             projects: "Projects",
@@ -147,7 +149,7 @@ export default {
         overview: {
             experience: "Ekaterina worked in securities, hospitality and interpreting before moving into software development. You can explore each stage in the Work experience section.",
             projects: "Ekaterina’s portfolio includes YogaNow Studio, a to-do app, a shop demo, hotel and gift management apps, websites for Feta and Café Mokka, and two versions of UNO. Feel free to try the available demos.",
-            technologies: "Ekaterina has used the technologies below during her training and in her projects. Feel free to ask where she used a particular tool, such as Vue, PHP or Hibernate.",
+            technologies: 'Ekaterina has built web apps with Vue and TypeScript and a hotel management application with Java. At JAWA, she worked on existing software using PHP and SQL.',
             contact: "You can find Ekaterina’s GitHub profile in the contact section. She would be happy to hear about interesting projects and software development roles.",
             python: "Ekaterina wants to explore how models learn from data and how to tell whether their results are reliable. She plans to start with a Python course in Hagen in late November 2026.",
             ai: "Ekaterina uses AI to try more ideas and narrow down the causes of bugs. She checks suggestions against the code and decides which approach to pursue.",

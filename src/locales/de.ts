@@ -135,6 +135,8 @@ export default {
         fallbackAnswer: 'Dazu habe ich gerade keine genaue Antwort. Vielleicht finden Sie die gesuchte Information in einem dieser Bereiche des Portfolios.',
         profileAnswer: 'Ekaterina Schedlberger ist Softwareentwicklerin in Graz. In ihrem Portfolio stellt sie ihre Ausbildung, ihre Berufserfahrung und ihre Projekte vor – von der To-do-App bis zur Hotelverwaltung. Wenn Sie sich selbst ein Bild machen möchten, können Sie hier UNO spielen und ihre Projektdemos ausprobieren. Ekaterina setzt sich gern klare Ziele und arbeitet sorgfältig und termingerecht. Sie freut sich über passende Stellenangebote in der Softwareentwicklung.',
         educationAnswer: 'Ekaterina hat im Oktober 2026 den Hochschullehrgang Software Engineering an der FH CAMPUS 02 abgeschlossen. Davor studierte sie Transkulturelle Kommunikation an der Universität Graz und schloss in Irkutsk ein Studium in Wirtschaft und Management ab.',
+        learningAnswer: 'Im Hochschullehrgang Software Engineering an der FH CAMPUS 02 lernte Ekaterina unter anderem objektorientierte Programmierung, Datenbanken, Softwarearchitektur und Qualitätssicherung. Am WIFI Steiermark lernte sie Webentwicklung und baute für ihr Diplomprojekt eine WordPress-Website.',
+        salaryAnswer: 'Im Portfolio steht keine bestätigte Gehaltsvorstellung. Bitte besprechen Sie das Gehalt direkt mit Ekaterina.',
         contactAnswer: 'Ekaterinas GitHub-Profil finden Sie im Kontaktbereich des Portfolios.',
         replyTitles: {
             projects: 'Projekte',
@@ -145,7 +147,7 @@ export default {
         overview: {
             experience: "Ekaterinas Weg führte vom Wertpapierbereich über die Hotellerie und das Dolmetschen in die Softwareentwicklung. Heute bringt sie diese Erfahrungen in ihre Arbeit ein. In der Rubrik Berufserfahrung finden Sie die einzelnen Stationen.",
             projects: "Ekaterinas Projekte reichen von der Yoga-App YogaNow Studio über eine Aufgabenliste und eine Shop-Demo bis zur Hotel- und Geschenkeverwaltung. Sie finden dort auch die Websites für Feta und das Kaffeehaus Mokka sowie zwei Varianten von UNO. Probieren Sie gern eine der verfügbaren Demos aus.",
-            technologies: "Ekaterina hat die unten aufgeführten Technologien in ihrer Ausbildung und in Projekten eingesetzt. Wenn Sie wissen möchten, wo sie ein bestimmtes Werkzeug verwendet hat, fragen Sie mich gern danach, zum Beispiel nach Vue, PHP oder Hibernate.",
+            technologies: 'Ekaterina hat mit Vue und TypeScript Webanwendungen umgesetzt, mit Java eine Hotelverwaltung gebaut und bei JAWA mit PHP und SQL an bestehender Software gearbeitet.',
             contact: "Wenn Sie mit Ekaterina in Kontakt treten möchten, finden Sie ihr GitHub-Profil im Kontaktbereich des Portfolios. Sie freut sich über interessante Projekte und passende Stellenangebote in der Softwareentwicklung.",
             python: "Ekaterina möchte selbst ausprobieren, wie Modelle aus Daten lernen und woran sich verlässliche Ergebnisse erkennen lassen. Ihr Einstieg ist ein Python-Kurs in Hagen, der für Ende November 2026 geplant ist.",
             ai: "Ekaterina nutzt KI, um beim Entwickeln mehr Ideen auszuprobieren und Fehler gezielter einzugrenzen. Sie prüft die Vorschläge am Code und entscheidet selbst, welchen Ansatz sie weiterverfolgt.",

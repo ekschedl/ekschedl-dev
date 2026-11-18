@@ -5,6 +5,7 @@ export type FollowUpKind = 'interest' | 'technology' | 'duration' | 'tasks'
 
 interface KnowledgeTopic {
   keywords: string[]
+  phrase?: RegExp
   titleKey?: string
   replyTitleKey?: string
   searchKeys?: string[]
@@ -154,7 +155,7 @@ const personalTopics = {
   ],
   authorization: [
     'arbeitsberechtigung', 'arbeitserlaubnis', 'arbeitsbewilligung', 'arbeitsgenehmigung',
-    'darf sie arbeiten', 'arbeitsrechtlich', 'work permit', 'right to work', 'work authorization', 'work authorisation',
+    'darf sie arbeiten', 'darf sie in österreich arbeiten', 'arbeitsrechtlich', 'work permit', 'right to work', 'work authorization', 'work authorisation',
     'visa sponsorship', 'право на работу', 'разрешение на работу', 'может ли работать', 'рабочая виза'
   ],
   interests: [
@@ -176,6 +177,19 @@ const topics: KnowledgeTopic[] = [
     detailsLabelKey: 'cvDownload',
     detailsNewTab: true,
     answerKey: 'assistant.cvAnswer'
+  },
+  {
+    keywords: [
+      'gehalt*', 'wunschgehalt*', 'lohn', 'lohnerwartung*', 'lohnvorstellung*', 'vergütung*',
+      'entlohnung*', 'jahresbrutto', 'wie viel verdienen', 'was möchte sie verdienen',
+      'was will sie verdienen', 'was stellt sie sich gehaltlich vor', 'was möchte ekaterina verdienen', 'was möchten sie verdienen',
+      'wie viel will sie verdienen', 'wie viel möchte sie verdienen', 'wie viel soll sie verdienen', 'wie viel stellt sie sich vor', 'wie viel geld möchte sie',
+      'salary', 'salaries', 'compensation', 'pay expectations', 'pay range', 'expected pay',
+      'what pay', 'how much does she want to earn', 'how much would she like to earn',
+      'зарплат*', 'оклад*', 'денежное вознаграждение', 'сколько она хочет получать',
+      'сколько она хочет зарабатывать', 'на какую оплату она рассчитывает'
+    ],
+    answerKey: 'assistant.salaryAnswer'
   },
   ...Object.entries(personalTopics).map(([id, keywords]) => {
     const path = `assistant.personalReplies.${id}`
@@ -232,15 +246,27 @@ const topics: KnowledgeTopic[] = [
     }
   }),
   {
-
+    phrase: /\bwas (?:genau )?(?:hat (?:sie|ekaterina)(?: bisher| alles)? gelernt|(?:sie|ekaterina)(?: bisher| schon| alles)? gelernt hat)\b/,
+    keywords: [
+      'was hat sie in der ausbildung gelernt',
+      'welche fächer hat sie gelernt', 'welche kenntnisse hat sie erworben',
+      'was hat sie sich beigebracht', 'was hat sie im studium gelernt',
+      'what did she learn', 'what has she learned', 'what has she learnt',
+      'what did ekaterina learn', 'what subjects did she study', 'what did she study',
+      'чему она научилась', 'чему научилась екатерина', 'что она изучала',
+      'что она выучила', 'чему её научили', 'какие предметы она изучала'
+    ],
+    titleKey: 'educationPage.title',
+    detailsPath: '/Ausbildung',
+    overview: true,
+    answerKey: 'assistant.learningAnswer'
+  },
+  {
     keywords: [
       'ausbildung', 'studium', 'education', 'qualification*',
       'образован*', 'учила*', 'училась', 'университет*',
-      'was hat sie gelernt',
-      'was hat ekaterina gelernt',
-      'was hat sie in der ausbildung gelernt',
-      'welche fächer hat sie gelernt',
-      'welche kenntnisse hat sie erworben'
+      'was hat sie studiert', 'was hat ekaterina studiert', 'wo hat sie studiert',
+      'where did she study', 'academic background', 'где она училась'
     ],
     titleKey: 'educationPage.title',
     overview: true,
@@ -263,18 +289,23 @@ const topics: KnowledgeTopic[] = [
     answerKey: 'assistant.overview.projects'
   },
   {
-
+    phrase: /\bwas (?:genau )?(?:kann (?:sie|ekaterina)|(?:sie|ekaterina) kann)\b/,
     keywords: [
       'technologien', 'technologies', 'tech stack',
       'skills', 'kenntnisse', 'технолог*', 'навык*',
       'инструмент*',
-      'was kann sie',
-      'was kann ekaterina',
       'was kann sie programmieren',
       'welche fähigkeiten hat sie',
       'welche programmiersprachen kennt sie',
       'welche kenntnisse bringt sie mit',
-      'was beherrscht sie',
+      'was beherrscht sie', 'worin kennt sie sich aus',
+      'welche technischen kenntnisse', 'was bringt sie an kenntnissen mit', 'welche fähigkeiten bringt sie mit',
+      'was sind ihre technischen fähigkeiten', 'technische fähigkeiten', 'programmierkenntnisse',
+      'programmiersprachen', 'what can she do', 'what can ekaterina do',
+      'what can she build', 'what is she able to do', 'what does she know',
+      'what tools does she know', 'programming languages', 'technical abilities',
+      'что она умеет', 'что умеет екатерина', 'что она может делать',
+      'что она умеет делать', 'какими технологиями', 'языки программирования',
       ...skills
     ],
     titleKey: 'technologiesTitle',
@@ -295,7 +326,7 @@ const topics: KnowledgeTopic[] = [
     answerKey: 'assistant.profileAnswer'
   },
   {
-    keywords: ['kontakt', 'contact', 'github', 'контакт*', 'связаться'],
+    keywords: ['kontakt', 'wie erreiche ich sie', 'contact', 'get in touch', 'github', 'контакт*', 'связаться'],
     titleKey: 'helloTitle',
     replyTitleKey: 'assistant.replyTitles.contact',
     overview: true,
@@ -382,19 +413,26 @@ function preferLongerMatches(
 }
 
 export function findKnowledgeTopics(question: string) {
-  const words = normalize(question).split(/\s+/)
-  const matches = searchableTopics.map(({ topic, keywords, technologies }) => ({
-    topic,
-    names: matchKeywords(words, keywords),
-    tools: matchKeywords(words, technologies)
-  }))
+  const normalized = normalize(question)
+  const words = normalized.split(' ')
+  const matches = searchableTopics.map(({ topic, keywords, technologies }) => {
+    const names = matchKeywords(words, keywords)
+    return { topic, names, tools: matchKeywords(words, technologies) }
+  })
+  const salary = matches.find(match => match.topic.answerKey === 'assistant.salaryAnswer')
+  if (salary?.names.length) return [salary.topic]
+
   const named = preferLongerMatches(matches.filter(match => !match.topic.overview), 'names')
   if (named.length) return named
 
   const technical = preferLongerMatches(matches, 'tools')
   if (technical.length) return technical
 
-  const overviews = matches.filter(match => match.topic.overview && match.names.length)
+  const overviewMatches = matches.filter(match => match.topic.overview)
+  const phrased = overviewMatches.filter(match => match.topic.phrase?.test(normalized))
+  if (phrased.length) return phrased.map(match => match.topic)
+
+  const overviews = overviewMatches.filter(match => match.names.length)
   // In “Ekaterina’s education”, the name sets the context and education is the topic.
   const specificOverviews = overviews.filter(match => match.topic.titleKey !== 'portfolioName')
   const relevant = specificOverviews.length ? specificOverviews : overviews
@@ -2184,34 +2222,36 @@ const employerQuestionAliases: Record<string, number> = {
   'was ist das feta projekt': 117
 }
 
-const employerIndex = employerFaq.map(entry => ({
-  entry,
-  normalized: normalizeEmployerQuestion(entry.question),
-  terms: new Set(normalizeEmployerQuestion(entry.question).split(' ').filter(
-    w => w.length >= 4 && !['ekaterina', 'schedlberger', 'welche', 'welcher', 'welches', 'diese', 'ihrer', 'ihrem', 'ihren', 'einer', 'einen', 'kannst', 'konnen'].includes(w)
-  ))
-}))
+const employerById = new Map<number, string>(employerFaq.map(({ id, answer }) => [id, answer]))
+const employerByQuestion = new Map(employerFaq.map(entry => [
+  normalizeEmployerQuestion(entry.question), entry.answer
+]))
 
-/** Liefert eine nachweislich hinterlegte deutsche Antwort oder null. */
+function normalizeCandidateName(question: string) {
+  // Only substitute subjects with the same grammatical role.
+  return question.replace(
+    /\b(hat|ist|war|kann|kennt|spricht|arbeitet|mochte|will|bringt|sucht|verwendet|nutzt|beherrscht|wurde) (?:sie|ekaterina(?: schedlberger)?)\b/g,
+    '$1 ekaterina'
+  )
+}
 
-/** Liefert eine nachweislich hinterlegte deutsche Antwort oder null. */
+const faqByCandidateSubject = new Map<string, string | null>()
+for (const [question, answer] of employerByQuestion) {
+  const key = normalizeCandidateName(question)
+  if (faqByCandidateSubject.has(key) && faqByCandidateSubject.get(key) !== answer) {
+    faqByCandidateSubject.set(key, null)
+  } else {
+    faqByCandidateSubject.set(key, answer)
+  }
+}
+
+/** Liefert eine hinterlegte deutsche Antwort, sofern die Zuordnung eindeutig ist. */
 export function findEmployerFaqAnswer(question: string): string | null {
   const normalized = normalizeEmployerQuestion(question)
+  const id = employerQuestionAliases[normalized]
 
-  if (!normalized) return null
-
-  const aliasedId = employerQuestionAliases[normalized]
-
-  if (aliasedId !== undefined) {
-    const entry = employerFaq[aliasedId - 1]
-    return entry?.answer ?? null
-  }
-
-  const exact = employerIndex.find(
-    item => item.normalized === normalized
-  )
-
-  if (exact) return exact.entry.answer
-
-  return null
+  return employerByQuestion.get(normalized) ??
+    (id === undefined ? undefined : employerById.get(id)) ??
+    faqByCandidateSubject.get(normalizeCandidateName(normalized)) ??
+    null
 }

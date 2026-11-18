@@ -19,11 +19,17 @@ const germanWords = new Set([
   'ist', 'sind', 'hat', 'hast', 'arbeitet', 'gearbeitet', 'entwickelt', 'gebaut',
   'deine', 'dein', 'ihre', 'über', 'ueber', 'erzähle', 'erzähl', 'bitte', 'und',
   'ausbildung', 'berufserfahrung', 'studium', 'projekte', 'kontakt', 'hallo', 'danke', 'teamarbeit', 'stärken', 'schwächen',
+  'sie', 'kann', 'kennt', 'gelernt', 'studiert', 'beherrscht', 'verdienen', 'verdient',
+  'mochte', 'möchte', 'will', 'gehalt', 'gehaltsvorstellungen', 'wunschgehalt', 'vergütung', 'lohn',
+  'kenntnisse', 'fähigkeiten', 'programmiersprachen', 'technologien', 'programmierkenntnisse',
+  'jahresbrutto', 'entlohnung', 'gehaltlich', 'qualifikationen',
   'wochenstunden', 'arbeitszeit', 'teilzeit', 'arbeitserlaubnis', 'arbeitsberechtigung', 'arbeitsbewilligung', 'freizeit', 'lebenslauf'
 ])
 
 const englishWords = new Set([
-  'who', 'what', 'where', 'how', 'which', 'why', 'when', 'is', 'are', 'were', 'did',
+  'who', 'what', 'can', 'she', 'learned', 'learnt', 'studied', 'earn', 'salary',
+  'salaries', 'pay', 'compensation', 'skills', 'abilities', 'technologies', 'programming',
+  'qualifications', 'where', 'how', 'which', 'why', 'when', 'is', 'are', 'were', 'did',
   'does', 'has', 'have', 'worked', 'built', 'developed', 'responsible', 'tell', 'about',
   'your', 'please', 'and', 'education', 'experience', 'projects', 'hello', 'thanks', 'strengths', 'weaknesses', 'teamwork', 'hours', 'permit', 'hobbies', 'resume', 'résumé'
 ])

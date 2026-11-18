@@ -154,7 +154,7 @@ const suggestedQuestions = [
 ] as const
 
 const answerLanguage = computed(
-  () => detectAssistantLanguage(submittedQuestion.value) ?? locale.value
+  () => employerFaqReply.value ? 'de' : detectAssistantLanguage(submittedQuestion.value) ?? locale.value
 )
 
 function replyText(
@@ -277,8 +277,6 @@ async function requestPilotAnswer(
     12000
   )
 
-  aiReply.value = replyText('assistant.aiLoading')
-
   try {
     const response = await fetch('/api/pixel-chat', {
       method: 'POST',
@@ -293,45 +291,17 @@ async function requestPilotAnswer(
       signal: request.signal
     })
 
-    if (!response.ok) {
-      const body = await response.json().catch(() => null)
-      const errorCode =
-        body && typeof body.error === 'string' ? body.error : ''
-
-      const messageKey: Record<string, string> = {
-        quota_exceeded: 'assistant.errors.quota',
-        capacity: 'assistant.errors.capacity',
-        offline: 'assistant.errors.offline',
-        input: 'assistant.errors.input'
-      }
-
-      const key = messageKey[errorCode] ?? 'assistant.errors.general'
-      if (aiRequest === request && !disposed) {
-        aiReply.value = replyText(key)
-      }
-      return
-    }
+    if (!response.ok) return
 
     const { answer } = await response.json()
 
-    if (aiRequest === request) {
-      aiReply.value =
-        typeof answer === 'string'
-          ? topics.some(topic =>
-              topic.startsWith('assistant.projectReplies.')
-            )
-            ? withoutProjectAge(answer)
-            : answer
-          : replyText('assistant.aiUnknown')
+    if (aiRequest === request && !disposed && typeof answer === 'string' && answer.trim()) {
+      aiReply.value = topics.some(topic => topic.startsWith('assistant.projectReplies.'))
+        ? withoutProjectAge(answer)
+        : answer
     }
-  } catch (error) {
-    if (aiRequest === request && !disposed) {
-      aiReply.value = replyText(
-        error instanceof DOMException && error.name === 'AbortError'
-          ? 'assistant.errors.timeout'
-          : 'assistant.errors.network'
-      )
-    }
+  } catch {
+    // Bei Netzwerkfehlern und Zeitüberschreitungen bleibt die lokale Antwort sichtbar.
   } finally {
     window.clearTimeout(timeout)
 
@@ -354,28 +324,21 @@ function sendAssistantQuestion(input: string) {
   aiReply.value = ''
   employerFaqReply.value = null
 
-  // Sprache der Frage bestimmen
-  const questionLanguage =
-    detectAssistantLanguage(question) ?? locale.value
+  submittedQuestion.value = question
+  assistantQuestion.value = ''
 
-  // Zuerst die Arbeitgeber-Wissensbasis prüfen.
-  // Der FAQ-Katalog enthält derzeit deutsche Antworten.
-  if (questionLanguage === 'de') {
-    const employerAnswer = findEmployerFaqAnswer(question)
+  // Ein deutscher FAQ-Treffer kann auch bei einer anderssprachigen Website vorliegen.
+  const detectedLanguage = detectAssistantLanguage(question)
+  const employerAnswer = !detectedLanguage || detectedLanguage === 'de'
+    ? findEmployerFaqAnswer(question)
+    : null
 
-    if (employerAnswer) {
-      employerFaqReply.value = employerAnswer
-
-      submittedQuestion.value = question
-      assistantQuestion.value = ''
-
-      // Alte Suchergebnisse entfernen
-      currentTopics.value = []
-      followUp.value = null
-      lastTopic.value = null
-
-      return
-    }
+  if (employerAnswer) {
+    employerFaqReply.value = employerAnswer
+    currentTopics.value = []
+    followUp.value = null
+    lastTopic.value = null
+    return
   }
 
   // Bestehende Pixel-Wissensbasis verwenden
@@ -427,9 +390,6 @@ function sendAssistantQuestion(input: string) {
         ? topic
         : null
   }
-
-  submittedQuestion.value = question
-  assistantQuestion.value = ''
 
   const topics = currentTopics.value.map(
     topic => topic.answerKey
