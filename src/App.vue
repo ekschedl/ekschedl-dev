@@ -7,6 +7,7 @@ import { useI18n } from 'vue-i18n'
 import Assistant from './pixel/Assistant.vue'
 import LegalPage from './pages/LegalPage.vue'
 import ContactSection from './components/ContactSection.vue'
+import AboutSection from './components/AboutSection.vue'
 import { cvPath, hotelConsoleImage, projects, shopDemoUrl, skillGroups, todoDemoUrl, unoWebCover, unoWebDemoUrl } from './data/portfolioData'
 
 const { locale, t, tm, rt } = useI18n({ useScope: 'global' })
@@ -796,34 +797,7 @@ function scrollToTop() {
       </section>
 
       <!-- 03 / ABOUT ME -->
-      <section id="about" class="section about-section">
-        <div class="about-layout">
-          <div class="section-head">
-            <span class="section-number">{{ t('sectionAbout') }}</span>
-            <h2>{{ t('aboutTitle') }}</h2>
-          </div>
-
-          <div class="about-content">
-            <div class="about-topics">
-              <div v-for="(topic, index) in aboutSections" :key="index" class="about-topic">
-                <h3>{{ rt(topic.heading) }}</h3>
-                <p>{{ rt(topic.before) }}<strong>{{ rt(topic.emphasis) }}</strong>{{ rt(topic.after) }}</p>
-              </div>
-            </div>
-
-            <div class="values-line">
-              <div
-                v-for="(value, index) in values"
-                :key="value.symbol"
-                class="value-item"
-              >
-                <span aria-hidden="true">{{ value.symbol }}</span>
-                <strong>{{ t(`valueLabels.${index}`) }}</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <AboutSection />
 
       <!-- 04 / SAY HELLO   -->
       <ContactSection />
