@@ -1212,7 +1212,7 @@ async function sendContactMessage() {
 
   box-sizing: border-box;
   width: min(560px, calc(100% - 28px));
-  max-height: min(810px, calc(100dvh - 28px));
+  height: min(760px, calc(100dvh - 28px));
 
   overflow: hidden;
   padding: 0;
@@ -1238,7 +1238,6 @@ async function sendContactMessage() {
 
 .assistant-dialog::backdrop {
   background: rgb(20 36 30 / 43%);
-  backdrop-filter: blur(3px);
 }
 
 /* Innere Abstände */
@@ -1246,7 +1245,7 @@ async function sendContactMessage() {
 .assistant-content {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
-  max-height: min(808px, calc(100dvh - 30px));
+  height: 100%;
 }
 
 .assistant-scroll {
