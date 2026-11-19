@@ -1145,7 +1145,8 @@ async function sendContactMessage() {
   );
   --assistant-accent-ink: #fff;
   --assistant-subtle: color-mix(in srgb, var(--ink) 4%, var(--surface));
-  --assistant-mint: light-dark(var(--mist), #79a992);
+  --assistant-category-green: light-dark(color-mix(in srgb, var(--slate) 55%, var(--surface)), #435e46);
+  --assistant-mint: light-dark(var(--slate), #79a992);
   --assistant-contact-fill: color-mix(in srgb, var(--lilac) 22%, var(--surface));
   --assistant-mint-border: color-mix(in srgb, var(--assistant-mint) 49%, var(--assistant-line));
   --assistant-mint-open: light-dark(
@@ -1347,6 +1348,7 @@ async function sendContactMessage() {
   box-sizing: border-box;
   min-height: 54px;
   padding: 10px 8px;
+  border-radius: 7px;
   color: var(--ink);
   font-weight: 650;
   overflow-wrap: anywhere;
@@ -1377,8 +1379,10 @@ async function sendContactMessage() {
   color: var(--accent);
 }
 
-.assistant-suggestion-category > summary:hover {
-  background: var(--assistant-mint-open);
+@media (hover: hover) {
+  .assistant-suggestion-category > summary:hover {
+    background: var(--assistant-category-green);
+  }
 }
 
 .assistant-suggestions {
@@ -1414,7 +1418,7 @@ async function sendContactMessage() {
 
 @media (hover: hover) {
   .assistant-suggestions > button:hover {
-    background-color: color-mix(in srgb, var(--assistant-mint) 23%, var(--surface));
+    background-color: var(--assistant-category-green);
     color: var(--accent);
   }
 }
