@@ -1141,11 +1141,17 @@ async function sendContactMessage() {
   );
   --assistant-accent-ink: #fff;
   --assistant-subtle: color-mix(in srgb, var(--ink) 4%, var(--surface));
-  --assistant-warm: #ad7159;
-  --assistant-book-cover: #693f37;
-  --assistant-contact-surface: color-mix(in srgb, var(--assistant-warm) 16%, var(--surface));
-  --assistant-warm-line: color-mix(in srgb, var(--assistant-warm) 45%, var(--assistant-line));
-  --assistant-warm-light: color-mix(in srgb, var(--assistant-warm) 10%, var(--surface));
+  --assistant-mint: light-dark(#82b9a2, #79a992);
+  --assistant-contact-apricot: light-dark(#fbebdf, #62493c);
+  --assistant-mint-border: color-mix(in srgb, var(--assistant-mint) 49%, var(--assistant-line));
+  --assistant-mint-card: light-dark(
+    color-mix(in srgb, var(--assistant-mint) 12%, var(--surface)),
+    color-mix(in srgb, var(--assistant-mint) 12%, var(--surface))
+  );
+  --assistant-mint-open: light-dark(
+    color-mix(in srgb, var(--assistant-mint) 29%, var(--surface)),
+    color-mix(in srgb, var(--assistant-mint) 23%, var(--surface))
+  );
 
   box-sizing: border-box;
   width: min(560px, calc(100% - 28px));
@@ -1154,9 +1160,8 @@ async function sendContactMessage() {
   overflow: hidden;
   padding: 0;
 
-  border: 1px solid var(--assistant-line);
-  border-inline-start: 5px solid var(--assistant-warm);
-  border-radius: 14px 26px 26px 14px;
+  border: 1px solid var(--assistant-mint-border);
+  border-radius: 24px;
   background: var(--surface);
   color: var(--ink);
 
@@ -1170,7 +1175,6 @@ async function sendContactMessage() {
 
 :global(:root[data-theme='dark']) .assistant-dialog {
   --assistant-accent-ink: var(--paper);
-  --assistant-book-cover: #55372f;
 }
 
 /* Hintergrund hinter Pixel */
@@ -1207,8 +1211,7 @@ async function sendContactMessage() {
 
   padding: 16px var(--assistant-inset);
 
-  border-bottom: 1px solid var(--assistant-warm-line);
-  background: var(--assistant-book-cover);
+  background: #245c4b;
   color: #fff6ec;
 }
 
@@ -1228,7 +1231,7 @@ async function sendContactMessage() {
 
 .assistant-identity .assistant-avatar {
   padding: 6px;
-  border: 1px solid var(--assistant-warm-line);
+  border: 1px solid var(--assistant-mint-border);
   border-radius: 14px;
   background: var(--surface);
 }
@@ -1237,7 +1240,6 @@ async function sendContactMessage() {
 
 .assistant-header h2 {
   margin: 0;
-  font-family: Georgia, 'Times New Roman', serif;
   font-size: clamp(1.05rem, 3.8vw, 1.35rem);
   font-weight: 700;
   line-height: 1.2;
@@ -1285,7 +1287,7 @@ async function sendContactMessage() {
 }
 
 .assistant-header-status strong {
-  color: #f8d7b9;
+  color: #f4df9e;
   font-weight: 650;
   margin-inline-end: 5px;
 }
@@ -1319,42 +1321,51 @@ async function sendContactMessage() {
 
 .assistant-suggestion-categories {
   display: grid;
-  gap: 7px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 14px;
+  background: var(--assistant-mint-card);
 }
 
 .assistant-suggestion-category {
-  border: 1px solid var(--assistant-line);
-  border-radius: 6px;
-  background: var(--surface);
+  min-width: 0;
+  border-radius: 8px;
 }
 
 .assistant-suggestion-category[open] {
-  background: var(--assistant-warm-light);
+  grid-column: 1 / -1;
+  background: var(--assistant-mint-open);
 }
 
 .assistant-suggestion-category > summary {
   box-sizing: border-box;
-  min-height: 44px;
-  padding: 10px 12px;
+  min-height: 54px;
+  padding: 10px 8px;
   color: var(--ink);
   font-weight: 650;
+  overflow-wrap: anywhere;
   line-height: 1.4;
   cursor: pointer;
 }
 
 .assistant-suggestion-category > summary::marker {
-  color: var(--assistant-warm);
+  color: var(--accent);
 }
 
 .assistant-suggestion-category > summary:hover {
-  background: var(--assistant-warm-light);
+  background: var(--assistant-mint-open);
 }
 
 .assistant-suggestions {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 6px;
-  padding: 0 10px 10px;
+  gap: 0;
+  margin: 0 8px 8px;
+  padding: 2px 0;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--assistant-mint) 8%, var(--surface));
 }
 
 .assistant-suggestions > button {
@@ -1362,16 +1373,15 @@ async function sendContactMessage() {
   align-items: center;
   width: 100%;
   min-height: 44px;
-  padding: 11px 14px;
+  padding: 7px 10px;
 
-  border: 1px solid var(--assistant-line);
-  border-radius: 12px;
-  background: var(--surface);
+  border: 0;
+  background: transparent;
   color: var(--ink);
 
   font: inherit;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.4;
   text-align: start;
 
@@ -1379,14 +1389,20 @@ async function sendContactMessage() {
   transition: background-color 0.2s ease;
 }
 
-.assistant-suggestions > button:hover {
-  background-color: var(--assistant-subtle);
+@media (hover: hover) {
+  .assistant-suggestions > button:hover {
+    background-color: color-mix(in srgb, var(--assistant-mint) 23%, var(--surface));
+    color: var(--accent);
+  }
 }
 
 .assistant-suggestions > button[aria-expanded='true'] {
-  border-color: var(--accent);
-  background-color: var(--assistant-tint);
   color: var(--accent);
+  font-weight: 700;
+}
+
+.assistant-suggestions > button:focus-visible {
+  outline-offset: -2px;
 }
 
 .assistant-contact > p {
@@ -1443,8 +1459,8 @@ async function sendContactMessage() {
   display: grid;
   gap: 10px;
   padding: 12px var(--assistant-inset) max(12px, env(safe-area-inset-bottom));
-  border-top: 1px solid var(--assistant-line);
-  background: var(--assistant-subtle);
+  border-top: 2px solid var(--accent);
+  background: var(--surface);
 }
 
 .assistant-question-form label {
@@ -1659,9 +1675,9 @@ async function sendContactMessage() {
   gap: 10px;
   min-height: 44px;
   padding: 6px 12px;
-  border: 1px solid var(--assistant-line);
+  border: 0;
   border-radius: 12px;
-  background: var(--assistant-contact-surface);
+  background: var(--assistant-contact-apricot);
   color: var(--ink);
   font: inherit;
   font-size: 0.9rem;
@@ -1671,7 +1687,7 @@ async function sendContactMessage() {
 }
 
 .assistant-contact-trigger:hover {
-  background: var(--assistant-subtle);
+  background: color-mix(in srgb, var(--assistant-contact-apricot) 88%, var(--ink));
 }
 
 .assistant-contact-icon {
