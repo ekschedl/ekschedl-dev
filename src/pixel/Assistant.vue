@@ -21,7 +21,7 @@ const emit = defineEmits<{ openProject: [event: MouseEvent, projectId: string] }
 // Dialog, aktuelle Eingabe und zuletzt abgeschickte Frage für die Anzeige.
 const assistantDialog = ref<HTMLDialogElement | null>(null)
 const assistantScroll = ref<HTMLDivElement | null>(null)
-const questionBubble = ref<HTMLParagraphElement | null>(null)
+const questionTurn = ref<HTMLDivElement | null>(null)
 const assistantQuestion = ref('')
 const submittedQuestion = ref('')
 const replyExpanded = ref(false)
@@ -355,7 +355,7 @@ function openAnswerLink(
 function scrollToCurrentQuestion(sequence: number) {
   void nextTick(() => {
     const scroll = assistantScroll.value
-    const question = questionBubble.value
+    const question = questionTurn.value
     if (sequence !== questionSequence || !replyExpanded.value || contactOpen.value || !assistantDialog.value?.open || !scroll || !question) return
 
     scroll.scrollTop += question.getBoundingClientRect().top - scroll.getBoundingClientRect().top - 12
@@ -455,9 +455,7 @@ function resetReply() {
   return sequence
 }
 
-function closeDesktopExamples() {
-  if (!window.matchMedia('(min-width: 680px)').matches) return
-
+function closeOpenExamples() {
   const openCategory = assistantScroll.value?.querySelector<HTMLDetailsElement>(
     '.assistant-suggestion-category[open]'
   )
@@ -474,7 +472,7 @@ function sendAssistantQuestion(
 
   if (!question || question.length > 500) return
 
-  if (ownQuestion) closeDesktopExamples()
+  if (ownQuestion) closeOpenExamples()
   const sequence = resetReply()
 
   submittedQuestion.value = question
@@ -787,13 +785,10 @@ async function sendContactMessage() {
           </section>
 
           <!-- Frage des Besuchers -->
-          <p
-            v-if="submittedQuestion"
-            ref="questionBubble"
-            class="assistant-question"
-          >
-            {{ submittedQuestion }}
-          </p>
+          <div v-if="submittedQuestion" ref="questionTurn" class="assistant-question-turn">
+            <span class="assistant-speaker">{{ replyText('assistant.questionLabel') }}</span>
+            <h3 class="assistant-question">{{ submittedQuestion }}</h3>
+          </div>
 
           <button
             v-if="submittedQuestion && !replyExpanded"
@@ -806,166 +801,172 @@ async function sendContactMessage() {
           </button>
 
           <!-- Antworten -->
-          <div
-            id="pixel-current-reply"
-            class="assistant-replies"
-            aria-live="polite"
-            @click="collapseReplyOnClick"
-            :lang="answerLanguage"
-          >
-            <template v-if="submittedQuestion && replyExpanded">
+          <div v-show="submittedQuestion && replyExpanded" class="assistant-reply-turn">
+            <div class="assistant-speaker assistant-speaker-pixel">
+              <img src="/images/pixel-avatar.png" alt="" width="24" height="24" />
+              <span>Pixel</span>
+            </div>
+            <div
+              id="pixel-current-reply"
+              class="assistant-replies"
+              aria-live="polite"
+              @click="collapseReplyOnClick"
+              :lang="answerLanguage"
+            >
+              <template v-if="submittedQuestion && replyExpanded">
 
-              <p v-if="aiPending" class="assistant-reply">
-                {{ replyText('assistant.loadingAnswer') }}
-              </p>
+                <p v-if="aiPending" class="assistant-reply">
+                  {{ replyText('assistant.loadingAnswer') }}
+                </p>
 
-              <article v-else-if="aiReply || employerFaqReply" class="assistant-reply">
-                <p class="assistant-reply-text">{{ aiReply || employerFaqReply }}</p>
-                <div v-if="answerLinksToPortfolio || employerFaqDemoUrl" class="assistant-answer-links">
-                  <a
-                    v-if="employerFaqDemoUrl"
-                    class="assistant-details"
-                    :href="employerFaqDemoUrl"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {{ replyText('assistant.projectDemoLink') }}
-                  </a>
-                  <a
-                    v-if="answerLinksToPortfolio"
-                    class="assistant-details"
-                    href="/#projects"
-                    @click="openAnswerLink($event)"
-                  >
-                    {{ replyText('nav.1') }}
-                  </a>
-                </div>
-              </article>
-
-              <template v-else-if="answers.length">
-                <article
-                  v-for="(answer, index) in answers"
-                  :key="index"
-                  class="assistant-reply"
-                >
-                  <h3 v-if="answer.title">
-                    {{ answer.title }}
-                  </h3>
-
-                  <p class="assistant-reply-text">{{ answer.text }}</p>
-
-                  <p v-if="answer.stack">
-                    <strong>
-                      {{ replyText('experiencePage.techStack') }}
-                    </strong>
-                    · {{ answer.stack }}
-                  </p>
-
-                  <div
-                    v-if="answer.detailsPath"
-                    class="assistant-answer-links"
-                  >
+                <article v-else-if="aiReply || employerFaqReply" class="assistant-reply">
+                  <p class="assistant-reply-text">{{ aiReply || employerFaqReply }}</p>
+                  <div v-if="answerLinksToPortfolio || employerFaqDemoUrl" class="assistant-answer-links">
                     <a
+                      v-if="employerFaqDemoUrl"
                       class="assistant-details"
-                      :href="answer.detailsPath"
-                      :target="
-                        answer.detailsNewTab
-                          ? '_blank'
-                          : undefined
-                      "
-                      :rel="
-                        answer.detailsNewTab
-                          ? 'noopener noreferrer'
-                          : undefined
-                      "
-                      @click="
-                        openAnswerLink(
-                          $event,
-                          answer.project?.id
-                        )
-                      "
-                    >
-                      {{ answer.detailsLabel }}
-                    </a>
-
-                    <a
-                      v-if="answer.project"
-                      class="assistant-details"
-                      :href="answer.project.url"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {{ replyText('projectLink') }}
-                    </a>
-
-                    <a
-                      v-if="answer.demoUrl"
-                      class="assistant-details"
-                      :href="answer.demoUrl"
+                      :href="employerFaqDemoUrl"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       {{ replyText('assistant.projectDemoLink') }}
                     </a>
-                  </div>
-                </article>
-              </template>
-
-              <!-- Antwort, wenn kein Thema erkannt wird -->
-              <div
-                v-else
-                class="assistant-reply assistant-fallback"
-              >
-                <p>
-                  {{
-                    replyText(
-                      projectReference.test(submittedQuestion)
-                        ? 'assistant.whichProject'
-                        : 'assistant.fallbackAnswer'
-                    )
-                  }}
-                </p>
-
-                <ul>
-                  <li>
                     <a
+                      v-if="answerLinksToPortfolio"
+                      class="assistant-details"
                       href="/#projects"
                       @click="openAnswerLink($event)"
                     >
                       {{ replyText('nav.1') }}
                     </a>
-                  </li>
+                  </div>
+                </article>
 
-                  <li>
-                    <a
-                      href="/Ausbildung"
-                      @click="openAnswerLink($event)"
-                    >
-                      {{ replyText('educationPage.title') }}
-                    </a>
-                  </li>
+                <template v-else-if="answers.length">
+                  <article
+                    v-for="(answer, index) in answers"
+                    :key="index"
+                    class="assistant-reply"
+                  >
+                    <h3 v-if="answer.title">
+                      {{ answer.title }}
+                    </h3>
 
-                  <li>
-                    <a
-                      href="/Berufserfahrung"
-                      @click="openAnswerLink($event)"
-                    >
-                      {{ replyText('experiencePage.title') }}
-                    </a>
-                  </li>
+                    <p class="assistant-reply-text">{{ answer.text }}</p>
 
-                  <li>
-                    <a
-                      :href="cvPath"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <p v-if="answer.stack">
+                      <strong>
+                        {{ replyText('experiencePage.techStack') }}
+                      </strong>
+                      · {{ answer.stack }}
+                    </p>
+
+                    <div
+                      v-if="answer.detailsPath"
+                      class="assistant-answer-links"
                     >
-                      {{ replyText('cvDownload') }}
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </template>
+                      <a
+                        class="assistant-details"
+                        :href="answer.detailsPath"
+                        :target="
+                          answer.detailsNewTab
+                            ? '_blank'
+                            : undefined
+                        "
+                        :rel="
+                          answer.detailsNewTab
+                            ? 'noopener noreferrer'
+                            : undefined
+                        "
+                        @click="
+                          openAnswerLink(
+                            $event,
+                            answer.project?.id
+                          )
+                        "
+                      >
+                        {{ answer.detailsLabel }}
+                      </a>
+
+                      <a
+                        v-if="answer.project"
+                        class="assistant-details"
+                        :href="answer.project.url"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {{ replyText('projectLink') }}
+                      </a>
+
+                      <a
+                        v-if="answer.demoUrl"
+                        class="assistant-details"
+                        :href="answer.demoUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {{ replyText('assistant.projectDemoLink') }}
+                      </a>
+                    </div>
+                  </article>
+                </template>
+
+                <!-- Antwort, wenn kein Thema erkannt wird -->
+                <div
+                  v-else
+                  class="assistant-reply assistant-fallback"
+                >
+                  <p>
+                    {{
+                      replyText(
+                        projectReference.test(submittedQuestion)
+                          ? 'assistant.whichProject'
+                          : 'assistant.fallbackAnswer'
+                      )
+                    }}
+                  </p>
+
+                  <ul>
+                    <li>
+                      <a
+                        href="/#projects"
+                        @click="openAnswerLink($event)"
+                      >
+                        {{ replyText('nav.1') }}
+                      </a>
+                    </li>
+
+                    <li>
+                      <a
+                        href="/Ausbildung"
+                        @click="openAnswerLink($event)"
+                      >
+                        {{ replyText('educationPage.title') }}
+                      </a>
+                    </li>
+
+                    <li>
+                      <a
+                        href="/Berufserfahrung"
+                        @click="openAnswerLink($event)"
+                      >
+                        {{ replyText('experiencePage.title') }}
+                      </a>
+                    </li>
+
+                    <li>
+                      <a
+                        :href="cvPath"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {{ replyText('cvDownload') }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
       </div>
@@ -1450,7 +1451,7 @@ async function sendContactMessage() {
 
 .assistant-suggestion-category > summary {
   display: grid;
-  grid-template-columns: 2ch minmax(0, 1fr);
+  grid-template-columns: 2rem minmax(0, 1fr);
   align-items: baseline;
   gap: 8px;
   box-sizing: border-box;
@@ -1468,12 +1469,29 @@ async function sendContactMessage() {
   display: none;
 }
 
+.assistant-suggestion-category {
+  --category-number-accent: var(--slate);
+}
+
+.assistant-suggestion-category:nth-child(2) {
+  --category-number-accent: var(--lilac);
+}
+
+.assistant-suggestion-category:nth-child(3) {
+  --category-number-accent: var(--mist);
+}
+
+.assistant-suggestion-category:nth-child(4) {
+  --category-number-accent: light-dark(#efb58f, #78433c);
+}
+
 .assistant-suggestion-category > summary::before {
   content: counter(pixel-category, decimal-leading-zero);
-  color: var(--accent);
+  color: color-mix(in srgb, var(--category-number-accent) 32%, var(--ink));
   font-size: 0.8em;
-  font-weight: 500;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
+  text-align: center;
 }
 
 .assistant-suggestion-category > summary > span {
@@ -1665,20 +1683,43 @@ async function sendContactMessage() {
 
 /* Frage des Besuchers */
 
-.assistant-question {
+.assistant-question-turn,
+.assistant-reply-turn {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.assistant-question-turn {
   justify-self: end;
-  max-width: 92%;
-  margin: 4px 0 0;
-  padding: 9px 14px;
+  max-width: 90%;
+}
 
-  border: 1px solid var(--assistant-line);
-  border-radius: 18px 18px 5px 18px;
+.assistant-question-turn .assistant-speaker {
+  text-align: end;
+}
 
-  background: var(--assistant-subtle);
+.assistant-speaker {
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
 
+.assistant-speaker-pixel {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.assistant-question {
+  margin: 0;
+  padding: 9px 12px;
+  border-radius: 9px 9px 3px 9px;
+  background: color-mix(in srgb, var(--assistant-mint) 22%, var(--surface));
   color: var(--ink);
-  font: inherit;
-  text-align: start;
+  font-size: 1.05rem;
+  font-weight: 650;
+  line-height: 1.4;
   overflow-wrap: anywhere;
 }
 
@@ -1724,18 +1765,11 @@ async function sendContactMessage() {
 }
 
 .assistant-reply {
-  cursor: pointer;
   margin: 0;
-  padding: 14px 16px;
-
-  border: 1px solid var(--assistant-line);
-  border-inline-start: 4px solid var(--accent);
-  border-radius: 18px 18px 18px 5px;
-
-  background: var(--assistant-subtle);
-
-  line-height: 1.6;
+  color: var(--ink);
+  line-height: 1.65;
   overflow-wrap: anywhere;
+  cursor: pointer;
 }
 
 .assistant-reply h3,
@@ -1784,6 +1818,14 @@ async function sendContactMessage() {
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
+}
+
+.assistant-reply .assistant-details {
+  min-height: 44px;
+  padding: 0 4px 0 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .assistant-dialog :is(

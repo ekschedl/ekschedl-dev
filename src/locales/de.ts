@@ -80,7 +80,7 @@ export default {
         },
         contactForm: {
             verificationError: 'Die Sicherheitsprüfung konnte nicht geladen werden. Bitte versuchen Sie es erneut.',
-            open: 'Ekaterina eine Nachricht schreiben',
+            open: 'Ekaterina schreiben',
             backToChat: 'Zurück zu Pixel',
             invitation: 'Möchten Sie Ekaterina eine Nachricht hinterlassen? Ihre E-Mail-Adresse wird für eine Rückantwort mitgesendet.',
             email: 'Ihre E-Mail-Adresse',
