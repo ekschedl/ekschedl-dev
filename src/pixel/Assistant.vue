@@ -1436,7 +1436,7 @@ async function sendContactMessage() {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;
   gap: 8px;
-  padding: 6px;
+  padding: 6px 6px 6px 0;
   border-radius: 14px;
   background: var(--surface);
 }
@@ -1459,7 +1459,7 @@ async function sendContactMessage() {
   gap: 8px;
   box-sizing: border-box;
   min-height: 54px;
-  padding: 10px 8px;
+  padding: 10px 8px 10px 4px;
   border-radius: 7px;
   color: var(--ink);
   font-weight: 650;
@@ -1613,27 +1613,21 @@ async function sendContactMessage() {
 
 .assistant-composer {
   display: grid;
-  row-gap: 4px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+  align-items: center;
+  gap: 4px 10px;
   padding: 12px var(--assistant-inset) max(8px, env(safe-area-inset-bottom));
   border-top: 1px solid var(--assistant-line);
   background: var(--surface);
 }
 
-@media (min-width: 350px) {
-  .assistant-composer {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    column-gap: 12px;
-  }
+.assistant-question-form,
+.assistant-privacy[open] {
+  grid-column: 1 / -1;
+}
 
-  .assistant-question-form,
-  .assistant-privacy[open] {
-    grid-column: 1 / -1;
-  }
-
-  .assistant-contact-trigger {
-    grid-column: 2;
-  }
+.assistant-contact-trigger {
+  grid-column: 2;
 }
 
 .assistant-question-form label {
@@ -1873,8 +1867,82 @@ async function sendContactMessage() {
 /* Kleine Smartphones */
 
 @media (max-width: 340px) {
-  .assistant-question-form {
+  .assistant-dialog {
+    --assistant-inset: 8px;
+    width: calc(100% - 10px);
+    border-radius: 14px;
+  }
+
+  .assistant-header {
+    align-items: flex-start;
+    gap: 4px;
+    padding-block: 10px;
+  }
+
+  .assistant-identity {
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  .assistant-identity .assistant-avatar {
+    width: 34px;
+    height: 34px;
+    padding: 3px;
+    border-radius: 8px;
+  }
+
+  .assistant-heading,
+  .assistant-contact-trigger,
+  .assistant-privacy,
+  .assistant-status,
+  .assistant-contact-form {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .assistant-heading {
+    gap: 3px;
+  }
+
+  .assistant-message,
+  .assistant-header-status {
+    font-size: 0.75rem;
+  }
+
+  .assistant-scroll {
+    gap: 10px;
+    padding-block: 10px;
+  }
+
+  .assistant-suggestion-categories,
+  .assistant-contact-form {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .assistant-suggestion-categories {
+    gap: 4px;
+  }
+
+  .assistant-suggestion-category > summary {
+    min-height: 44px;
+  }
+
+  .assistant-composer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-top: 8px;
+  }
+
+  .assistant-question-form {
+    gap: 5px 6px;
+  }
+
+  .assistant-question-form button {
+    padding-inline: 9px;
+  }
+
+  .assistant-privacy summary,
+  .assistant-contact-trigger {
+    font-size: 0.75rem;
   }
 }
 
