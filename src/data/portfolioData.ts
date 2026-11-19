@@ -70,7 +70,7 @@ export const projects = [
     image: '/images/todo-aufgaben.jpg',
     url: 'https://github.com/ekschedl/jawa_todo',
     demoUrl: todoDemoUrl,
-    stack: 'Vue 3 · TypeScript · Vuetify · Pinia'
+    stack: 'Vue · TypeScript · Vuetify · Pinia'
   },
   {
     id: 'shopplatzi',
@@ -79,7 +79,7 @@ export const projects = [
     image: '/images/todo-shopplatzi.jpg',
     url: 'https://github.com/ekschedl/jawa_todo',
     demoUrl: shopDemoUrl,
-    stack: 'Vue 3 · TypeScript · Vuetify · Pinia · Axios · REST-APIs'
+    stack: 'Vue · TypeScript · Vuetify · Pinia · Axios · REST-APIs'
   },
   {
     id: 'uno-web',
@@ -96,7 +96,7 @@ export const projects = [
     area: 'web',
     image: '/images/pixel-avatar.png',
     url: 'https://github.com/ekschedl/ekschedl-dev',
-    stack: 'Vue 3 · TypeScript · Cloudflare Workers AI'
+    stack: 'Vue · TypeScript · Cloudflare Workers AI'
   }
 ] as const
 
@@ -108,7 +108,7 @@ export const skillGroups = [
       { name: 'CSS', icon: 'css3', color: '1572B6' },
       { name: 'JavaScript', icon: 'javascript', color: 'B99B00' },
       { name: 'TypeScript', icon: 'typescript', color: '3178C6' },
-      { name: 'Vue 3', icon: 'vuedotjs', color: '42B883' },
+      { name: 'Vue', icon: 'vuedotjs', color: '42B883' },
       { name: 'SwiftUI', icon: 'swift', color: 'F05138', note: 'project' },
       { name: 'Swift', icon: 'swift', color: 'F05138' },
       { name: 'Vuetify', icon: 'vuetify', color: '1867C0' },

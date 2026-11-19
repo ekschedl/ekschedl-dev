@@ -7,9 +7,21 @@ const softwareEngineeringCompletion = formatKnowledgeMonth(pixelFacts.softwareEn
 
 // Vom Nutzer bestätigte Berufserfahrung. Die Dauer stammt aus den gemeinsamen Fakten.
 // Gemeinsame Projektantwort für Pixel und die zugehörigen FAQ.
-const portfolioAssistantReply = "Der KI-Assistent gehört zu Ekaterinas Portfolio-Website, die sie mit Unterstützung von KI entwickelt und schrittweise erweitert. Die Website nutzt Vue 3, TypeScript, Vue I18n und Vite und stellt ihre Projekte, Ausbildung und Berufserfahrung auf Deutsch, Englisch und Russisch vor. Der Assistent verbindet vorbereitete FAQ-Antworten mit einer optionalen KI-Funktion über Cloudflare Pages Functions und Workers AI. Zum Kontaktformular gehören die Spam-Prüfung mit Turnstile und der E-Mail-Versand über Resend."
+const portfolioAssistantReply = "Der KI-Assistent gehört zu Ekaterinas Portfolio-Website, die sie mit Unterstützung von KI entwickelt und schrittweise erweitert. Die Website nutzt Vue, TypeScript, Vue I18n und Vite und stellt ihre Projekte, Ausbildung und Berufserfahrung auf Deutsch, Englisch und Russisch vor. Der Assistent verbindet vorbereitete FAQ-Antworten mit einer optionalen KI-Funktion über Cloudflare Pages Functions und Workers AI. Zum Kontaktformular gehören die Spam-Prüfung mit Turnstile und der E-Mail-Versand über Resend."
 
 const jawaVueExperience = `Ekaterina hat ${jawaExperienceMonths} Monate bei JAWA Management Software GmbH mit Vue gearbeitet.`
+
+const projectOverview = [
+  "Mit ihrer To-do-App hat Ekaterina einen kleinen Alltagshelfer gebaut, in dem Sie Aufgaben festhalten, abhaken und löschen können. In der Shop-Demo ShopPlatzi können Sie Produkte suchen, filtern und in den Warenkorb legen.",
+  "Für den Lutscherhersteller Feta setzte Ekaterina eine statische Website in WordPress um und entwickelte dafür ein eigenes Theme. Die Seiten für den Produktkatalog, die Zutatenlisten und das Kontaktformular baute sie mit PHP-Templates. Die kleine Kaffeehaus-Website Mokka entstand als Übung für HTML, CSS und JavaScript. Außerdem entwickelte Ekaterina ihr mehrsprachiges Portfolio und integrierte Pixel, der Fragen zu ihren Projekten beantwortet.",
+  "Bei der iOS-App YogaNow Studio hat Ekaterina im Team das Design, die Anbindung an Supabase und die Kursbuchung übernommen. Wer die App öffnet, kann in der Yoga-Bibliothek stöbern und einen Kurs im Studio buchen.",
+  "Auch für die Verwaltung hat sie zwei Anwendungen gebaut. Ihre Hotelsoftware in Java führt Gäste, Zimmer, Buchungen und Zusatzleistungen zusammen. In ihrer Windows-App lassen sich Geschenkideen sammeln und filtern, und vorhandene Einträge können Sie bearbeiten oder kopieren.",
+  "Spiele gehören ebenfalls zu ihrem Portfolio. Das UNO-Konsolenspiel in Java entstand im Team. Aus der gemeinsam entwickelten Oberfläche von CAMPUS02 ColorSpiel hat Ekaterina eine eigene Webversion für vier Personen an einem Bildschirm gemacht. Dafür schrieb sie ein Backend, das Karten austeilt, Spielzüge prüft und die Punkte zählt.",
+].join('\n\n')
+
+const wifiWebDevelopmentAnswer = "Ja. Am WIFI Steiermark lernte Ekaterina, wie man Websites plant, mit HTML strukturiert, mit CSS responsiv gestaltet und mit JavaScript interaktiv macht. Für ihr Diplomprojekt setzte sie das mit WordPress und PHP praktisch um. Sie entwickelte für den Lutscherhersteller Feta ein eigenes responsives WordPress-Theme mit Produktkatalog, Zutatenlisten und Kontaktformular."
+
+const campusSoftwareEngineeringAnswer = `Von Februar 2025 bis ${softwareEngineeringCompletion} absolvierte Ekaterina an der FH CAMPUS 02 den akademischen Hochschullehrgang Software Engineering. Sie schloss als Akademische Softwareentwicklerin (Akad.-SE) ab.\n\nSie lernte objektorientierte Programmierung, Algorithmen und Datenstrukturen sowie Software Engineering mit Architektur und Design. Weitere Schwerpunkte waren Datenbanken und SQL, Webentwicklung und interaktive Systeme, REST-APIs und servicebasierte Systeme, mobile Anwendungsentwicklung und Software-Qualitätssicherung.\n\nAuf dem Gelernten baut Ekaterina weiter auf und vertieft ihre Kenntnisse in eigenen Projekten.`
 
 export default {
   latestProjects: 'Zuletzt gebaut',
@@ -51,7 +63,7 @@ export default {
     loadingAnswer: 'Pixel ruft eine Antwort ab …',
         aiPrivacy: "In der Testversion verarbeitet Cloudflare Workers AI (Cloudflare, Inc., USA) Ihre Frage zum Portfolio, um eine Antwort zu erzeugen. Bitte geben Sie keine persönlichen Daten ein.",
         open: 'Lieber persönlich Kontakt aufnehmen?',
-        aiNotice: "Testversion des KI-Assistenten. Fragen zum Portfolio können zur Beantwortung an Cloudflare Workers AI gesendet werden. Antworten können Fehler enthalten. Bitte geben Sie keine persönlichen Daten ein.",
+        aiNotice: "Fragen können an Cloudflare Workers AI gesendet werden. Bitte keine persönlichen Daten eingeben.",
         cvTitle: 'Lebenslauf',
         cvAnswer: 'Hier finden Sie Ekaterinas Lebenslauf als PDF.',
         projectDetailsLink: 'Projekt im Portfolio ansehen',
@@ -67,7 +79,8 @@ export default {
         },
         contactForm: {
             verificationError: 'Die Sicherheitsprüfung konnte nicht geladen werden. Bitte versuchen Sie es erneut.',
-            open: 'Ekaterina eine Nachricht hinterlassen',
+            open: 'Ekaterina eine Nachricht schreiben',
+            backToChat: 'Zurück zu Pixel',
             invitation: 'Möchten Sie Ekaterina eine Nachricht hinterlassen? Ihre E-Mail-Adresse wird für eine Rückantwort mitgesendet.',
             email: 'Ihre E-Mail-Adresse',
             message: 'Ihre Nachricht',
@@ -78,10 +91,11 @@ export default {
             unavailable: 'Der Nachrichtenversand ist gerade nicht verfügbar.',
         },
         suggestionLabel: 'Beispielfragen',
-        suggestions: {
-            projects: 'Welche Projekte hat Ekaterina entwickelt?',
-            teamwork: 'Wie wichtig ist Teamarbeit für Ekaterina?',
-            workplace: 'Welches Arbeitsmodell passt für Ekaterina?',
+        suggestionCategories: {
+            projects: 'Projekte',
+            education: 'Ausbildung',
+            experience: 'Berufserfahrung & Technologien',
+            collaboration: 'Zusammenarbeit & Arbeitszeiten',
         },
         detailsLink: 'Vollständige Informationen ansehen',
         personalReplies: {
@@ -126,14 +140,16 @@ export default {
                 answer: "Ekaterina ist schon mehrmals einen Halbmarathon gelaufen. Sie trainiert Pole Sport, tanzt gern Hip-Hop und liebt es, zu reisen und dabei Neues kennenzulernen.",
             },
         },
-        name: "KI-Assistent",
+        name: "Pixel – KI-Assistent",
         title: 'KI-Assistent',
         status: "Testversion",
         statusNote: "Bitte wichtige Angaben prüfen.",
-        greeting: "Dieser KI-Assistent beantwortet Fragen zu Ekaterinas Projekten, Ausbildung und Berufserfahrung und hilft, passende Informationen auf der Website zu finden.",
+        greeting: "Fragen zu Ekaterinas Projekten, Ausbildung und Beruf.",
+        showAnswer: 'Antwort anzeigen',
         questionLabel: 'Ihre Frage',
         send: 'Senden',
         whichProject: "Welches Projekt meinen Sie? Nennen Sie mir gern den Projektnamen.",
+        undocumentedSkillsAnswer: "Im Portfolio steht, womit Ekaterina bereits gearbeitet hat. Welche Fähigkeiten ihr fehlen, geht daraus nicht hervor. Wenn Sie nach einer bestimmten Technologie fragen, kann ich nachsehen, ob dazu Erfahrung dokumentiert ist.",
         fallbackAnswer: 'Dazu habe ich gerade keine genaue Antwort. Vielleicht finden Sie die gesuchte Information in einem dieser Bereiche des Portfolios.',
         profileAnswer: 'Ekaterina Schedlberger ist Softwareentwicklerin in Graz. In ihrem Portfolio stellt sie ihre Ausbildung, ihre Berufserfahrung und ihre Projekte vor – von der To-do-App bis zur Hotelverwaltung. Wenn Sie sich selbst ein Bild machen möchten, können Sie hier UNO spielen und ihre Projektdemos ausprobieren. Ekaterina setzt sich gern klare Ziele und arbeitet sorgfältig und termingerecht. Sie freut sich über passende Stellenangebote in der Softwareentwicklung.',
         educationAnswer: `Ekaterina hat im ${softwareEngineeringCompletion} den Hochschullehrgang Software Engineering an der FH CAMPUS 02 abgeschlossen. Davor studierte sie Transkulturelle Kommunikation an der Universität Graz und schloss in Irkutsk ein Studium in Wirtschaft und Management ab.`,
@@ -148,7 +164,7 @@ export default {
         },
         overview: {
             experience: "Ekaterinas Weg führte vom Wertpapierbereich über die Hotellerie und das Dolmetschen in die Softwareentwicklung. Heute bringt sie diese Erfahrungen in ihre Arbeit ein. In der Rubrik Berufserfahrung finden Sie die einzelnen Stationen.",
-            projects: "Ekaterinas Projekte reichen von der Yoga-App YogaNow Studio über eine Aufgabenliste und eine Shop-Demo bis zur Hotel- und Geschenkeverwaltung. Sie finden dort auch die Websites für Feta und das Kaffeehaus Mokka sowie zwei Varianten von UNO. Probieren Sie gern eine der verfügbaren Demos aus." + " Dazu gehört auch ihre eigene mehrsprachige Portfolio-Website mit integriertem KI-Assistenten.",
+            projects: projectOverview,
             technologies: jawaVueExperience + " " + 'Ekaterina hat mit Vue und TypeScript Webanwendungen umgesetzt, mit Java eine Hotelverwaltung gebaut und bei JAWA mit PHP und SQL an bestehender Software gearbeitet.',
             contact: "Wenn Sie mit Ekaterina in Kontakt treten möchten, finden Sie ihr GitHub-Profil im Kontaktbereich des Portfolios. Sie freut sich über interessante Projekte und passende Stellenangebote in der Softwareentwicklung.",
             python: "Ekaterina möchte selbst ausprobieren, wie Modelle aus Daten lernen und woran sich verlässliche Ergebnisse erkennen lassen. Ihr Einstieg ist ein Python-Kurs in Hagen, der für Ende November 2026 geplant ist.",
@@ -167,10 +183,10 @@ export default {
             geschenkeverwaltung: "Mit der Windows-App können Sie Geschenke anlegen, bearbeiten, kopieren und filtern. Ekaterina zeigt am Löschen eines Eintrags, wie Oberfläche, ViewModel und Datenzugriff zusammenspielen. Die Galerie gibt Ihnen einen Eindruck von der Anwendung.",
         },
         educationReplies: {
-            softwareEngineering: `Ekaterina hat den Hochschullehrgang Software Engineering an der FH CAMPUS 02 im ${softwareEngineeringCompletion} abgeschlossen. Zu den Schwerpunkten gehörten Programmierung, Datenbanken, Softwarearchitektur und Qualitätssicherung.`,
+            softwareEngineering: campusSoftwareEngineeringAnswer,
             vue: "Bei Glo Academy hat Ekaterina die Grundlagen von Vue.js gelernt und ein erstes Projekt damit umgesetzt. Wenn Sie Vue im Einsatz sehen möchten, können Sie sich ihre To-do-App ansehen.",
             javascript: "Ekaterina hat sich bei Glo Academy in JavaScript weitergebildet. Im Portfolio sehen Sie JavaScript zum Beispiel auf der Website für das Kaffeehaus Mokka und im webbasierten Kartenspiel.",
-            webDevelopment: "Ekaterina hat am WIFI Steiermark eine Weiterbildung in Webentwicklung absolviert. Ihr Diplomprojekt war Feta, eine WordPress-Website für einen Lutscherhersteller. Einen Einblick bekommen Sie in der Projektgalerie.",
+            webDevelopment: wifiWebDevelopmentAnswer,
             reception: "Ekaterina hat am WIFI Steiermark die Ausbildung zur geprüften Rezeptionistin abgeschlossen. Später arbeitete sie vier Jahre lang an der Rezeption des Boutiquehotels Dom in Graz.",
             englishB1: "Ekaterina besuchte einen Englischkurs auf dem Niveau B1 am Internationalen Sprachzentrum der Universität Graz.",
             englishA2B1: "Ekaterina besuchte am Internationalen Sprachzentrum der Universität Graz Englischkurse auf den Niveaus A2 und B1.",
@@ -715,7 +731,7 @@ export const employerFaq = [
   {
     "id": 31,
     "question": "Was hat sie an der FH CAMPUS 02 gelernt?",
-    "answer": "Zu den Schwerpunkten gehörten objektorientierte Programmierung, Algorithmen und Datenstrukturen, Datenbankentwicklung, Softwarearchitektur, Webentwicklung, REST-APIs und Softwarequalitätssicherung. Das Gelernte setzte sie auch in praktischen Projekten um."
+    "answer": campusSoftwareEngineeringAnswer
   },
   {
     "id": 32,
@@ -730,7 +746,7 @@ export const employerFaq = [
   {
     "id": 34,
     "question": "Hat Ekaterina eine Ausbildung in Webentwicklung?",
-    "answer": "Ja. Sie absolvierte eine Weiterbildung in Webentwicklung am WIFI Steiermark. Ihr Diplomprojekt war die Website Feta für einen Lutscherhersteller."
+    "answer": wifiWebDevelopmentAnswer
   },
   {
     "id": 35,
@@ -740,7 +756,7 @@ export const employerFaq = [
   {
     "id": 36,
     "question": "Hat sie Vue.js gelernt?",
-    "answer": "Ja. Anfang 2025 beschäftigte sie sich bei Glo Academy mit den Grundlagen von Vue.js und setzte ein erstes Projekt um. Vue 3 verwendet sie auch in weiteren Projekten ihres Portfolios."
+    "answer": "Ja. Anfang 2025 beschäftigte sie sich bei Glo Academy mit den Grundlagen von Vue.js und setzte ein erstes Projekt um. Vue verwendet sie auch in weiteren Projekten ihres Portfolios."
   },
   {
     "id": 37,
@@ -765,7 +781,7 @@ export const employerFaq = [
   {
     "id": 41,
     "question": "Wo hat Ekaterina praktische Erfahrung in der Softwareentwicklung gesammelt?",
-    "answer": `Bei der JAWA Management Software GmbH in Graz. Dort arbeitete sie von ${jawaStart} bis ${jawaEnd} und sammelte Erfahrungen mit einer bestehenden Softwareplattform und kundenbezogenen Aufgaben.`
+    "answer": `Ekaterinas Einstieg in die Webentwicklung war ein konkretes Projekt am WIFI Steiermark. Für Feta setzte sie eine statische Website in WordPress um und schrieb dafür ein eigenes Theme mit PHP. An der FH CAMPUS 02 kamen eine Hotelverwaltung in Java und die iOS-App YogaNow Studio dazu. Bei YogaNow war sie im Team für das Design, die Anbindung an Supabase und die Kursbuchung zuständig. Auch nach der gemeinsamen Arbeit an CAMPUS02 ColorSpiel blieb sie dran. Sie baute ein eigenes Backend mit Node.js und stellte ihre Webversion selbst online. In eigenen Softwareprojekten sammelt sie laufend weitere Erfahrung, etwa mit Vue und TypeScript in ihrer To-do-App und der Shop-Demo ShopPlatzi.\n\nVon ${jawaStart} bis ${jawaEnd} absolvierte sie im Rahmen ihrer dualen Ausbildung die betriebliche Praxis bei JAWA Management Software GmbH in Graz. Dort arbeitete sie an der webbasierten Managementplattform INFORUM mit und bearbeitete Aufgaben im Umfeld von 16 Kundenprojekten. Sie ging Fehlermeldungen nach, analysierte und debuggte bestehenden Code und nahm Anpassungen in den Anwendungen vor.\n\nDabei arbeitete sie mit Vue, TypeScript und PHP. Für die Fehlersuche im PHP-Code nutzte sie Xdebug, für Datenbankaufgaben HeidiSQL. Zum Arbeitsalltag gehörten außerdem Docker, Git und Bitbucket sowie Jira für die Aufgabenverfolgung.`
   },
   {
     "id": 42,
@@ -870,12 +886,12 @@ export const employerFaq = [
   {
     "id": 62,
     "question": "Welche Technologien verwendet sie für Webentwicklung?",
-    "answer": "In ihren Webprojekten kommen unter anderem HTML, CSS, JavaScript, Vue 3, TypeScript, Pinia und REST-APIs vor. Außerdem hat sie mit WordPress und PHP gearbeitet."
+    "answer": "In ihren Webprojekten kommen unter anderem HTML, CSS, JavaScript, Vue, TypeScript, Pinia und REST-APIs vor. Außerdem hat sie mit WordPress und PHP gearbeitet."
   },
   {
     "id": 63,
-    "question": "Hat Ekaterina Erfahrung mit Vue 3?",
-    "answer": "Zu ihren Vue-3-Projekten gehören die To-do-App und ShopPlatzi. Auch ihre Portfolio-Website verwendet Vue." + " " + jawaVueExperience
+    "question": "Hat Ekaterina Erfahrung mit Vue?",
+    "answer": "Zu ihren Vue-Projekten gehören die To-do-App und ShopPlatzi. Auch ihre Portfolio-Website verwendet Vue." + " " + jawaVueExperience
   },
   {
     "id": 64,
@@ -965,12 +981,12 @@ export const employerFaq = [
   {
     "id": 81,
     "question": "Welche Projekte hat Ekaterina entwickelt?",
-    "answer": "Ihr Portfolio umfasst Webanwendungen, eine iOS-App, Konsolenprogramme und eine Windows-Desktopanwendung. Dazu gehören unter anderem YogaNow Studio, zwei UNO-Varianten, eine Hotelverwaltung, eine Geschenkeverwaltung und verschiedene Webprojekte."
+    "answer": projectOverview
   },
   {
     "id": 82,
     "question": "Welches Projekt zeigt ihre Frontend-Kenntnisse?",
-    "answer": "Ein gutes Beispiel ist ihre Vue-To-do-App mit TypeScript, Vuetify und Pinia. Auch ShopPlatzi zeigt die Arbeit mit Benutzeroberflächen, Produktdaten und interaktiven Funktionen."
+    "answer": "Probieren Sie Ekaterinas To-do-App aus: Legen Sie „Pixel testen“ als Aufgabe an und setzen Sie gleich den ersten Haken. Die Oberfläche hat Ekaterina mit Vue, TypeScript und Vuetify gebaut. Dank Pinia bleibt Ihre Liste auch nach dem Neuladen im selben Browser erhalten."
   },
   {
     "id": 83,
@@ -1024,8 +1040,8 @@ export const employerFaq = [
   },
   {
     "id": 93,
-    "question": "Welche Aufgaben übernahm Ekaterina bei YogaNow?",
-    "answer": "Ekaterina war im Team für das Design, die Supabase-Anbindung und die Kursbuchungsplattform zuständig. Die App wurde gemeinsam entwickelt und sollte deshalb nicht als ausschließlich ihre eigene Arbeit dargestellt werden."
+    "question": "Was hat Ekaterina bei der iOS-App YogaNow Studio übernommen?",
+    "answer": "YogaNow Studio verbindet eine Yoga-Bibliothek mit der Buchung von Studiokursen. Ekaterina übernahm im Team das Design der iOS-App, die Anbindung an die Supabase-Datenbank und die Kursbuchung. So hat sie mitgestaltet, wie Besucherinnen und Besucher Kurse finden und buchen."
   },
   {
     "id": 94,
@@ -1099,8 +1115,8 @@ export const employerFaq = [
   },
   {
     "id": 108,
-    "question": "Was hat Ekaterina selbst daran erweitert?",
-    "answer": "Sie entwickelte ein eigenes Backend mit Node.js und Express. Außerdem ergänzte sie eigene Kartendesigns und einen Wintermodus."
+    "question": "Wie hat Ekaterina aus einem Teamprojekt ihre eigene Version von CAMPUS02 ColorSpiel gemacht?",
+    "answer": "Die erste Spieloberfläche entstand im Team an der FH CAMPUS 02. Ekaterina hat daraus ihre eigene Webversion entwickelt. Sie schrieb ein Backend mit Node.js und Express, das Karten austeilt, Spielzüge prüft und Punkte zählt. Dazu hat sie die Karten neu gestaltet und einen gemütlichen Wintermodus ergänzt. Ekaterina hat das Spiel selbst online gestellt. In der Live-Demo können Sie zu viert an einem Bildschirm spielen."
   },
   {
     "id": 109,
@@ -1120,7 +1136,7 @@ export const employerFaq = [
   {
     "id": 112,
     "question": "Welche Technologien verwendet die To-do-App?",
-    "answer": "Im Projekt kommen Vue 3, TypeScript, Vuetify und Pinia zum Einsatz."
+    "answer": "Im Projekt kommen Vue, TypeScript, Vuetify und Pinia zum Einsatz."
   },
   {
     "id": 113,
@@ -1140,7 +1156,7 @@ export const employerFaq = [
   {
     "id": 116,
     "question": "Verwendet ShopPlatzi Axios?",
-    "answer": "Ja. Axios gehört zum dokumentierten Technologie-Stack des Projekts, gemeinsam mit Vue 3, TypeScript, Vuetify, Pinia und REST-APIs."
+    "answer": "Ja. Axios gehört zum dokumentierten Technologie-Stack des Projekts, gemeinsam mit Vue, TypeScript, Vuetify, Pinia und REST-APIs."
   },
   {
     "id": 117,
@@ -1260,7 +1276,7 @@ export const employerFaq = [
   {
     "id": 140,
     "question": "Wo möchte sie arbeiten?",
-    "answer": "Ihr bevorzugter Standort ist Graz beziehungsweise die Steiermark. Je nach Tätigkeit kommen für sie auch Remote-Positionen innerhalb Österreichs und passende Stellen in Wien infrage."
+    "answer": "Ekaterina möchte am liebsten in Graz oder an einem anderen Standort in der Steiermark arbeiten. Wenn die Aufgaben und das Team sie begeistern, pendelt sie für eine passende Stelle auch nach Wien oder Klagenfurt. In Wien könnte sie zum Beispiel zwei Tage pro Woche vor Ort und an den übrigen Arbeitstagen im Homeoffice arbeiten. Sie ist auch offen für Remote-Stellen innerhalb Österreichs."
   },
   {
     "id": 141,

@@ -155,7 +155,7 @@ const personalTopics = {
     'слабые сторон*', 'слабост*', 'улучш*', 'над чем работает', 'как она учится'
   ],
   hours: [
-    'wochenstunden', 'arbeitsstunden', 'arbeitszeit*', 'stunden pro woche', 'wie viele stunden', 'teilzeit', 'vollzeit',
+    'wochenstunden', 'arbeitsstunden', 'arbeitszeit*', 'stunden pro woche', 'wie viele stunden', 'wie viel stunden', 'teilzeit', 'vollzeit',
     'hours per week', 'how many hours', 'working hours', 'part time', 'full time',
     'часов*', 'сколько часов', 'занятост*', 'полная ставка', 'неполная ставка'
   ],
@@ -296,6 +296,7 @@ const topics: KnowledgeTopic[] = [
     replyTitleKey: 'assistant.replyTitles.projects',
     overview: true,
     detailsPath: '/#projects',
+    detailsLabelKey: 'nav.1',
     answerKey: 'assistant.overview.projects'
   },
   {
@@ -372,7 +373,7 @@ function normalize(value: string) {
     .replace(/\btype script\b/g, 'typescript')
     .replace(/\bnodejs\b/g, 'node js')
     .replace(/\brest apis?\b/g, 'rest api')
-    .replace(/\bvue js\b/g, 'vue')
+    .replace(/\bvue (?:js|3)\b/g, 'vue')
     .trim()
 }
 
@@ -392,8 +393,7 @@ const searchableTopics = topics.map(topic => ({
     )
   ]),
   technologies: compileKeywords((topic.technologies ?? []).flatMap(technology =>
-    technology === 'Vue 3' ? ['Vue', technology] :
-      technology === 'SQL Server LocalDB' ? ['SQL Server', technology] : [technology]
+    technology === 'SQL Server LocalDB' ? ['SQL Server', technology] : [technology]
   ))
 }))
 
@@ -422,8 +422,18 @@ function preferLongerMatches(
   ))).map(match => match.topic)
 }
 
+const undocumentedSkillsQuestion = /^(?:was (?:genau )?kann (?:sie|ekaterina) (?:noch )?nicht\b(?! nur\b)|was (?:sie|ekaterina) (?:noch )?nicht kann\b|what (?:can (?:she|ekaterina) not|can(?:not| t) (?:she|ekaterina))\b|что (?:она|екатерина) (?:пока )?не умеет(?: |$)|чего (?:она|екатерина) (?:пока )?не умеет(?: |$))/
+
+const undocumentedSkillsTopic: KnowledgeTopic = {
+  keywords: [],
+  overview: true,
+  answerKey: 'assistant.undocumentedSkillsAnswer'
+}
+
 export function findKnowledgeTopics(question: string) {
   const normalized = normalize(question)
+  if (undocumentedSkillsQuestion.test(normalized)) return [undocumentedSkillsTopic]
+
   const words = normalized.split(' ')
   const matches = searchableTopics.map(({ topic, keywords, technologies }) => {
     const names = matchKeywords(words, keywords)
@@ -457,10 +467,14 @@ function normalizeEmployerQuestion(value: string): string {
     .normalize('NFKD').replace(/\p{M}/gu, '')
     .replace(/ß/g, 'ss')
     .replace(/[^\p{L}\p{N} ]+/gu, ' ')
-    .replace(/\s+/g, ' ').trim()
+    .replace(/\s+/g, ' ')
+    .replace(/\bvue ?3\b/g, 'vue')
+    .trim()
 }
 
 const employerQuestionAliases: Record<string, number> = {
+  'was hat ekaterina selbst daran erweitert': 108,
+  'welche aufgaben übernahm ekaterina bei yoganow': 93,
   'welche projekte hat sie mit vue': 63,
   'welche projekte auf vue': 63,
   'welche erfahrung hat ekaterina in der softwareentwicklung': 41,
@@ -474,7 +488,9 @@ const employerQuestionAliases: Record<string, number> = {
   'hat sie inforum allein entwickelt': 44,
   'hat sie alle 16 kundenprojekte allein entwickelt': 45,
   'warum sucht ekaterina eine junior stelle': 209,
-  'was ist das feta projekt': 117
+  'was ist das feta projekt': 117,
+  'wie viel stunden mag sie arbeiten': 144,
+  'wie viele stunden mag sie arbeiten': 144
 }
 
 function normalizeCandidateName(question: string) {
@@ -491,7 +507,7 @@ function normalizeCandidateName(question: string) {
 }
 
 function indexEmployerFaq(entries: readonly { id: number; question: string; answer: string }[]) {
-  const answers = new Map(entries.map(entry => [entry.id, entry.answer]))
+  const entriesById = new Map(entries.map(entry => [entry.id, entry]))
   const exact = new Map<string, string | null>()
   const subjects = new Map<string, string | null>()
 
@@ -505,7 +521,7 @@ function indexEmployerFaq(entries: readonly { id: number; question: string; answ
     add(exact, normalized, entry.answer)
     add(subjects, normalizeCandidateName(normalized), entry.answer)
   }
-  return { answers, exact, subjects }
+  return { entriesById, exact, subjects }
 }
 
 const faqIndexes = new Map([
@@ -514,8 +530,18 @@ const faqIndexes = new Map([
   ['ru', indexEmployerFaq(russianFaq)]
 ])
 
+export function getEmployerFaqQuestions(ids: readonly number[], language: string) {
+  const index = faqIndexes.get(language) ?? faqIndexes.get('de')
+  return ids.flatMap(id => {
+    const entry = index?.entriesById.get(id)
+    return entry ? [{ id, question: entry.question }] : []
+  })
+}
+
 const translatedAliases = {
   en: {
+    'what did ekaterina add to colorspiel herself': 108,
+    'what did ekaterina contribute to yoganow': 93,
     'which projects use vue': 63,
     'what are her vue projects': 63,
     'which languages does she speak': 159,
@@ -524,6 +550,8 @@ const translatedAliases = {
     'how long did ekaterina work at jawa': 42
   },
   ru: {
+    'что екатерина самостоятельно добавила в colorspiel': 108,
+    'какой вклад екатерина внесла в yoganow': 93,
     'какие проекты на vue': 63,
     'какие проект на vue': 63,
     'какие у нее проекты на vue': 63,
@@ -553,6 +581,6 @@ export function findEmployerFaqAnswer(question: string, language = 'de'): string
   if (index.exact.has(normalized)) return index.exact.get(normalized) ?? null
 
   const id = faqAliases.get(language)?.get(normalized)
-  if (id !== undefined) return index.answers.get(id) ?? null
+  if (id !== undefined) return index.entriesById.get(id)?.answer ?? null
   return index.subjects.get(normalizeCandidateName(normalized)) ?? null
 }

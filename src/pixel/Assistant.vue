@@ -1,16 +1,17 @@
 <!-- Pixel-Fenster und Bedienung. Verarbeitet Fragen, zeigt Antworten und bietet das Kontaktformular an. -->
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 // Erkennt das Thema einer Frage und sucht passende Antworten im FAQ-Katalog.
 import {
   findKnowledgeTopics,
   findEmployerFaqAnswer,
+  getEmployerFaqQuestions,
   type FollowUpKind
 } from './questionMatching'
 // Erkennt DE/EN/RU aus der Frage. Die Sprache der Website wird dabei nicht umgestellt.
 import { detectAssistantLanguage } from './language'
-import { cvPath } from '../data/portfolioData'
+import { cvPath, unoWebDemoUrl } from '../data/portfolioData'
 
 // i18n liefert die gewählte Website-Sprache und die übersetzten Texte.
 const { locale, t } = useI18n({ useScope: 'global' })
@@ -19,11 +20,16 @@ const emit = defineEmits<{ openProject: [event: MouseEvent, projectId: string] }
 
 // Dialog, aktuelle Eingabe und zuletzt abgeschickte Frage für die Anzeige.
 const assistantDialog = ref<HTMLDialogElement | null>(null)
+const assistantScroll = ref<HTMLDivElement | null>(null)
+const questionBubble = ref<HTMLParagraphElement | null>(null)
 const assistantQuestion = ref('')
 const submittedQuestion = ref('')
+const replyExpanded = ref(false)
 
 // Enthält eine direkte Antwort aus den 350 Arbeitgeberfragen der erkannten Sprache.
 const employerFaqReply = ref<string | null>(null)
+const employerFaqLinksToPortfolio = ref(false)
+const employerFaqDemoUrl = ref<string | null>(null)
 
 // Dieser Build-Schalter aktiviert KI-Anfragen. Auch der Server muss den Pilot freigeben.
 const aiPilotEnabled = import.meta.env.VITE_PIXEL_AI_PILOT === 'true'
@@ -32,6 +38,9 @@ const aiPending = ref(false)
 let aiRequest: AbortController | undefined
 let questionSequence = 0
 // Eigenständiges Kontaktformular. Die Nachricht geht über die Server-Schnittstelle an Resend.
+const contactOpen = ref(false)
+const contactTrigger = ref<HTMLButtonElement | null>(null)
+const contactBack = ref<HTMLButtonElement | null>(null)
 const contactEmail = ref('')
 const contactMessage = ref('')
 // Für Besucher unsichtbares Feld zum Erkennen automatisch ausgefüllter Spam-Nachrichten.
@@ -86,14 +95,22 @@ function loadTurnstile() {
   return turnstileScript
 }
 
-// Startet die Sicherheitsprüfung beim Aufklappen des Kontaktbereichs.
-async function prepareContactVerification(event: Event) {
-  if (
-    !(event.currentTarget instanceof HTMLDetailsElement) ||
-    !event.currentTarget.open ||
-    !turnstileSiteKey ||
-    turnstileWidget !== undefined
-  ) return
+async function showContact() {
+  contactOpen.value = true
+  await nextTick()
+  contactBack.value?.focus({ preventScroll: true })
+  void prepareContactVerification()
+}
+
+async function returnToChat() {
+  contactOpen.value = false
+  await nextTick()
+  contactTrigger.value?.focus({ preventScroll: true })
+}
+
+// Startet die Sicherheitsprüfung beim Öffnen der Kontaktansicht.
+async function prepareContactVerification() {
+  if (!contactOpen.value || !turnstileSiteKey || turnstileWidget !== undefined) return
 
   turnstileFailed.value = false
 
@@ -102,6 +119,7 @@ async function prepareContactVerification(event: Event) {
 
     if (
       disposed ||
+      !contactOpen.value ||
       !turnstileContainer.value ||
       turnstileWidget !== undefined
     ) return
@@ -158,6 +176,16 @@ const lastTopic = ref<AssistantTopic | null>(null)
 const currentTopics = ref<AssistantTopic[]>([])
 const followUp = ref<FollowUpKind | 'unknown' | null>(null)
 
+function isPortfolioTopic(topic: AssistantTopic) {
+  return Boolean(topic.project) || topic.answerKey === 'assistant.overview.projects'
+}
+
+const answerLinksToPortfolio = computed(() =>
+  aiReply.value
+    ? currentTopics.value.length === 1 && currentTopics.value.some(isPortfolioTopic)
+    : employerFaqLinksToPortfolio.value
+)
+
 // Unterscheidet Anschlussfragen nach Interesse, Technologien, Zeitraum und Aufgaben.
 const followUpPhrases: Record<FollowUpKind, RegExp> = {
   interest: /gemocht|gefallen|mochte|spaß|motiviert|gern|\b(like|liked|enjoy|enjoyed)\b|нрав|нарв|понрав|любил/iu,
@@ -166,12 +194,20 @@ const followUpPhrases: Record<FollowUpKind, RegExp> = {
   tasks: /was .*gemacht|aufgaben|tätigkeit|what .*do|responsibilit|что .*делал|чем .*занимал|задач/iu
 }
 
-// Diese Einträge steuern die drei Vorschlagsbuttons. Die Texte stehen in den Sprachdateien.
-const suggestedQuestions = [
-  'projects',
-  'teamwork',
-  'workplace'
-] as const
+// Die Beispielfragen verwenden die übersetzten Einträge aus dem FAQ-Katalog.
+const suggestionCategories = {
+  projects: [81, 108, 93, 86],
+  education: [31, 34, 32],
+  experience: [41, 46, 63],
+  collaboration: [13, 140, 144]
+} as const
+
+const suggestedCategories = computed(() =>
+  Object.entries(suggestionCategories).map(([category, ids]) => ({
+    category,
+    questions: getEmployerFaqQuestions(ids, locale.value)
+  }))
+)
 
 // Hier zusätzliche Themen für den KI-Pilot freigeben. Die Einträge sind i18n-Antwortschlüssel.
 // Einzelne Projekte, Ausbildungen und Berufsstationen werden zusätzlich weiter unten freigegeben.
@@ -304,6 +340,17 @@ function openAnswerLink(
   }
 }
 
+// Zeigt den Beginn der aktuellen Frage und lässt lange Antworten ab ihrem Anfang lesbar.
+function scrollToCurrentQuestion(sequence: number) {
+  void nextTick(() => {
+    const scroll = assistantScroll.value
+    const question = questionBubble.value
+    if (sequence !== questionSequence || !replyExpanded.value || contactOpen.value || !assistantDialog.value?.open || !scroll || !question) return
+
+    scroll.scrollTop += question.getBoundingClientRect().top - scroll.getBoundingClientRect().top - 12
+  })
+}
+
 // Sendet Frage, Themenkennungen und Sprache an /api/pixel-chat.
 // Der Server holt dazu die hinterlegten Fakten und ruft Cloudflare Workers AI auf.
 async function requestPilotAnswer(
@@ -353,17 +400,43 @@ async function requestPilotAnswer(
     if (!disposed && sequence === questionSequence) {
       aiRequest = undefined
       aiPending.value = false
+      scrollToCurrentQuestion(sequence)
     }
   }
 }
 
+function toggleCurrentReply() {
+  replyExpanded.value = !replyExpanded.value
+  if (replyExpanded.value) scrollToCurrentQuestion(questionSequence)
+}
+
+function collapseReplyOnClick(event: MouseEvent) {
+  const target = event.target
+  if (
+    !(target instanceof Element) ||
+    !target.closest('.assistant-reply') ||
+    target.closest('a, button') ||
+    window.getSelection()?.isCollapsed === false
+  ) return
+
+  replyExpanded.value = false
+}
+
+function toggleSuggestedQuestion(question: string, portfolioExample: boolean) {
+  if (submittedQuestion.value === question) {
+    toggleCurrentReply()
+    return
+  }
+
+  sendAssistantQuestion(question, portfolioExample)
+}
+
 // Hauptablauf für eigene Fragen und Vorschlagsbuttons.
-function sendAssistantQuestion(input: string) {
+function sendAssistantQuestion(input: string, portfolioExample = false) {
   const question = input.trim()
 
   if (!question || question.length > 500) return
 
-  // Vorherige KI-Anfrage abbrechen, damit ihre Antwort die neue Frage nicht überschreibt.
   const sequence = ++questionSequence
   aiRequest?.abort()
   aiRequest = undefined
@@ -371,9 +444,13 @@ function sendAssistantQuestion(input: string) {
   aiPending.value = false
   aiReply.value = ''
   employerFaqReply.value = null
+  employerFaqLinksToPortfolio.value = false
+  employerFaqDemoUrl.value = null
 
   submittedQuestion.value = question
+  replyExpanded.value = true
   assistantQuestion.value = ''
+  scrollToCurrentQuestion(sequence)
 
   // Zuerst in den FAQ der erkannten Sprache suchen. Ohne Sprachhinweis gilt die Website-Sprache.
   const detectedLanguage = detectAssistantLanguage(question)
@@ -381,6 +458,11 @@ function sendAssistantQuestion(input: string) {
 
   if (employerAnswer) {
     employerFaqReply.value = employerAnswer
+    const faqTopics = findKnowledgeTopics(question)
+    employerFaqLinksToPortfolio.value = portfolioExample || faqTopics.some(isPortfolioTopic)
+    if (faqTopics.some(topic => topic.project?.id === 'uno-web')) {
+      employerFaqDemoUrl.value = unoWebDemoUrl
+    }
     currentTopics.value = []
     followUp.value = null
     lastTopic.value = null
@@ -592,16 +674,14 @@ async function sendContactMessage() {
             width="56"
             height="56"
           />
-        <div class="assistant-heading">
-        <h2 id="assistant-title">
-            {{ t('assistant.name') }}
-        </h2>
-
-        <p class="assistant-header-status">
-            <strong>{{ t('assistant.status') }}</strong>
-            <span>{{ t('assistant.statusNote') }}</span>
-        </p>
-        </div>
+          <div class="assistant-heading">
+            <h2 id="assistant-title">{{ t('assistant.name') }}</h2>
+            <p class="assistant-message">{{ t('assistant.greeting') }}</p>
+            <p class="assistant-header-status">
+              <strong>{{ t('assistant.status') }}</strong>
+              <span>{{ t('assistant.statusNote') }}</span>
+            </p>
+          </div>
         </div>
 
         <form method="dialog">
@@ -615,347 +695,397 @@ async function sendContactMessage() {
         </form>
       </header>
 
- 
+      <div v-show="!contactOpen" ref="assistantScroll" class="assistant-scroll">
+        <!-- Abschnittsüberschrift -->
+        <h3 id="assistant-suggestion-title" class="assistant-section-title">
+          {{ t('assistant.suggestionLabel') }}
+        </h3>
 
-      <!-- Begrüßung -->
-      <p class="assistant-message">
-        {{ t('assistant.greeting') }}
-      </p>
-
-      <!-- Abschnittsüberschrift -->
-      <h3 class="assistant-section-title">
-        {{ t('assistant.suggestionLabel') }}
-      </h3>
-
-      <!-- Vorschläge und Kontakt -->
-      <div
-        class="assistant-suggestions"
-        role="group"
-        :aria-label="t('assistant.suggestionLabel')"
-      >
-        <button
-          v-for="suggestion in suggestedQuestions"
-          :key="suggestion"
-          type="button"
-          @click="
-            sendAssistantQuestion(
-              t(`assistant.suggestions.${suggestion}`)
-            )
-          "
+        <div
+          class="assistant-suggestion-categories"
+          role="group"
+          aria-labelledby="assistant-suggestion-title"
         >
-          {{ t(`assistant.suggestions.${suggestion}`) }}
-        </button>
-
-
-      </div>
-
-      <!-- Datenschutzhinweis für KI -->
-      <p
-        id="pixel-ai-notice"
-        class="assistant-status"
-      >
-        {{ t('assistant.aiNotice') }}
-
-        <a
-          href="/Datenschutz#pixel-ki"
-          target="_blank"
-          rel="noopener"
-        >
-          {{ t('legal.privacy') }}
-        </a>
-      </p>
-
-      <!-- Eigene Frage stellen -->
-      <form
-        class="assistant-question-form"
-        @submit.prevent="
-          sendAssistantQuestion(assistantQuestion)
-        "
-      >
-        <label for="assistant-question">
-          {{ t('assistant.questionLabel') }}
-        </label>
-
-        <input
-          id="assistant-question"
-          v-model="assistantQuestion"
-          type="text"
-          maxlength="500"
-          :aria-describedby="
-            aiPilotEnabled
-              ? 'pixel-ai-notice'
-              : undefined
-          "
-        />
-
-        <button type="submit">
-          {{ t('assistant.send') }}
-        </button>
-      </form>
-
-  
-      <!-- Frage des Besuchers -->
-      <p
-        v-if="submittedQuestion"
-        class="assistant-question"
-      >
-        {{ submittedQuestion }}
-      </p>
-
-      <!-- Antworten -->
-      <div
-        class="assistant-replies"
-        aria-live="polite"
-        :lang="answerLanguage"
-      >
-        <template v-if="submittedQuestion">
-
-          <p v-if="aiPending" class="assistant-reply">
-            {{ replyText('assistant.loadingAnswer') }}
-          </p>
-
-          <article v-else-if="aiReply" class="assistant-reply">
-            <p>{{ aiReply }}</p>
-          </article>
-
-          <article v-else-if="employerFaqReply" class="assistant-reply">
-            <p>{{ employerFaqReply }}</p>
-          </article>
-
-          <template v-else-if="answers.length">
-            <article
-              v-for="(answer, index) in answers"
-              :key="index"
-              class="assistant-reply"
-            >
-              <h3 v-if="answer.title">
-                {{ answer.title }}
-              </h3>
-
-              <p>{{ answer.text }}</p>
-
-              <p v-if="answer.stack">
-                <strong>
-                  {{ replyText('experiencePage.techStack') }}
-                </strong>
-                · {{ answer.stack }}
-              </p>
-
-              <div
-                v-if="answer.detailsPath"
-                class="assistant-answer-links"
+          <details
+            v-for="{ category, questions } in suggestedCategories"
+            :key="category"
+            name="pixel-suggestion-category"
+            class="assistant-suggestion-category"
+          >
+            <summary>{{ t(`assistant.suggestionCategories.${category}`) }}</summary>
+            <div class="assistant-suggestions">
+              <button
+                v-for="{ id, question } in questions"
+                :key="id"
+                type="button"
+                :aria-expanded="submittedQuestion === question && replyExpanded"
+                aria-controls="pixel-current-reply"
+                @click="toggleSuggestedQuestion(question, category === 'projects')"
               >
-                <a
-                  class="assistant-details"
-                  :href="answer.detailsPath"
-                  :target="
-                    answer.detailsNewTab
-                      ? '_blank'
-                      : undefined
-                  "
-                  :rel="
-                    answer.detailsNewTab
-                      ? 'noopener noreferrer'
-                      : undefined
-                  "
-                  @click="
-                    openAnswerLink(
-                      $event,
-                      answer.project?.id
-                    )
-                  "
-                >
-                  {{ answer.detailsLabel }}
-                </a>
+                {{ question }}
+              </button>
+            </div>
+          </details>
+        </div>
 
-                <a
-                  v-if="answer.project"
-                  class="assistant-details"
-                  :href="answer.project.url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {{ replyText('projectLink') }}
-                </a>
+        <!-- Datenschutzhinweis für KI -->
+        <p
+          id="pixel-ai-notice"
+          class="assistant-status"
+        >
+          {{ t('assistant.aiNotice') }}
 
+          <a
+            href="/Datenschutz#pixel-ki"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ t('legal.privacy') }}
+          </a>
+        </p>
+
+        <!-- Frage des Besuchers -->
+        <p
+          v-if="submittedQuestion"
+          ref="questionBubble"
+          class="assistant-question"
+        >
+          {{ submittedQuestion }}
+        </p>
+
+        <button
+          v-if="submittedQuestion && !replyExpanded"
+          class="assistant-details assistant-reopen-reply"
+          type="button"
+          aria-controls="pixel-current-reply"
+          @click="toggleCurrentReply"
+        >
+          {{ replyText('assistant.showAnswer') }}
+        </button>
+
+        <!-- Antworten -->
+        <div
+          id="pixel-current-reply"
+          class="assistant-replies"
+          aria-live="polite"
+          @click="collapseReplyOnClick"
+          :lang="answerLanguage"
+        >
+          <template v-if="submittedQuestion && replyExpanded">
+
+            <p v-if="aiPending" class="assistant-reply">
+              {{ replyText('assistant.loadingAnswer') }}
+            </p>
+
+            <article v-else-if="aiReply || employerFaqReply" class="assistant-reply">
+              <p class="assistant-reply-text">{{ aiReply || employerFaqReply }}</p>
+              <div v-if="answerLinksToPortfolio || employerFaqDemoUrl" class="assistant-answer-links">
                 <a
-                  v-if="answer.demoUrl"
+                  v-if="employerFaqDemoUrl"
                   class="assistant-details"
-                  :href="answer.demoUrl"
+                  :href="employerFaqDemoUrl"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   {{ replyText('assistant.projectDemoLink') }}
                 </a>
-              </div>
-            </article>
-          </template>
-
-          <!-- Antwort, wenn kein Thema erkannt wird -->
-          <div
-            v-else
-            class="assistant-reply assistant-fallback"
-          >
-            <p>
-              {{
-                replyText(
-                  projectReference.test(submittedQuestion)
-                    ? 'assistant.whichProject'
-                    : 'assistant.fallbackAnswer'
-                )
-              }}
-            </p>
-
-            <ul>
-              <li>
                 <a
+                  v-if="answerLinksToPortfolio"
+                  class="assistant-details"
                   href="/#projects"
                   @click="openAnswerLink($event)"
                 >
                   {{ replyText('nav.1') }}
                 </a>
-              </li>
+              </div>
+            </article>
 
-              <li>
-                <a
-                  href="/Ausbildung"
-                  @click="openAnswerLink($event)"
+            <template v-else-if="answers.length">
+              <article
+                v-for="(answer, index) in answers"
+                :key="index"
+                class="assistant-reply"
+              >
+                <h3 v-if="answer.title">
+                  {{ answer.title }}
+                </h3>
+
+                <p class="assistant-reply-text">{{ answer.text }}</p>
+
+                <p v-if="answer.stack">
+                  <strong>
+                    {{ replyText('experiencePage.techStack') }}
+                  </strong>
+                  · {{ answer.stack }}
+                </p>
+
+                <div
+                  v-if="answer.detailsPath"
+                  class="assistant-answer-links"
                 >
-                  {{ replyText('educationPage.title') }}
-                </a>
-              </li>
+                  <a
+                    class="assistant-details"
+                    :href="answer.detailsPath"
+                    :target="
+                      answer.detailsNewTab
+                        ? '_blank'
+                        : undefined
+                    "
+                    :rel="
+                      answer.detailsNewTab
+                        ? 'noopener noreferrer'
+                        : undefined
+                    "
+                    @click="
+                      openAnswerLink(
+                        $event,
+                        answer.project?.id
+                      )
+                    "
+                  >
+                    {{ answer.detailsLabel }}
+                  </a>
 
-              <li>
-                <a
-                  href="/Berufserfahrung"
-                  @click="openAnswerLink($event)"
-                >
-                  {{ replyText('experiencePage.title') }}
-                </a>
-              </li>
+                  <a
+                    v-if="answer.project"
+                    class="assistant-details"
+                    :href="answer.project.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{ replyText('projectLink') }}
+                  </a>
 
-              <li>
-                <a
-                  :href="cvPath"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {{ replyText('cvDownload') }}
-                </a>
-              </li>
-            </ul>
-          </div>
-        </template>
-      </div>
-            <details
-          class="assistant-contact"
-          @toggle="prepareContactVerification"
-        >
-          <summary>
-            {{ t('assistant.contactForm.open') }}
-          </summary>
+                  <a
+                    v-if="answer.demoUrl"
+                    class="assistant-details"
+                    :href="answer.demoUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{ replyText('assistant.projectDemoLink') }}
+                  </a>
+                </div>
+              </article>
+            </template>
 
-          <p>
-            {{ t('assistant.contactForm.invitation') }}
-          </p>
-
-          <p v-if="turnstileSiteKey">
-            <a
-              href="/Datenschutz#kontakt"
-              target="_blank"
-              rel="noopener"
+            <!-- Antwort, wenn kein Thema erkannt wird -->
+            <div
+              v-else
+              class="assistant-reply assistant-fallback"
             >
-              {{ t('legal.privacy') }}
-            </a>
-          </p>
+              <p>
+                {{
+                  replyText(
+                    projectReference.test(submittedQuestion)
+                      ? 'assistant.whichProject'
+                      : 'assistant.fallbackAnswer'
+                  )
+                }}
+              </p>
 
-          <form
-            v-if="turnstileSiteKey"
-            class="assistant-contact-form"
-            @submit.prevent="sendContactMessage"
+              <ul>
+                <li>
+                  <a
+                    href="/#projects"
+                    @click="openAnswerLink($event)"
+                  >
+                    {{ replyText('nav.1') }}
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="/Ausbildung"
+                    @click="openAnswerLink($event)"
+                  >
+                    {{ replyText('educationPage.title') }}
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="/Berufserfahrung"
+                    @click="openAnswerLink($event)"
+                  >
+                    {{ replyText('experiencePage.title') }}
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    :href="cvPath"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{ replyText('cvDownload') }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </template>
+        </div>
+
+      </div>
+
+      <section
+        v-show="contactOpen"
+        class="assistant-scroll assistant-contact"
+        aria-labelledby="pixel-contact-title"
+      >
+        <button
+          ref="contactBack"
+          type="button"
+          class="assistant-contact-back"
+          @click="returnToChat"
+        >
+          <span aria-hidden="true">←</span>
+          {{ t('assistant.contactForm.backToChat') }}
+        </button>
+
+        <h3 id="pixel-contact-title">{{ t('assistant.contactForm.open') }}</h3>
+        <p>
+          {{ t('assistant.contactForm.invitation') }}
+        </p>
+
+        <p v-if="turnstileSiteKey">
+          <a
+            href="/Datenschutz#kontakt"
+            target="_blank"
+            rel="noopener"
           >
-            <label for="pixel-contact-email">
-              {{ t('assistant.contactForm.email') }}
+            {{ t('legal.privacy') }}
+          </a>
+        </p>
+
+        <form
+          v-if="turnstileSiteKey"
+          class="assistant-contact-form"
+          @submit.prevent="sendContactMessage"
+        >
+          <label for="pixel-contact-email">
+            {{ t('assistant.contactForm.email') }}
+          </label>
+
+          <input
+            id="pixel-contact-email"
+            v-model="contactEmail"
+            type="email"
+            autocomplete="email"
+            maxlength="254"
+            required
+            :disabled="contactState === 'sending'"
+          />
+
+          <label for="pixel-contact-message">
+            {{ t('assistant.contactForm.message') }}
+          </label>
+
+          <textarea
+            id="pixel-contact-message"
+            v-model="contactMessage"
+            rows="4"
+            maxlength="3000"
+            required
+            :disabled="contactState === 'sending'"
+          ></textarea>
+
+          <!-- Spam-Schutz -->
+          <div hidden>
+            <label for="pixel-contact-website">
+              Website
             </label>
 
             <input
-              id="pixel-contact-email"
-              v-model="contactEmail"
-              type="email"
-              autocomplete="email"
-              maxlength="254"
-              required
-              :disabled="contactState === 'sending'"
+              id="pixel-contact-website"
+              v-model="contactWebsite"
+              tabindex="-1"
+              autocomplete="off"
             />
+          </div>
 
-            <label for="pixel-contact-message">
-              {{ t('assistant.contactForm.message') }}
-            </label>
-
-            <textarea
-              id="pixel-contact-message"
-              v-model="contactMessage"
-              rows="4"
-              maxlength="3000"
-              required
-              :disabled="contactState === 'sending'"
-            ></textarea>
-
-            <!-- Spam-Schutz -->
-            <div hidden>
-              <label for="pixel-contact-website">
-                Website
-              </label>
-
-              <input
-                id="pixel-contact-website"
-                v-model="contactWebsite"
-                tabindex="-1"
-                autocomplete="off"
-              />
-            </div>
-
-            <div ref="turnstileContainer"></div>
-
-            <p
-              v-if="turnstileFailed"
-              role="status"
-            >
-              {{ t('assistant.contactForm.verificationError') }}
-            </p>
-
-            <button
-              type="submit"
-              :disabled="
-                contactState === 'sending' ||
-                !turnstileToken
-              "
-            >
-              {{
-                t(
-                  contactState === 'sending'
-                    ? 'assistant.contactForm.sending'
-                    : 'assistant.contactForm.send'
-                )
-              }}
-            </button>
-          </form>
-
-          <p v-else role="status">
-            {{ t('assistant.contactForm.unavailable') }}
-          </p>
+          <div ref="turnstileContainer"></div>
 
           <p
-            v-if="
-              contactState === 'sent' ||
-              contactState === 'error' ||
-              contactState === 'unavailable'
-            "
+            v-if="turnstileFailed"
             role="status"
           >
-            {{ t(`assistant.contactForm.${contactState}`) }}
+            {{ t('assistant.contactForm.verificationError') }}
           </p>
-        </details>
+
+          <button
+            type="submit"
+            :disabled="
+              contactState === 'sending' ||
+              !turnstileToken
+            "
+          >
+            {{
+              t(
+                contactState === 'sending'
+                  ? 'assistant.contactForm.sending'
+                  : 'assistant.contactForm.send'
+              )
+            }}
+          </button>
+        </form>
+
+        <p v-else role="status">
+          {{ t('assistant.contactForm.unavailable') }}
+        </p>
+
+        <p
+          v-if="
+            contactState === 'sent' ||
+            contactState === 'error' ||
+            contactState === 'unavailable'
+          "
+          role="status"
+        >
+          {{ t(`assistant.contactForm.${contactState}`) }}
+        </p>
+      </section>
+
+      <div v-show="!contactOpen" class="assistant-composer">
+        <!-- Eigene Frage stellen -->
+        <form
+          class="assistant-question-form"
+          @submit.prevent="
+            sendAssistantQuestion(assistantQuestion)
+          "
+        >
+          <label for="assistant-question">
+            {{ t('assistant.questionLabel') }}
+          </label>
+
+          <input
+            id="assistant-question"
+            v-model="assistantQuestion"
+            type="text"
+            maxlength="500"
+            :aria-describedby="
+              aiPilotEnabled
+                ? 'pixel-ai-notice'
+                : undefined
+            "
+          />
+
+          <button type="submit">
+            {{ t('assistant.send') }}
+          </button>
+        </form>
+
+        <button
+          ref="contactTrigger"
+          type="button"
+          class="assistant-contact-trigger"
+          @click="showContact"
+        >
+          <span class="assistant-contact-icon" aria-hidden="true">✉</span>
+          <span>{{ t('assistant.contactForm.open') }}</span>
+          <span class="assistant-contact-arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
 
     </div>
   </dialog>
@@ -1001,7 +1131,7 @@ async function sendContactMessage() {
   --assistant-inset: clamp(17px, 4vw, 32px);
   --assistant-line: color-mix(
     in srgb,
-    var(--accent) 25%,
+    var(--ink) 18%,
     var(--surface)
   );
   --assistant-tint: color-mix(
@@ -1010,32 +1140,37 @@ async function sendContactMessage() {
     var(--surface)
   );
   --assistant-accent-ink: #fff;
-  --pixel-peach: #f0c8b5;
-  --pixel-sage: #c8e0cf;
+  --assistant-subtle: color-mix(in srgb, var(--ink) 4%, var(--surface));
+  --assistant-warm: #ad7159;
+  --assistant-book-cover: #693f37;
+  --assistant-contact-surface: color-mix(in srgb, var(--assistant-warm) 16%, var(--surface));
+  --assistant-warm-line: color-mix(in srgb, var(--assistant-warm) 45%, var(--assistant-line));
+  --assistant-warm-light: color-mix(in srgb, var(--assistant-warm) 10%, var(--surface));
 
   box-sizing: border-box;
   width: min(560px, calc(100% - 28px));
   max-height: min(810px, calc(100dvh - 28px));
 
-  overflow: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
   padding: 0;
 
   border: 1px solid var(--assistant-line);
-  border-radius: 28px;
+  border-inline-start: 5px solid var(--assistant-warm);
+  border-radius: 14px 26px 26px 14px;
   background: var(--surface);
   color: var(--ink);
 
   font-family: inherit;
   font-size: 1rem;
 
-  box-shadow: 0 24px 70px rgb(30 50 40 / 20%);
+  box-shadow: 0 26px 80px rgb(25 42 36 / 30%);
 }
 
 /* Dunkelmodus */
 
 :global(:root[data-theme='dark']) .assistant-dialog {
   --assistant-accent-ink: var(--paper);
+  --assistant-book-cover: #55372f;
 }
 
 /* Hintergrund hinter Pixel */
@@ -1049,32 +1184,32 @@ async function sendContactMessage() {
 
 .assistant-content {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  max-height: min(808px, calc(100dvh - 30px));
+}
+
+.assistant-scroll {
+  display: grid;
+  align-content: start;
   gap: 17px;
-  padding: 0 var(--assistant-inset) var(--assistant-inset);
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  padding: 17px var(--assistant-inset);
 }
 
 /* Kopfbereich */
 
 .assistant-header {
-  position: sticky;
-  z-index: 1;
-  top: 0;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
 
-  margin-inline: calc(var(--assistant-inset) * -1);
   padding: 16px var(--assistant-inset);
 
-  border-bottom: 1px solid var(--assistant-line);
-
-  background: linear-gradient(
-    115deg,
-    color-mix(in srgb, #c5dfcc 72%, var(--surface)),
-    color-mix(in srgb, #f1cdbb 65%, var(--surface))
-  );
+  border-bottom: 1px solid var(--assistant-warm-line);
+  background: var(--assistant-book-cover);
+  color: #fff6ec;
 }
 
 .assistant-identity {
@@ -1093,24 +1228,19 @@ async function sendContactMessage() {
 
 .assistant-identity .assistant-avatar {
   padding: 6px;
-  border-radius: 20px;
-
-  background: color-mix(
-    in srgb,
-    #e9edca 55%,
-    var(--surface)
-  );
-
-  box-shadow: 0 4px 12px rgb(40 65 45 / 10%);
+  border: 1px solid var(--assistant-warm-line);
+  border-radius: 14px;
+  background: var(--surface);
 }
 
 /* Pixel-Überschrift */
 
 .assistant-header h2 {
   margin: 0;
-  font-size: 1.6rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.05rem, 3.8vw, 1.35rem);
   font-weight: 700;
-  line-height: 1.12;
+  line-height: 1.2;
   letter-spacing: -0.025em;
 }
 
@@ -1149,13 +1279,13 @@ async function sendContactMessage() {
 
 .assistant-header-status {
   margin: 0;
-  color: var(--ink);
+  color: inherit;
   font-size: 0.75rem;
   line-height: 1.4;
 }
 
 .assistant-header-status strong {
-  color: var(--accent);
+  color: #f8d7b9;
   font-weight: 650;
   margin-inline-end: 5px;
 }
@@ -1164,18 +1294,10 @@ async function sendContactMessage() {
   opacity: 0.85;
 }
 
-/* Begrüßung ohne große Karte */
-
 .assistant-message {
   margin: 0;
-  padding: 2px 0 4px;
-
-  background: transparent;
-  color: var(--ink);
-
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.65;
+  font-size: 0.875rem;
+  line-height: 1.35;
 }
 
 /* Überschrift vor den Fragen */
@@ -1195,13 +1317,47 @@ async function sendContactMessage() {
 
 /* Fragevorschläge */
 
+.assistant-suggestion-categories {
+  display: grid;
+  gap: 7px;
+}
+
+.assistant-suggestion-category {
+  border: 1px solid var(--assistant-line);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.assistant-suggestion-category[open] {
+  background: var(--assistant-warm-light);
+}
+
+.assistant-suggestion-category > summary {
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 10px 12px;
+  color: var(--ink);
+  font-weight: 650;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.assistant-suggestion-category > summary::marker {
+  color: var(--assistant-warm);
+}
+
+.assistant-suggestion-category > summary:hover {
+  background: var(--assistant-warm-light);
+}
+
 .assistant-suggestions {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 9px;
+  gap: 6px;
+  padding: 0 10px 10px;
 }
 
-.assistant-suggestions > button{
+.assistant-suggestions > button {
   display: flex;
   align-items: center;
   width: 100%;
@@ -1211,7 +1367,7 @@ async function sendContactMessage() {
   border: 1px solid var(--assistant-line);
   border-radius: 12px;
   background: var(--surface);
-  color: var(--accent);
+  color: var(--ink);
 
   font: inherit;
   font-size: 0.9rem;
@@ -1220,22 +1376,21 @@ async function sendContactMessage() {
   text-align: start;
 
   cursor: pointer;
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .assistant-suggestions > button:hover {
-  background: color-mix(
-    in srgb,
-    var(--pixel-sage) 35%,
-    var(--surface)
-  );
-  transform: translateY(-1px);
+  background-color: var(--assistant-subtle);
+}
+
+.assistant-suggestions > button[aria-expanded='true'] {
+  border-color: var(--accent);
+  background-color: var(--assistant-tint);
+  color: var(--accent);
 }
 
 .assistant-contact > p {
-  margin: 10px 0 0;
+  margin: 0;
   line-height: 1.55;
 }
 
@@ -1282,8 +1437,14 @@ async function sendContactMessage() {
   gap: 8px 10px;
   align-items: end;
 
-  padding-top: 17px;
+}
+
+.assistant-composer {
+  display: grid;
+  gap: 10px;
+  padding: 12px var(--assistant-inset) max(12px, env(safe-area-inset-bottom));
   border-top: 1px solid var(--assistant-line);
+  background: var(--assistant-subtle);
 }
 
 .assistant-question-form label {
@@ -1344,14 +1505,28 @@ async function sendContactMessage() {
   border: 1px solid var(--assistant-line);
   border-radius: 18px 18px 5px 18px;
 
-  background: color-mix(
-    in srgb,
-    var(--pixel-peach) 45%,
-    var(--surface)
-  );
+  background: var(--assistant-subtle);
 
   color: var(--ink);
+  font: inherit;
+  text-align: start;
   overflow-wrap: anywhere;
+}
+
+.assistant-reopen-reply {
+  justify-self: start;
+  min-height: 44px;
+  background: var(--surface);
+}
+
+.assistant-status {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.assistant-status a {
+  text-decoration: underline;
 }
 
 /* Antworten von Pixel */
@@ -1366,6 +1541,7 @@ async function sendContactMessage() {
 }
 
 .assistant-reply {
+  cursor: pointer;
   margin: 0;
   padding: 14px 16px;
 
@@ -1373,11 +1549,7 @@ async function sendContactMessage() {
   border-inline-start: 4px solid var(--accent);
   border-radius: 18px 18px 18px 5px;
 
-  background: color-mix(
-    in srgb,
-    var(--pixel-sage) 28%,
-    var(--surface)
-  );
+  background: var(--assistant-subtle);
 
   line-height: 1.6;
   overflow-wrap: anywhere;
@@ -1386,6 +1558,10 @@ async function sendContactMessage() {
 .assistant-reply h3,
 .assistant-reply p {
   margin: 0;
+}
+
+.assistant-reply-text {
+  white-space: pre-line;
 }
 
 .assistant-reply h3 {
@@ -1455,7 +1631,7 @@ async function sendContactMessage() {
 
 /* Kleine Smartphones */
 
-@media (max-width: 360px) {
+@media (max-width: 340px) {
   .assistant-question-form {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1474,46 +1650,67 @@ async function sendContactMessage() {
 }
 
 
-/* Kontakt als dezente Footer-Option */
+/* Kontakt */
 
-
-.assistant-contact {
-  position: static;
-  margin: 0;
-  padding: 14px 0 0;
-
-  border: 0;
-  border-top: 1px solid var(--assistant-line);
-  border-radius: 0;
-
-  background: transparent;
-}
-
-
-.assistant-contact > summary {
-  display: list-item;
-  width: fit-content;
-  min-height: auto;
-  padding: 6px 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--accent);
-  font-size: 0.88rem;
-  font-weight: 600;
+.assistant-contact-trigger {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 12px;
+  border: 1px solid var(--assistant-line);
+  border-radius: 12px;
+  background: var(--assistant-contact-surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-align: start;
   cursor: pointer;
 }
 
-.assistant-contact > summary:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+.assistant-contact-trigger:hover {
+  background: var(--assistant-subtle);
 }
 
-.assistant-contact[open] {
-  padding: 12px 0;
-  border: 0;
-  border-top: 1px solid var(--assistant-line);
-  background: transparent;
+.assistant-contact-icon {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--accent);
+  background: var(--assistant-subtle);
 }
 
+.assistant-contact-arrow {
+  font-size: 1.1rem;
+}
+
+.assistant-contact {
+  gap: 12px;
+}
+
+.assistant-contact h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.assistant-contact-back {
+  justify-self: start;
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid var(--assistant-line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.assistant-contact-back span {
+  margin-inline-end: 4px;
+}
 </style>

@@ -892,7 +892,7 @@ function scrollToTop() {
         <p>{{ t('portfolioDetails.intro') }}</p>
         <dl>
           <div>
-            <dt>Vue 3 · TypeScript</dt>
+            <dt>Vue · TypeScript</dt>
             <dd>{{ t('portfolioDetails.interface') }}</dd>
           </div>
           <div>
