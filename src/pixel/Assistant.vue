@@ -39,6 +39,7 @@ let aiRequest: AbortController | undefined
 let questionSequence = 0
 // Eigenständiges Kontaktformular. Die Nachricht geht über die Server-Schnittstelle an Resend.
 const contactOpen = ref(false)
+const privacyOpen = ref(false)
 const contactTrigger = ref<HTMLButtonElement | null>(null)
 const contactBack = ref<HTMLButtonElement | null>(null)
 const contactEmail = ref('')
@@ -62,7 +63,7 @@ type Turnstile = {
   render: (container: HTMLElement, options: {
     sitekey: string
     action: string
-    size: 'flexible'
+    size: 'flexible' | 'compact'
     callback: (token: string) => void
     'expired-callback': () => void
     'error-callback': () => void
@@ -130,7 +131,7 @@ async function prepareContactVerification() {
     turnstileWidget = api.render(turnstileContainer.value, {
       sitekey: turnstileSiteKey,
       action: 'pixel_contact',
-      size: 'flexible',
+      size: turnstileContainer.value.clientWidth < 300 ? 'compact' : 'flexible',
 
       callback(token) {
         turnstileToken.value = token
@@ -1118,33 +1119,33 @@ async function sendContactMessage() {
           </button>
         </form>
 
-        <details class="assistant-privacy">
-          <summary>{{ t('assistant.privacySummary') }}</summary>
-          <p
-            id="pixel-ai-notice"
-            class="assistant-status"
+        <div class="assistant-footer-actions">
+          <button
+            type="button"
+            class="assistant-privacy-toggle"
+            :aria-expanded="privacyOpen"
+            aria-controls="pixel-ai-notice"
+            @click="privacyOpen = !privacyOpen"
           >
-            {{ t('assistant.aiNotice') }}
+            {{ t('assistant.privacySummary') }}
+          </button>
+          <button
+            ref="contactTrigger"
+            type="button"
+            class="assistant-contact-trigger"
+            @click="showContact"
+          >
+            <span class="assistant-contact-icon" aria-hidden="true"></span>
+            <span>{{ t('assistant.contactForm.open') }}</span>
+          </button>
+        </div>
 
-            <a
-              href="/Datenschutz#pixel-ki"
-              target="_blank"
-              rel="noopener"
-            >
-              {{ t('legal.privacy') }}
-            </a>
-          </p>
-        </details>
-
-        <button
-          ref="contactTrigger"
-          type="button"
-          class="assistant-contact-trigger"
-          @click="showContact"
-        >
-          <span class="assistant-contact-icon" aria-hidden="true"></span>
-          <span>{{ t('assistant.contactForm.open') }}</span>
-        </button>
+        <p v-show="privacyOpen" id="pixel-ai-notice" class="assistant-status">
+          {{ t('assistant.aiNotice') }}
+          <a href="/Datenschutz#pixel-ki" target="_blank" rel="noopener">
+            {{ t('legal.privacy') }}
+          </a>
+        </p>
       </div>
 
     </div>
@@ -1613,21 +1614,17 @@ async function sendContactMessage() {
 
 .assistant-composer {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
-  align-items: center;
-  gap: 4px 10px;
+  gap: 4px;
   padding: 12px var(--assistant-inset) max(8px, env(safe-area-inset-bottom));
   border-top: 1px solid var(--assistant-line);
   background: var(--surface);
 }
 
-.assistant-question-form,
-.assistant-privacy[open] {
-  grid-column: 1 / -1;
-}
-
-.assistant-contact-trigger {
-  grid-column: 2;
+.assistant-footer-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+  align-items: start;
+  gap: 8px;
 }
 
 .assistant-question-form label {
@@ -1726,30 +1723,27 @@ async function sendContactMessage() {
   background: var(--surface);
 }
 
-.assistant-privacy summary,
-.assistant-contact-trigger {
+.assistant-footer-actions button {
+  min-width: 0;
   min-height: 44px;
+  padding: 12px 0;
+  border: 0;
+  background: transparent;
   color: var(--accent);
   font: inherit;
   font-size: 0.8125rem;
   font-weight: 500;
   line-height: 1.4;
+  text-align: start;
   cursor: pointer;
 }
 
-.assistant-privacy summary {
-  display: list-item;
-  width: fit-content;
-  padding: 12px 0;
-}
-
-.assistant-privacy summary:hover,
-.assistant-contact-trigger:hover {
+.assistant-footer-actions button:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.assistant-privacy[open] .assistant-status {
+.assistant-status {
   margin-top: 6px;
 }
 
@@ -1893,7 +1887,7 @@ async function sendContactMessage() {
 
   .assistant-heading,
   .assistant-contact-trigger,
-  .assistant-privacy,
+  .assistant-privacy-toggle,
   .assistant-status,
   .assistant-contact-form {
     min-width: 0;
@@ -1928,8 +1922,11 @@ async function sendContactMessage() {
   }
 
   .assistant-composer {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     padding-top: 8px;
+  }
+
+  .assistant-footer-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .assistant-question-form {
@@ -1940,8 +1937,7 @@ async function sendContactMessage() {
     padding-inline: 9px;
   }
 
-  .assistant-privacy summary,
-  .assistant-contact-trigger {
+  .assistant-footer-actions button {
     font-size: 0.75rem;
   }
 }
@@ -1963,19 +1959,16 @@ async function sendContactMessage() {
 
 .assistant-contact-trigger {
   display: inline-flex;
-  align-items: center;
-  justify-self: start;
+  align-items: flex-start;
+  justify-self: end;
   gap: 7px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  text-align: start;
 }
 
 .assistant-contact-icon {
   position: relative;
   flex: 0 0 15px;
   height: 11px;
+  margin-top: 0.25em;
   overflow: hidden;
   border: 1px solid currentColor;
   border-radius: 2px;
@@ -1994,6 +1987,8 @@ async function sendContactMessage() {
 }
 
 .assistant-contact {
+  grid-template-columns: minmax(0, 1fr);
+  overflow-wrap: anywhere;
   grid-row: 2 / -1;
   gap: 12px;
 }
