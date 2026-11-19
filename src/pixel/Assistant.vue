@@ -712,7 +712,9 @@ async function sendContactMessage() {
             name="pixel-suggestion-category"
             class="assistant-suggestion-category"
           >
-            <summary>{{ t(`assistant.suggestionCategories.${category}`) }}</summary>
+            <summary>
+              <span>{{ t(`assistant.suggestionCategories.${category}`) }}</span>
+            </summary>
             <div class="assistant-suggestions">
               <button
                 v-for="{ id, question } in questions"
@@ -1144,7 +1146,7 @@ async function sendContactMessage() {
   --assistant-accent-ink: #fff;
   --assistant-subtle: color-mix(in srgb, var(--ink) 4%, var(--surface));
   --assistant-mint: light-dark(var(--mist), #79a992);
-  --assistant-contact-fill: color-mix(in srgb, var(--lilac) 34%, var(--surface));
+  --assistant-contact-fill: color-mix(in srgb, var(--lilac) 22%, var(--surface));
   --assistant-mint-border: color-mix(in srgb, var(--assistant-mint) 49%, var(--assistant-line));
   --assistant-mint-open: light-dark(
     color-mix(in srgb, var(--assistant-mint) 29%, var(--surface)),
@@ -1159,7 +1161,7 @@ async function sendContactMessage() {
   padding: 0;
 
   border: 1px solid var(--assistant-mint-border);
-  border-radius: 24px;
+  border-radius: 20px;
   background: var(--surface);
   color: var(--ink);
 
@@ -1317,6 +1319,7 @@ async function sendContactMessage() {
 
 .assistant-suggestion-categories {
   display: grid;
+  counter-reset: pixel-category;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;
   gap: 8px;
@@ -1326,6 +1329,7 @@ async function sendContactMessage() {
 }
 
 .assistant-suggestion-category {
+  counter-increment: pixel-category;
   min-width: 0;
   border-radius: 8px;
 }
@@ -1336,7 +1340,8 @@ async function sendContactMessage() {
 }
 
 .assistant-suggestion-category > summary {
-  display: flex;
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
   align-items: baseline;
   gap: 8px;
   box-sizing: border-box;
@@ -1354,23 +1359,22 @@ async function sendContactMessage() {
 }
 
 .assistant-suggestion-category > summary::before {
-  content: '';
-  flex: 0 0 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--blue);
+  content: counter(pixel-category, decimal-leading-zero);
+  color: var(--accent);
+  font-size: 0.8em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
-.assistant-suggestion-category:nth-child(2) > summary::before {
-  background: var(--lilac);
+.assistant-suggestion-category > summary > span {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 
-.assistant-suggestion-category:nth-child(3) > summary::before {
-  background: var(--slate);
-}
-
-.assistant-suggestion-category:nth-child(4) > summary::before {
-  background: light-dark(#e7ab91, #d7a28b);
+.assistant-suggestion-category[open] > summary > span {
+  color: var(--accent);
 }
 
 .assistant-suggestion-category > summary:hover {
