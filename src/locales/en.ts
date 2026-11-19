@@ -82,6 +82,7 @@ const messages = {
             unavailable: 'Message delivery is currently unavailable.',
         },
         suggestionLabel: 'Suggested questions',
+        moreExampleQuestions: 'More questions · {category}',
         suggestionCategories: {
             projects: 'Projects',
             education: 'Education',
@@ -114,7 +115,7 @@ const messages = {
             },
             growth: {
                 title: "What Ekaterina is working on",
-                answer: "Ekaterina wants to deepen her programming knowledge. She knows that understanding grows with practice, so she makes time to learn every day, listens to online lectures and tries new ideas in personal projects.",
+                answer: "Ekaterina sometimes sets the bar too high for herself. She keeps working on a task until she is satisfied with the quality. That shows in the care she puts into her work. Her goal is to pair that standard with realistic milestones.",
             },
             hours: {
                 title: "Preferred working hours",
@@ -143,6 +144,7 @@ const messages = {
         send: 'Send',
         whichProject: "Which project do you mean? Please tell me its name.",
         undocumentedSkillsAnswer: "The portfolio shows what Ekaterina has worked with so far. It doesn’t establish which skills she lacks. If you ask about a specific technology, I can check whether her experience with it is documented.",
+        incompleteQuestionAnswer: 'What would you like to know about Ekaterina?',
         fallbackAnswer: 'I don’t have a precise answer for that yet. One of these sections of the portfolio may have what you’re looking for.',
         profileAnswer: 'Ekaterina Schedlberger is a software developer based in Graz. Her portfolio covers her education, work experience and projects, from a to-do app to a hotel management system. You can also play UNO and try her project demos here. Ekaterina likes setting clear goals and takes care to finish her work on time. She would be happy to hear about software development roles that might be a good fit.',
         educationAnswer: `Ekaterina completed the Software Engineering programme at CAMPUS 02 University of Applied Sciences in ${softwareEngineeringCompletion}. Before that, she studied Transcultural Communication at the University of Graz and earned a qualification in economics and management in Irkutsk.`,

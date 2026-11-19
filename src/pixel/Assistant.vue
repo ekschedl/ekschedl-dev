@@ -211,14 +211,20 @@ const suggestedCategories = computed(() =>
 )
 
 const openedCategory = ref<string | null>(null)
+const showExampleList = ref(true)
+const examplePanel = ref<HTMLElement | null>(null)
 const openedExamples = computed(() =>
   suggestedCategories.value.find(({ category }) => category === openedCategory.value)
 )
 
 function updateOpenedCategory(category: string, event: Event) {
   const details = event.currentTarget as HTMLDetailsElement
-  if (details.open) openedCategory.value = category
-  else if (openedCategory.value === category) openedCategory.value = null
+  if (details.open) {
+    openedCategory.value = category
+    showExampleList.value = true
+  } else if (openedCategory.value === category) {
+    openedCategory.value = null
+  }
 }
 
 // Hier zusätzliche Themen für den KI-Pilot freigeben. Die Einträge sind i18n-Antwortschlüssel.
@@ -294,10 +300,34 @@ function withoutProjectAge(text: string): string {
     .replace(/\.{2,}/g, '.')
 }
 
+const replySegmenter = computed(() =>
+  typeof Intl.Segmenter === 'function'
+    ? new Intl.Segmenter(answerLanguage.value, { granularity: 'sentence' })
+    : undefined
+)
+
+function formatReply(text: string) {
+  const firstSentence = replySegmenter.value?.segment(text)[Symbol.iterator]().next().value?.segment.trimEnd()
+  const lead = firstSentence && firstSentence.length <= 190 ? firstSentence : ''
+  return { lead, rest: text.slice(lead.length) }
+}
+
+const directReply = computed(() => formatReply(aiReply.value || employerFaqReply.value || ''))
+
 // Baut aus den gefundenen Themen die sichtbaren Antworten mit Überschrift, Text und Links.
 const answers = computed(() =>
   currentTopics.value.map(topic => {
     const titleKey = topic.replyTitleKey ?? topic.titleKey
+
+    const text = topic.project
+        ? withoutProjectAge(
+            followUp.value
+              ? followUpText(topic, followUp.value)
+              : replyText(topic.answerKey)
+          )
+        : followUp.value
+          ? followUpText(topic, followUp.value)
+          : replyText(topic.answerKey)
 
     return {
       title: titleKey ? replyText(titleKey) : undefined,
@@ -312,16 +342,7 @@ const answers = computed(() =>
         topic.project && 'demoUrl' in topic.project
           ? topic.project.demoUrl
           : undefined,
-
-      text: topic.project
-        ? withoutProjectAge(
-            followUp.value
-              ? followUpText(topic, followUp.value)
-              : replyText(topic.answerKey)
-          )
-        : followUp.value
-          ? followUpText(topic, followUp.value)
-          : replyText(topic.answerKey)
+      ...formatReply(text)
     }
   })
 )
@@ -441,6 +462,20 @@ function toggleSuggestedQuestion(question: string, portfolioExample: boolean) {
   }
 
   sendAssistantQuestion(question, { portfolioExample })
+}
+
+async function selectDesktopExample(question: string, portfolioExample: boolean) {
+  showExampleList.value = false
+  toggleSuggestedQuestion(question, portfolioExample)
+  await nextTick()
+  questionTurn.value?.focus({ preventScroll: true })
+}
+
+async function reopenDesktopExamples() {
+  showExampleList.value = true
+  await nextTick()
+  examplePanel.value?.scrollIntoView({ block: 'nearest' })
+  examplePanel.value?.querySelector('button')?.focus({ preventScroll: true })
 }
 
 function resetReply() {
@@ -764,7 +799,8 @@ async function sendContactMessage() {
 
         <div class="assistant-conversation">
           <section
-            v-if="openedExamples"
+            v-if="openedExamples && showExampleList"
+            ref="examplePanel"
             class="assistant-suggestions-panel"
             aria-labelledby="pixel-open-category-title"
           >
@@ -778,15 +814,24 @@ async function sendContactMessage() {
                 type="button"
                 :aria-expanded="submittedQuestion === question && replyExpanded"
                 aria-controls="pixel-current-reply"
-                @click="toggleSuggestedQuestion(question, openedExamples.category === 'projects')"
+                @click="selectDesktopExample(question, openedExamples.category === 'projects')"
               >
                 {{ question }}
               </button>
             </div>
           </section>
 
+          <button
+            v-if="openedExamples && !showExampleList"
+            type="button"
+            class="assistant-example-return"
+            @click="reopenDesktopExamples"
+          >
+            {{ t('assistant.moreExampleQuestions', { category: t(`assistant.suggestionCategories.${openedExamples.category}`) }) }}
+          </button>
+
           <!-- Frage des Besuchers -->
-          <div v-if="submittedQuestion" ref="questionTurn" class="assistant-question-turn">
+          <div v-if="submittedQuestion" ref="questionTurn" class="assistant-question-turn" tabindex="-1">
             <span class="assistant-speaker">{{ replyText('assistant.questionLabel') }}</span>
             <h3 class="assistant-question">{{ submittedQuestion }}</h3>
           </div>
@@ -821,7 +866,7 @@ async function sendContactMessage() {
                 </p>
 
                 <article v-else-if="aiReply || employerFaqReply" class="assistant-reply">
-                  <p class="assistant-reply-text">{{ aiReply || employerFaqReply }}</p>
+                  <p class="assistant-reply-text"><strong v-if="directReply.lead" class="assistant-reply-lead">{{ directReply.lead }}</strong>{{ directReply.rest }}</p>
                   <div v-if="answerLinksToPortfolio || employerFaqDemoUrl" class="assistant-answer-links">
                     <a
                       v-if="employerFaqDemoUrl"
@@ -853,7 +898,7 @@ async function sendContactMessage() {
                       {{ answer.title }}
                     </h3>
 
-                    <p class="assistant-reply-text">{{ answer.text }}</p>
+                    <p class="assistant-reply-text"><strong v-if="answer.lead" class="assistant-reply-lead">{{ answer.lead }}</strong>{{ answer.rest }}</p>
 
                     <p v-if="answer.stack">
                       <strong>
@@ -1164,7 +1209,7 @@ async function sendContactMessage() {
   position: fixed;
   z-index: 40;
   inset-inline-start: clamp(10px, 2vw, 24px);
-  bottom: clamp(10px, 2vw, 24px);
+  bottom: var(--floating-control-bottom);
 
   display: inline-flex;
   align-items: center;
@@ -1269,7 +1314,8 @@ async function sendContactMessage() {
   gap: 10px;
 }
 
-.assistant-suggestions-panel {
+.assistant-suggestions-panel,
+.assistant-example-return {
   display: none;
 }
 
@@ -1302,6 +1348,21 @@ async function sendContactMessage() {
 
   .assistant-suggestions-panel {
     display: block;
+  }
+
+  .assistant-example-return {
+    display: block;
+    justify-self: start;
+    min-height: 36px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--accent);
+    font: inherit;
+    font-size: 0.8125rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
   }
 
   .assistant-suggestions-panel h3 {
@@ -1782,6 +1843,12 @@ async function sendContactMessage() {
 
 .assistant-reply-text {
   white-space: pre-line;
+}
+
+.assistant-reply-lead {
+  background: var(--assistant-mint-open);
+  color: var(--ink);
+  font-weight: 650;
 }
 
 .assistant-reply h3 {

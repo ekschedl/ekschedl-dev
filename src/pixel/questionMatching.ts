@@ -430,8 +430,17 @@ const undocumentedSkillsTopic: KnowledgeTopic = {
   answerKey: 'assistant.undocumentedSkillsAnswer'
 }
 
+const incompleteQuestionTopic: KnowledgeTopic = {
+  keywords: [],
+  overview: true,
+  answerKey: 'assistant.incompleteQuestionAnswer'
+}
+
 export function findKnowledgeTopics(question: string) {
   const normalized = normalize(question)
+  if (/^(?:was|wer|wie|wo|wann|warum|what|who|how|where|when|why|что|кто|как|где|когда|почему)?$/u.test(normalized)) {
+    return [incompleteQuestionTopic]
+  }
   if (undocumentedSkillsQuestion.test(normalized)) return [undocumentedSkillsTopic]
 
   const words = normalized.split(' ')

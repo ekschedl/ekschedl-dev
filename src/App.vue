@@ -1814,7 +1814,7 @@ function scrollToTop() {
 
 @media (max-width: 920px) {
   .footer {
-    padding-block-end: calc(64px + clamp(10px, 2vw, 24px) + env(safe-area-inset-bottom, 0px));
+    padding-block-end: calc(64px + var(--floating-control-bottom));
   }
 
   .footer-legal :is(a, button) {
@@ -1863,7 +1863,7 @@ function scrollToTop() {
   position: fixed;
   z-index: 40;
   right: clamp(10px, 2vw, 24px);
-  bottom: clamp(10px, 2vw, 24px);
+  bottom: var(--floating-control-bottom);
   display: grid;
   width: 44px;
   height: 44px;

@@ -12,6 +12,7 @@
   --accent: #245c4b;
   --paper: #f7fcf7;
   --surface: #ffffff;
+  --floating-control-bottom: calc(clamp(10px, 2vw, 24px) + env(safe-area-inset-bottom, 0px));
   --blue: #94d9bd;
   --slate: #c5e9ac;
   --mist: #a8e1d8;
@@ -21,6 +22,12 @@
   --on-ink: #ffffff;
   --art-ink: #382b2d1a;
   --art-accent: #245c4b33;
+}
+
+@media (display-mode: standalone) {
+  :root {
+    --floating-control-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 :root[data-theme='dark'] {

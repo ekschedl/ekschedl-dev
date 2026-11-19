@@ -12,6 +12,7 @@ const portfolioAssistantReply = "Der KI-Assistent gehört zu Ekaterinas Portfoli
 const jawaVueExperience = `Ekaterina hat ${jawaExperienceMonths} Monate bei JAWA Management Software GmbH mit Vue gearbeitet.`
 
 const projectOverview = [
+  "Ekaterina hat Webanwendungen, eine iOS-App, Spiele und Verwaltungsprogramme entwickelt.",
   "Mit ihrer To-do-App hat Ekaterina einen kleinen Alltagshelfer gebaut, in dem Sie Aufgaben festhalten, abhaken und löschen können. In der Shop-Demo ShopPlatzi können Sie Produkte suchen, filtern und in den Warenkorb legen.",
   "Für den Lutscherhersteller Feta setzte Ekaterina eine statische Website in WordPress um und entwickelte dafür ein eigenes Theme. Die Seiten für den Produktkatalog, die Zutatenlisten und das Kontaktformular baute sie mit PHP-Templates. Die kleine Kaffeehaus-Website Mokka entstand als Übung für HTML, CSS und JavaScript. Außerdem entwickelte Ekaterina ihr mehrsprachiges Portfolio und integrierte Pixel, der Fragen zu ihren Projekten beantwortet.",
   "Bei der iOS-App YogaNow Studio hat Ekaterina im Team das Design, die Anbindung an Supabase und die Kursbuchung übernommen. Wer die App öffnet, kann in der Yoga-Bibliothek stöbern und einen Kurs im Studio buchen.",
@@ -92,6 +93,7 @@ export default {
             unavailable: 'Der Nachrichtenversand ist gerade nicht verfügbar.',
         },
         suggestionLabel: 'Beispielfragen',
+        moreExampleQuestions: 'Weitere Fragen · {category}',
         suggestionCategories: {
             projects: 'Projekte',
             education: 'Ausbildung',
@@ -121,8 +123,8 @@ export default {
                 answer: "Ekaterina arbeitet gerne mit anderen zusammen. Sie tauscht Ideen aus, hilft bei Problemen und freut sich, wenn man gemeinsam Lösungen findet. Ein freundliches und unterstützendes Team ist ihr wichtig.",
             },
             growth: {
-                title: "Was Ekaterina weiterentwickelt",
-                answer: "Ekaterina möchte ihre Programmierkenntnisse vertiefen. Sie weiß, dass vieles erst mit der Praxis verständlich wird, und arbeitet aktiv daran. Sie lernt täglich, hört sich Online-Vorlesungen an und probiert Neues in eigenen Projekten aus.",
+                title: "Woran Ekaterina arbeitet",
+                answer: "Ekaterina setzt die Messlatte für sich manchmal zu hoch. Sie bleibt an einer Aufgabe dran, bis die Qualität stimmt. Das zeigt sich in ihrer sorgfältigen Arbeit. Ihr Ziel ist es, diesen Anspruch mit realistischen Etappenzielen zu verbinden.",
             },
             hours: {
                 title: "Gewünschte Wochenstunden",
@@ -151,6 +153,7 @@ export default {
         send: 'Senden',
         whichProject: "Welches Projekt meinen Sie? Nennen Sie mir gern den Projektnamen.",
         undocumentedSkillsAnswer: "Im Portfolio steht, womit Ekaterina bereits gearbeitet hat. Welche Fähigkeiten ihr fehlen, geht daraus nicht hervor. Wenn Sie nach einer bestimmten Technologie fragen, kann ich nachsehen, ob dazu Erfahrung dokumentiert ist.",
+        incompleteQuestionAnswer: 'Was genau möchten Sie über Ekaterina wissen?',
         fallbackAnswer: 'Dazu habe ich gerade keine genaue Antwort. Vielleicht finden Sie die gesuchte Information in einem dieser Bereiche des Portfolios.',
         profileAnswer: 'Ekaterina Schedlberger ist Softwareentwicklerin in Graz. In ihrem Portfolio stellt sie ihre Ausbildung, ihre Berufserfahrung und ihre Projekte vor – von der To-do-App bis zur Hotelverwaltung. Wenn Sie sich selbst ein Bild machen möchten, können Sie hier UNO spielen und ihre Projektdemos ausprobieren. Ekaterina setzt sich gern klare Ziele und arbeitet sorgfältig und termingerecht. Sie freut sich über passende Stellenangebote in der Softwareentwicklung.',
         educationAnswer: `Ekaterina hat im ${softwareEngineeringCompletion} den Hochschullehrgang Software Engineering an der FH CAMPUS 02 abgeschlossen. Davor studierte sie Transkulturelle Kommunikation an der Universität Graz und schloss in Irkutsk ein Studium in Wirtschaft und Management ab.`,
