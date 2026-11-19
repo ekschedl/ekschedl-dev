@@ -358,7 +358,7 @@ function scrollToCurrentQuestion(sequence: number) {
     const question = questionTurn.value
     if (sequence !== questionSequence || !replyExpanded.value || contactOpen.value || !assistantDialog.value?.open || !scroll || !question) return
 
-    scroll.scrollTop += question.getBoundingClientRect().top - scroll.getBoundingClientRect().top - 12
+    scroll.scrollTop += question.getBoundingClientRect().top - scroll.getBoundingClientRect().top - 4
   })
 }
 
@@ -1142,9 +1142,8 @@ async function sendContactMessage() {
           class="assistant-contact-trigger"
           @click="showContact"
         >
-          <span class="assistant-contact-icon" aria-hidden="true">✉</span>
+          <span class="assistant-contact-icon" aria-hidden="true"></span>
           <span>{{ t('assistant.contactForm.open') }}</span>
-          <span class="assistant-contact-arrow" aria-hidden="true">→</span>
         </button>
       </div>
 
@@ -1264,6 +1263,10 @@ async function sendContactMessage() {
   align-content: start;
   gap: 17px;
   min-width: 0;
+}
+
+.assistant-conversation {
+  gap: 10px;
 }
 
 .assistant-suggestions-panel {
@@ -1616,7 +1619,7 @@ async function sendContactMessage() {
   background: var(--surface);
 }
 
-@media (min-width: 500px) {
+@media (min-width: 350px) {
   .assistant-composer {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
@@ -1692,7 +1695,7 @@ async function sendContactMessage() {
 
 .assistant-question-turn {
   justify-self: end;
-  max-width: 90%;
+  max-width: 100%;
 }
 
 .assistant-question-turn .assistant-speaker {
@@ -1713,7 +1716,7 @@ async function sendContactMessage() {
 
 .assistant-question {
   margin: 0;
-  padding: 9px 12px;
+  padding: 7px 10px;
   border-radius: 9px 9px 3px 9px;
   background: color-mix(in srgb, var(--assistant-mint) 22%, var(--surface));
   color: var(--ink);
@@ -1729,14 +1732,27 @@ async function sendContactMessage() {
   background: var(--surface);
 }
 
+.assistant-privacy summary,
+.assistant-contact-trigger {
+  min-height: 44px;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
 .assistant-privacy summary {
   display: list-item;
   width: fit-content;
-  margin-block: -2px;
-  padding: 4px 0;
-  color: var(--accent);
-  font-size: 0.8125rem;
-  cursor: pointer;
+  padding: 12px 0;
+}
+
+.assistant-privacy summary:hover,
+.assistant-contact-trigger:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .assistant-privacy[open] .assistant-status {
@@ -1878,31 +1894,35 @@ async function sendContactMessage() {
 /* Kontakt */
 
 .assistant-contact-trigger {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  display: inline-flex;
   align-items: center;
   justify-self: start;
   gap: 7px;
-  min-height: 44px;
-  padding: 4px 0;
+  padding: 0;
   border: 0;
   background: transparent;
-  color: var(--accent);
-  font: inherit;
-  font-size: 0.875rem;
-  font-weight: 600;
   text-align: start;
-  cursor: pointer;
 }
 
-.assistant-contact-trigger:hover span:nth-child(2) {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+.assistant-contact-icon {
+  position: relative;
+  flex: 0 0 15px;
+  height: 11px;
+  overflow: hidden;
+  border: 1px solid currentColor;
+  border-radius: 2px;
 }
 
-.assistant-contact-icon,
-.assistant-contact-arrow {
-  line-height: 1;
+.assistant-contact-icon::before {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  content: '';
+  transform: translateX(-50%) rotate(45deg);
 }
 
 .assistant-contact {
