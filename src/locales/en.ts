@@ -48,6 +48,7 @@ const messages = {
     authority: "Austrian Data Protection Authority",
   },
     assistant: {
+    loadingAnswer: 'Pixel is getting an answer …',
         aiPrivacy: "In the test version, Cloudflare Workers AI (Cloudflare, Inc., USA) processes your question about the portfolio to generate a reply. Please do not enter personal information.",
         open: 'Prefer to contact Ekaterina directly?',
         aiNotice: "AI assistant test version. Questions about the portfolio may be sent to Cloudflare Workers AI to generate a reply. Answers may contain errors. Please do not enter personal information.",

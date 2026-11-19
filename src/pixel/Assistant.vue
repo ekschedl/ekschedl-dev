@@ -27,9 +27,10 @@ const employerFaqReply = ref<string | null>(null)
 
 // Dieser Build-Schalter aktiviert KI-Anfragen. Auch der Server muss den Pilot freigeben.
 const aiPilotEnabled = import.meta.env.VITE_PIXEL_AI_PILOT === 'true'
-// Eine erfolgreiche KI-Antwort ergänzt die Anzeige. aiRequest erlaubt das Abbrechen alter Anfragen.
 const aiReply = ref('')
+const aiPending = ref(false)
 let aiRequest: AbortController | undefined
+let questionSequence = 0
 // Eigenständiges Kontaktformular. Die Nachricht geht über die Server-Schnittstelle an Resend.
 const contactEmail = ref('')
 const contactMessage = ref('')
@@ -307,51 +308,54 @@ function openAnswerLink(
 // Der Server holt dazu die hinterlegten Fakten und ruft Cloudflare Workers AI auf.
 async function requestPilotAnswer(
   question: string,
-  topics: string[]
+  topics: string[],
+  sequence: number
 ) {
   const request = new AbortController()
   aiRequest = request
+  aiPending.value = true
 
-  // Nach zwölf Sekunden abbrechen. Währenddessen ist die vorbereitete Antwort bereits sichtbar.
-  const timeout = window.setTimeout(
-    () => request.abort(),
-    12000
-  )
+  const timeout = window.setTimeout(() => request.abort(), 12000)
+  const cancelled = new Promise<null>(resolve => {
+    request.signal.addEventListener('abort', () => resolve(null), { once: true })
+  })
 
   try {
-    const response = await fetch('/api/pixel-chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        question,
-        topics,
-        language: answerLanguage.value
-      }),
-      signal: request.signal
-    })
+    const response = await Promise.race([
+      fetch('/api/pixel-chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          question,
+          topics,
+          language: answerLanguage.value
+        }),
+        signal: request.signal
+      }).then(response => response.ok ? response.json() : null),
+      cancelled
+    ])
 
-    if (!response.ok) return
+    if (disposed || sequence !== questionSequence || request.signal.aborted) return
 
-    const { answer } = await response.json()
-
-    if (aiRequest === request && !disposed && typeof answer === 'string' && answer.trim()) {
-      aiReply.value = topics.some(topic => topic.startsWith('assistant.projectReplies.'))
+    const answer = response?.answer
+    if (typeof answer === 'string') {
+      aiReply.value = (topics.some(topic => topic.startsWith('assistant.projectReplies.'))
         ? withoutProjectAge(answer)
-        : answer
+        : answer).trim()
     }
   } catch {
-    // Bei Netzwerkfehlern und Zeitüberschreitungen bleibt die lokale Antwort sichtbar.
+    // Die vorbereitete lokale Antwort wird nach dem Ladezustand angezeigt.
   } finally {
     window.clearTimeout(timeout)
 
-    if (aiRequest === request) {
+    if (!disposed && sequence === questionSequence) {
       aiRequest = undefined
+      aiPending.value = false
     }
   }
 }
-
 
 // Hauptablauf für eigene Fragen und Vorschlagsbuttons.
 function sendAssistantQuestion(input: string) {
@@ -360,9 +364,11 @@ function sendAssistantQuestion(input: string) {
   if (!question || question.length > 500) return
 
   // Vorherige KI-Anfrage abbrechen, damit ihre Antwort die neue Frage nicht überschreibt.
+  const sequence = ++questionSequence
   aiRequest?.abort()
   aiRequest = undefined
 
+  aiPending.value = false
   aiReply.value = ''
   employerFaqReply.value = null
 
@@ -463,7 +469,7 @@ function sendAssistantQuestion(input: string) {
       /^assistant\.(projectReplies|educationReplies|experienceReplies)\./.test(key)
     )
   ) {
-    void requestPilotAnswer(question, topics)
+    void requestPilotAnswer(question, topics, sequence)
   }
 }
 
@@ -704,98 +710,90 @@ async function sendContactMessage() {
       >
         <template v-if="submittedQuestion">
 
-            <article
-            v-if="employerFaqReply"
-            class="assistant-reply"
-            >
-            <p>{{ employerFaqReply }}</p>
-            </article>
-
-
-          <p
-            v-if="aiReply && answers.length > 1"
-            class="assistant-reply"
-          >
-            {{ aiReply }}
+          <p v-if="aiPending" class="assistant-reply">
+            {{ replyText('assistant.loadingAnswer') }}
           </p>
 
-          <article
-            v-for="(answer, index) in answers"
-            :key="index"
-            class="assistant-reply"
-          >
-            <h3 v-if="answer.title">
-              {{ answer.title }}
-            </h3>
-
-            <p
-              v-if="
-                !aiReply ||
-                answers.length === 1
-              "
-            >
-              {{ aiReply || answer.text }}
-            </p>
-
-            <p v-if="answer.stack">
-              <strong>
-                {{ replyText('experiencePage.techStack') }}
-              </strong>
-              · {{ answer.stack }}
-            </p>
-
-            <div
-              v-if="answer.detailsPath"
-              class="assistant-answer-links"
-            >
-              <a
-                class="assistant-details"
-                :href="answer.detailsPath"
-                :target="
-                  answer.detailsNewTab
-                    ? '_blank'
-                    : undefined
-                "
-                :rel="
-                  answer.detailsNewTab
-                    ? 'noopener noreferrer'
-                    : undefined
-                "
-                @click="
-                  openAnswerLink(
-                    $event,
-                    answer.project?.id
-                  )
-                "
-              >
-                {{ answer.detailsLabel }}
-              </a>
-
-              <a
-                v-if="answer.project"
-                class="assistant-details"
-                :href="answer.project.url"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {{ replyText('projectLink') }}
-              </a>
-
-              <a
-                v-if="answer.demoUrl"
-                class="assistant-details"
-                :href="answer.demoUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {{ replyText('assistant.projectDemoLink') }}
-              </a>
-            </div>
+          <article v-else-if="aiReply" class="assistant-reply">
+            <p>{{ aiReply }}</p>
           </article>
+
+          <article v-else-if="employerFaqReply" class="assistant-reply">
+            <p>{{ employerFaqReply }}</p>
+          </article>
+
+          <template v-else-if="answers.length">
+            <article
+              v-for="(answer, index) in answers"
+              :key="index"
+              class="assistant-reply"
+            >
+              <h3 v-if="answer.title">
+                {{ answer.title }}
+              </h3>
+
+              <p>{{ answer.text }}</p>
+
+              <p v-if="answer.stack">
+                <strong>
+                  {{ replyText('experiencePage.techStack') }}
+                </strong>
+                · {{ answer.stack }}
+              </p>
+
+              <div
+                v-if="answer.detailsPath"
+                class="assistant-answer-links"
+              >
+                <a
+                  class="assistant-details"
+                  :href="answer.detailsPath"
+                  :target="
+                    answer.detailsNewTab
+                      ? '_blank'
+                      : undefined
+                  "
+                  :rel="
+                    answer.detailsNewTab
+                      ? 'noopener noreferrer'
+                      : undefined
+                  "
+                  @click="
+                    openAnswerLink(
+                      $event,
+                      answer.project?.id
+                    )
+                  "
+                >
+                  {{ answer.detailsLabel }}
+                </a>
+
+                <a
+                  v-if="answer.project"
+                  class="assistant-details"
+                  :href="answer.project.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{ replyText('projectLink') }}
+                </a>
+
+                <a
+                  v-if="answer.demoUrl"
+                  class="assistant-details"
+                  :href="answer.demoUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{ replyText('assistant.projectDemoLink') }}
+                </a>
+              </div>
+            </article>
+          </template>
 
           <!-- Antwort, wenn kein Thema erkannt wird -->
           <div
-            v-if="!answers.length && !employerFaqReply"
+            v-else
             class="assistant-reply assistant-fallback"
           >
             <p>

@@ -48,6 +48,7 @@ export default {
     authority: "österreichischen Datenschutzbehörde",
   },
     assistant: {
+    loadingAnswer: 'Pixel ruft eine Antwort ab …',
         aiPrivacy: "In der Testversion verarbeitet Cloudflare Workers AI (Cloudflare, Inc., USA) Ihre Frage zum Portfolio, um eine Antwort zu erzeugen. Bitte geben Sie keine persönlichen Daten ein.",
         open: 'Lieber persönlich Kontakt aufnehmen?',
         aiNotice: "Testversion des KI-Assistenten. Fragen zum Portfolio können zur Beantwortung an Cloudflare Workers AI gesendet werden. Antworten können Fehler enthalten. Bitte geben Sie keine persönlichen Daten ein.",

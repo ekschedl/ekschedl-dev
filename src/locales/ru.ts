@@ -51,6 +51,7 @@ const messages = {
   },
   
     assistant: {
+    loadingAnswer: 'Pixel загружает ответ …',
         aiPrivacy: "В тестовой версии вопросы о портфолио обрабатывает Cloudflare Workers AI (Cloudflare, Inc., США). Пожалуйста, не указывайте личные данные.",
         open: 'Хотите связаться с Екатериной напрямую?',
 
