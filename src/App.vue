@@ -73,9 +73,6 @@ function toggleTheme() {
   }
 }
 
-
-const aboutSections = computed(() => tm('aboutSections'))
-
 const hotelSlides = [
 
   {
@@ -386,13 +383,6 @@ function handleSkillIconLoad(event: Event) {
 function handleSkillIconError(event: Event) {
   (event.currentTarget as HTMLImageElement).hidden = true
 }
-
-const values = [
-  { symbol: '⌘' },
-  { symbol: '↗' },
-  { symbol: '♡' },
-  { symbol: '⟳' }
-]
 
 const githubUrl = 'https://github.com/ekschedl'
 const linkedinUrl = 'https://www.linkedin.com/in/ekaterina-schedlberger-05162630b/'
