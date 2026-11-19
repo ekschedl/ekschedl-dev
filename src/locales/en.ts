@@ -53,6 +53,7 @@ const messages = {
     loadingAnswer: 'Pixel is getting an answer …',
         aiPrivacy: "In the test version, Cloudflare Workers AI (Cloudflare, Inc., USA) processes your question about the portfolio to generate a reply. Please do not enter personal information.",
         open: 'Prefer to contact Ekaterina directly?',
+        privacySummary: 'AI & privacy',
         aiNotice: "Questions may be sent to Cloudflare Workers AI. Please avoid entering personal data.",
         cvTitle: 'CV',
         cvAnswer: 'You can open Ekaterina’s CV here as a PDF.',

@@ -728,22 +728,6 @@ async function sendContactMessage() {
           </details>
         </div>
 
-        <!-- Datenschutzhinweis für KI -->
-        <p
-          id="pixel-ai-notice"
-          class="assistant-status"
-        >
-          {{ t('assistant.aiNotice') }}
-
-          <a
-            href="/Datenschutz#pixel-ki"
-            target="_blank"
-            rel="noopener"
-          >
-            {{ t('legal.privacy') }}
-          </a>
-        </p>
-
         <!-- Frage des Besuchers -->
         <p
           v-if="submittedQuestion"
@@ -1075,6 +1059,24 @@ async function sendContactMessage() {
           </button>
         </form>
 
+        <details class="assistant-privacy">
+          <summary>{{ t('assistant.privacySummary') }}</summary>
+          <p
+            id="pixel-ai-notice"
+            class="assistant-status"
+          >
+            {{ t('assistant.aiNotice') }}
+
+            <a
+              href="/Datenschutz#pixel-ki"
+              target="_blank"
+              rel="noopener"
+            >
+              {{ t('legal.privacy') }}
+            </a>
+          </p>
+        </details>
+
         <button
           ref="contactTrigger"
           type="button"
@@ -1141,13 +1143,9 @@ async function sendContactMessage() {
   );
   --assistant-accent-ink: #fff;
   --assistant-subtle: color-mix(in srgb, var(--ink) 4%, var(--surface));
-  --assistant-mint: light-dark(#82b9a2, #79a992);
-  --assistant-contact-apricot: light-dark(#fbebdf, #62493c);
+  --assistant-mint: light-dark(var(--mist), #79a992);
+  --assistant-contact-fill: color-mix(in srgb, var(--lilac) 34%, var(--surface));
   --assistant-mint-border: color-mix(in srgb, var(--assistant-mint) 49%, var(--assistant-line));
-  --assistant-mint-card: light-dark(
-    color-mix(in srgb, var(--assistant-mint) 12%, var(--surface)),
-    color-mix(in srgb, var(--assistant-mint) 12%, var(--surface))
-  );
   --assistant-mint-open: light-dark(
     color-mix(in srgb, var(--assistant-mint) 29%, var(--surface)),
     color-mix(in srgb, var(--assistant-mint) 23%, var(--surface))
@@ -1211,8 +1209,8 @@ async function sendContactMessage() {
 
   padding: 16px var(--assistant-inset);
 
-  background: #245c4b;
-  color: #fff6ec;
+  background: var(--surface);
+  color: var(--ink);
 }
 
 .assistant-identity {
@@ -1233,7 +1231,7 @@ async function sendContactMessage() {
   padding: 6px;
   border: 1px solid var(--assistant-mint-border);
   border-radius: 14px;
-  background: var(--surface);
+  background: color-mix(in srgb, var(--slate) 34%, var(--surface));
 }
 
 /* Pixel-Überschrift */
@@ -1287,7 +1285,7 @@ async function sendContactMessage() {
 }
 
 .assistant-header-status strong {
-  color: #f4df9e;
+  color: var(--accent);
   font-weight: 650;
   margin-inline-end: 5px;
 }
@@ -1306,9 +1304,7 @@ async function sendContactMessage() {
 
 .assistant-section-title {
   margin: 2px 0 -7px;
-  padding-top: 18px;
 
-  border-top: 1px solid var(--assistant-line);
   color: var(--ink);
 
   font-size: 1rem;
@@ -1326,7 +1322,7 @@ async function sendContactMessage() {
   gap: 8px;
   padding: 6px;
   border-radius: 14px;
-  background: var(--assistant-mint-card);
+  background: var(--surface);
 }
 
 .assistant-suggestion-category {
@@ -1340,6 +1336,9 @@ async function sendContactMessage() {
 }
 
 .assistant-suggestion-category > summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
   box-sizing: border-box;
   min-height: 54px;
   padding: 10px 8px;
@@ -1350,8 +1349,28 @@ async function sendContactMessage() {
   cursor: pointer;
 }
 
-.assistant-suggestion-category > summary::marker {
-  color: var(--accent);
+.assistant-suggestion-category > summary::-webkit-details-marker {
+  display: none;
+}
+
+.assistant-suggestion-category > summary::before {
+  content: '';
+  flex: 0 0 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.assistant-suggestion-category:nth-child(2) > summary::before {
+  background: var(--lilac);
+}
+
+.assistant-suggestion-category:nth-child(3) > summary::before {
+  background: var(--slate);
+}
+
+.assistant-suggestion-category:nth-child(4) > summary::before {
+  background: light-dark(#e7ab91, #d7a28b);
 }
 
 .assistant-suggestion-category > summary:hover {
@@ -1459,7 +1478,7 @@ async function sendContactMessage() {
   display: grid;
   gap: 10px;
   padding: 12px var(--assistant-inset) max(12px, env(safe-area-inset-bottom));
-  border-top: 2px solid var(--accent);
+  border-top: 1px solid var(--assistant-line);
   background: var(--surface);
 }
 
@@ -1470,6 +1489,7 @@ async function sendContactMessage() {
 }
 
 .assistant-question-form input {
+  background: color-mix(in srgb, var(--assistant-mint) 9%, var(--surface));
   border-color: color-mix(
     in srgb,
     var(--accent) 40%,
@@ -1533,6 +1553,20 @@ async function sendContactMessage() {
   justify-self: start;
   min-height: 44px;
   background: var(--surface);
+}
+
+.assistant-privacy summary {
+  display: list-item;
+  width: fit-content;
+  margin-block: -2px;
+  padding: 4px 0;
+  color: var(--accent);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.assistant-privacy[open] .assistant-status {
+  margin-top: 6px;
 }
 
 .assistant-status {
@@ -1677,7 +1711,7 @@ async function sendContactMessage() {
   padding: 6px 12px;
   border: 0;
   border-radius: 12px;
-  background: var(--assistant-contact-apricot);
+  background: var(--assistant-contact-fill);
   color: var(--ink);
   font: inherit;
   font-size: 0.9rem;
@@ -1687,7 +1721,7 @@ async function sendContactMessage() {
 }
 
 .assistant-contact-trigger:hover {
-  background: color-mix(in srgb, var(--assistant-contact-apricot) 88%, var(--ink));
+  background: color-mix(in srgb, var(--assistant-contact-fill) 88%, var(--ink));
 }
 
 .assistant-contact-icon {
@@ -1705,6 +1739,7 @@ async function sendContactMessage() {
 }
 
 .assistant-contact {
+  grid-row: 2 / -1;
   gap: 12px;
 }
 

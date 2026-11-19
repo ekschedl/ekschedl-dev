@@ -63,6 +63,7 @@ export default {
     loadingAnswer: 'Pixel ruft eine Antwort ab …',
         aiPrivacy: "In der Testversion verarbeitet Cloudflare Workers AI (Cloudflare, Inc., USA) Ihre Frage zum Portfolio, um eine Antwort zu erzeugen. Bitte geben Sie keine persönlichen Daten ein.",
         open: 'Lieber persönlich Kontakt aufnehmen?',
+        privacySummary: 'KI & Datenschutz',
         aiNotice: "Fragen können an Cloudflare Workers AI gesendet werden. Bitte keine persönlichen Daten eingeben.",
         cvTitle: 'Lebenslauf',
         cvAnswer: 'Hier finden Sie Ekaterinas Lebenslauf als PDF.',

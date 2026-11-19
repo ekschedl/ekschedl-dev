@@ -57,6 +57,7 @@ const messages = {
         aiPrivacy: "В тестовой версии вопросы о портфолио обрабатывает Cloudflare Workers AI (Cloudflare, Inc., США). Пожалуйста, не указывайте личные данные.",
         open: 'Хотите связаться с Екатериной напрямую?',
 
+        privacySummary: 'ИИ и конфиденциальность',
         aiNotice: "Вопросы могут передаваться в Cloudflare Workers AI. Не вводите личные данные.",
 
         cvTitle: 'Резюме',
