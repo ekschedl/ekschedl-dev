@@ -10,6 +10,7 @@ import ContactSection from './components/ContactSection.vue'
 import AboutSection from './components/AboutSection.vue'
 import TechnologiesSection from './components/TechnologiesSection.vue'
 import ProjectGallery from './components/ProjectGallery.vue'
+import HeroSection from './components/HeroSection.vue'
 
 import { cvPath, projects } from './data/portfolioData'
 import { projectGalleries, yogaSlides } from './data/projectGalleries'
@@ -90,11 +91,6 @@ function openDemoSettings() {
   projectGalleryRef.value?.openDemoSettings()
 }
 
-const latestProjects = computed(() => [...projects]
-  .sort((first, second) => second.createdAt.localeCompare(first.createdAt))
-  .slice(0, 3)
-  .map(project => ({ ...project, title: t(`projectTitles.${project.id}`) }))
-)
 
 const projectTechnologies = [...new Set(projects.flatMap(({ stack }) => stack.split(' · ')))]
   .sort((first, second) => first.localeCompare(second))
@@ -336,91 +332,7 @@ function scrollToTop() {
       </a>
 
       <!-- HERO BENTO -->
-      <section id="home" class="hero-grid">
-        <div class="tile portrait-tile">
-          <div class="portrait-orbit orbit-one"></div>
-          <div class="portrait-orbit orbit-two"></div>
-          <span class="portrait-spark" aria-hidden="true">✳</span>
-
-          <img
-            src="/images/ekaterina-cutout.png"
-            :alt="portfolioName"
-            class="portrait-image"
-            fetchpriority="high"
-          />
-        </div>
-
-        <a href="#projects" class="tile intro-tile" :aria-label="t('nav.1')">
-          <div>
-            <span class="eyebrow">{{ t('heroGreeting') }}</span>
-            <h1>{{ t('heroName') }}<span>.</span></h1>
-            <h2>{{ t('role') }}</h2>
-            <p class="location">{{ t('location') }}</p>
-          </div>
-
-          <div class="intro-bottom">
-            <p>{{ t('heroNote') }}</p>
-            <span class="round-arrow" aria-hidden="true">↗</span>
-          </div>
-        </a>
-
-        <!-- Auf dem Handy führt ein kompakter Portfolio-Block zur vollständigen Projektübersicht. -->
-        <a href="#projects" class="tile mobile-portfolio-link">
-          <span class="tile-type">{{ t('allProjectsLink') }}</span>
-          <h3>{{ t('nav.1') }}</h3>
-          <span class="tile-corner-arrow" aria-hidden="true">↗</span>
-        </a>
-
-        <section class="latest-projects" aria-labelledby="latest-projects-heading">
-          <div class="latest-projects-header">
-            <h2 id="latest-projects-heading" class="eyebrow">{{ t('latestProjects') }}</h2>
-            <a class="latest-projects-link" href="#projects">
-              {{ t('allProjectsLink') }} <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-          <div class="latest-projects-grid">
-            <a
-              v-for="project in latestProjects"
-              :key="project.id"
-              :href="'#' + project.id"
-              @click="openProject($event, project.id)"
-              class="tile project-tile"
-              :data-area="project.area"
-            >
-              <span class="tile-type tile-type-full">{{ t(`projectTypes.${project.area}`) }}</span>
-              <span class="tile-type tile-type-compact">{{ t(`projectTypesShort.${project.area}`) }}</span>
-
-              <div class="tile-project-image">
-                <img v-if="project.image" :src="project.image" :alt="project.title" loading="lazy" />
-              </div>
-
-              <div class="tile-bottom">
-                <h3>{{ project.title }}</h3>
-                <span aria-hidden="true">↗</span>
-              </div>
-            </a>
-          </div>
-        </section>
-
-        <a href="#technologies" class="tile expertise-tile">
-          <span class="tile-type">{{ t('whatIUse') }}</span>
-          <h3>{{ t('nav.2') }}</h3>
-          <div class="expertise-preview">
-            <span>Vue </span>
-            <span>TypeScript</span>
-            <span>PHP</span>
-            <span>{{ t('more') }}</span>
-          </div>
-          <span class="tile-corner-arrow" aria-hidden="true">↗</span>
-        </a>
-
-        <a href="#about" class="tile about-tile">
-          <span class="tile-type">{{ t('aboutTile') }}</span>
-          <h3>{{ t('about') }}</h3>
-          <p>{{ t('aboutShort') }}</p>
-          <span class="tile-corner-arrow" aria-hidden="true">↗</span>
-        </a>
-      </section>
+    <HeroSection @open-project="openProject" />
 
       <!-- 01 / PORTFOLIO -->
       <section id="projects" class="section projects-section">
