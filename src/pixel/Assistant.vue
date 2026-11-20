@@ -300,20 +300,6 @@ function withoutProjectAge(text: string): string {
     .replace(/\.{2,}/g, '.')
 }
 
-const replySegmenter = computed(() =>
-  typeof Intl.Segmenter === 'function'
-    ? new Intl.Segmenter(answerLanguage.value, { granularity: 'sentence' })
-    : undefined
-)
-
-function formatReply(text: string) {
-  const firstSentence = replySegmenter.value?.segment(text)[Symbol.iterator]().next().value?.segment.trimEnd()
-  const lead = firstSentence && firstSentence.length <= 190 ? firstSentence : ''
-  return { lead, rest: text.slice(lead.length) }
-}
-
-const directReply = computed(() => formatReply(aiReply.value || employerFaqReply.value || ''))
-
 // Baut aus den gefundenen Themen die sichtbaren Antworten mit Überschrift, Text und Links.
 const answers = computed(() =>
   currentTopics.value.map(topic => {
@@ -342,7 +328,7 @@ const answers = computed(() =>
         topic.project && 'demoUrl' in topic.project
           ? topic.project.demoUrl
           : undefined,
-      ...formatReply(text)
+      text
     }
   })
 )
@@ -866,7 +852,7 @@ async function sendContactMessage() {
                 </p>
 
                 <article v-else-if="aiReply || employerFaqReply" class="assistant-reply">
-                  <p class="assistant-reply-text"><strong v-if="directReply.lead" class="assistant-reply-lead">{{ directReply.lead }}</strong>{{ directReply.rest }}</p>
+                  <p class="assistant-reply-text">{{ aiReply || employerFaqReply }}</p>
                   <div v-if="answerLinksToPortfolio || employerFaqDemoUrl" class="assistant-answer-links">
                     <a
                       v-if="employerFaqDemoUrl"
@@ -898,7 +884,7 @@ async function sendContactMessage() {
                       {{ answer.title }}
                     </h3>
 
-                    <p class="assistant-reply-text"><strong v-if="answer.lead" class="assistant-reply-lead">{{ answer.lead }}</strong>{{ answer.rest }}</p>
+                    <p class="assistant-reply-text">{{ answer.text }}</p>
 
                     <p v-if="answer.stack">
                       <strong>
@@ -1822,6 +1808,9 @@ async function sendContactMessage() {
 .assistant-replies {
   display: grid;
   gap: 10px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: var(--assistant-mint-open);
 }
 
 .assistant-replies:empty {
@@ -1843,12 +1832,6 @@ async function sendContactMessage() {
 
 .assistant-reply-text {
   white-space: pre-line;
-}
-
-.assistant-reply-lead {
-  background: var(--assistant-mint-open);
-  color: var(--ink);
-  font-weight: 650;
 }
 
 .assistant-reply h3 {

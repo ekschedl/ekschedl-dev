@@ -14,6 +14,7 @@
   --surface: #ffffff;
   --floating-control-bottom: calc(clamp(10px, 2vw, 24px) + env(safe-area-inset-bottom, 0px));
   --blue: #94d9bd;
+  --project-backend-color: #efb58f;
   --slate: #c5e9ac;
   --mist: #a8e1d8;
   --lilac: #f4dc92;
@@ -38,6 +39,7 @@
   --paper: #393435;
   --surface: #453f3d;
   --blue: #6c4b59;
+  --project-backend-color: var(--blue);
   --slate: #394e65;
   --mist: #78433c;
   --lilac: #4d5d53;

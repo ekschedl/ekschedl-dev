@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { projectGalleries } from '../data/projectGalleries'
 import { todoDemoUrl, unoWebDemoUrl } from '../data/portfolioData'
 
+defineProps<{ homeHref: string }>()
+
 const { t } = useI18n({ useScope: 'global' })
 
 const privacyPath = '/Datenschutz'
@@ -131,7 +133,7 @@ defineExpose({ //defineExpose() bedeutet: Die übergeordnete Komponente App.vue 
         </dl>
         <p>{{ t('portfolioDetails.development') }}</p>
         <p>{{ t('portfolioDetails.exploreHint') }}</p>
-            <a class="primary-link" href="/#home" @click="hotelGallery?.close()">
+            <a class="primary-link" :href="homeHref" @click="hotelGallery?.close()">
               {{ t('portfolioDetails.explore') }} ↗
         </a>
       </div>

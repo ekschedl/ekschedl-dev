@@ -124,15 +124,11 @@ const emit = defineEmits<{
 }
 
 .project-tile[data-area='backend'] {
-  --area-color: #efb58f;
+  --area-color: var(--project-backend-color);
 }
 
 .project-tile[data-area='desktop'] {
   --area-color: var(--lilac);
-}
-
-:global(:root[data-theme='dark']) .project-tile[data-area='backend'] {
-  --area-color: var(--blue);
 }
 
 .project-tile[data-area] {
