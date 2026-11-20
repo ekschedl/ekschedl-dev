@@ -1,10 +1,18 @@
 // Server-Schnittstelle für KI-Antworten. Prüft Anfragen, lädt passende Wissensquellen und ruft Cloudflare Workers AI auf.
-import { getPixelSources } from '../../src/pixel/sources.ts'
+import { createPixelKnowledge } from '../../src/pixel/sources.ts'
 
 const MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast'
-const LANGUAGES = new Map([['de', 'German'], ['en', 'English'], ['ru', 'Russian']])
 const MAX_BODY_BYTES = 4096
-const sourcesByTopic = getPixelSources()
+const MAX_TOPICS = 5
+const LANGUAGE_NAMES = [
+  ['de', 'German'],
+  ['en', 'English'],
+  ['ru', 'Russian']
+]
+
+const knowledgeByLanguage = new Map(LANGUAGE_NAMES.map(([code, name]) => [
+  code, { name, ...createPixelKnowledge(code) }
+]))
 
 function json(body, status = 200) {
   return Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } })
@@ -35,6 +43,12 @@ async function readInput(request) {
   }
 }
 
+// Older clients sent project IDs instead of topic keys.
+function getLegacyProjectTopics(input) {
+  const projects = Array.isArray(input?.projects) ? input.projects : [input?.project]
+  return projects.map(id => typeof id === 'string' ? `assistant.projectReplies.${id}` : null)
+}
+
 export async function onRequestPost({ request, env }) {
   if (env.VITE_PIXEL_AI_PILOT !== 'true' || !env.AI) return json({ error: 'offline' }, 503)
   if (request.headers.get('Origin') !== new URL(request.url).origin) return json({ error: 'origin' }, 403)
@@ -44,15 +58,17 @@ export async function onRequestPost({ request, env }) {
 
   const input = await readInput(request)
   const question = typeof input?.question === 'string' ? input.question.trim() : ''
-  const language = LANGUAGES.get(input?.language)
-  const topics = input?.topics ?? (Array.isArray(input?.projects) ? input.projects : [input?.project])
-    .map(id => typeof id === 'string' ? `assistant.projectReplies.${id}` : null)
-  if (!question || question.length > 500 || !language || !Array.isArray(topics) ||
-      topics.length < 1 || topics.length > 5 || topics.some(topic => !sourcesByTopic.has(topic))) {
+  const knowledge = knowledgeByLanguage.get(input?.language)
+  const topics = input?.topics ?? getLegacyProjectTopics(input)
+  if (!question || question.length > 500 || !knowledge || !Array.isArray(topics) ||
+      topics.length > MAX_TOPICS || topics.some(topic => !knowledge.sources.has(topic))) {
     return json({ error: 'input' }, 400)
   }
-  const localizedSources = getPixelSources(input.language)
-  const sources = [...new Set(topics)].map(topic => localizedSources.get(topic))
+
+  const selectedKeys = new Set(topics)
+  const relatedKeys = knowledge.findRelatedSources(question, selectedKeys)
+  const sources = [...selectedKeys, ...relatedKeys].map(key => knowledge.sources.get(key))
+  if (sources.length === 0) return json({ answer: null })
 
   try {
     const result = await env.AI.run(MODEL, {
@@ -63,7 +79,7 @@ export async function onRequestPost({ request, env }) {
         content: [
           // Persönlichkeit und Sprache
           'You are Pixel, the friendly portfolio assistant for Ekaterina Schedlberger.',
-          `Always answer in ${language}.`,
+          `Always answer in ${knowledge.name}.`,
           'Write naturally, warmly and professionally.',
           'Use clear, fluent and grammatically correct sentences.',
           'Sound like a helpful person, not like a formal report or advertisement.',
@@ -79,6 +95,8 @@ export async function onRequestPost({ request, env }) {
 
           // Nur überprüfbare Fakten
           'Use ONLY the supplied portfolio sources for factual claims.',
+          'Related sources may be irrelevant. Use only facts that directly answer the question.',
+          'Do not disclose or guess private information about Ekaterina or anyone else.',
           'Never invent or assume personal information, qualifications, work experience or achievements.',
           'Never invent programming skills, responsibilities, technologies or project features.',
           'Never invent motivations, future plans, results, customers or user numbers.',

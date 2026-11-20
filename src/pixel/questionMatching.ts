@@ -482,6 +482,9 @@ function normalizeEmployerQuestion(value: string): string {
 }
 
 const employerQuestionAliases: Record<string, number> = {
+  'kann sie php': 47,
+  'kann ekaterina php': 47,
+  'kennt sie php': 47,
   'was hat ekaterina selbst daran erweitert': 108,
   'welche aufgaben übernahm ekaterina bei yoganow': 93,
   'welche projekte hat sie mit vue': 63,
@@ -549,6 +552,9 @@ export function getEmployerFaqQuestions(ids: readonly number[], language: string
 
 const translatedAliases = {
   en: {
+    'does she know php': 47,
+    'can she use php': 47,
+    'does ekaterina know php': 47,
     'what did ekaterina add to colorspiel herself': 108,
     'what did ekaterina contribute to yoganow': 93,
     'which projects use vue': 63,
@@ -559,6 +565,11 @@ const translatedAliases = {
     'how long did ekaterina work at jawa': 42
   },
   ru: {
+    'она умеет php': 47,
+    'умеет ли она php': 47,
+    'она знает php': 47,
+    'знает ли она php': 47,
+    'екатерина умеет php': 47,
     'что екатерина самостоятельно добавила в colorspiel': 108,
     'какой вклад екатерина внесла в yoganow': 93,
     'какие проекты на vue': 63,
@@ -592,4 +603,42 @@ export function findEmployerFaqAnswer(question: string, language = 'de'): string
   const id = faqAliases.get(language)?.get(normalized)
   if (id !== undefined) return index.entriesById.get(id)?.answer ?? null
   return index.subjects.get(normalizeCandidateName(normalized)) ?? null
+}
+
+// Schätzt die Fragesprache. Bei Gleichstand gilt die Website-Sprache.
+const germanWords = new Set([
+  'war', 'lernt', 'nach', 'ihrem', 'wozu', 'woher', 'verwendet', 'die', 'wäre', 'bevorzugt', 'können', 'wir', 'ihr', 'einen',
+  'wer', 'was', 'wie', 'wo', 'woran', 'welche', 'welcher', 'welches', 'warum', 'wann',
+  'ist', 'sind', 'hat', 'hast', 'arbeitet', 'gearbeitet', 'entwickelt', 'gebaut',
+  'deine', 'dein', 'ihre', 'über', 'ueber', 'erzähle', 'erzähl', 'bitte', 'und',
+  'ausbildung', 'berufserfahrung', 'studium', 'projekte', 'kontakt', 'hallo', 'danke', 'teamarbeit', 'stärken', 'schwächen',
+  'sie', 'kann', 'kennt', 'gelernt', 'studiert', 'beherrscht', 'verdienen', 'verdient',
+  'mochte', 'möchte', 'will', 'gehalt', 'gehaltsvorstellungen', 'wunschgehalt', 'vergütung', 'lohn',
+  'kenntnisse', 'fähigkeiten', 'programmiersprachen', 'technologien', 'programmierkenntnisse',
+  'jahresbrutto', 'entlohnung', 'gehaltlich', 'qualifikationen',
+  'wochenstunden', 'arbeitszeit', 'teilzeit', 'arbeitserlaubnis', 'arbeitsberechtigung', 'arbeitsbewilligung', 'freizeit', 'lebenslauf'
+])
+
+const englishWords = new Set([
+  'would', 'could', 'her', 'a', 'at', 'into', 'will', 'first', 'client',
+  'who', 'what', 'can', 'she', 'learned', 'learnt', 'studied', 'earn', 'salary',
+  'salaries', 'pay', 'compensation', 'skills', 'abilities', 'technologies', 'programming',
+  'qualifications', 'where', 'how', 'which', 'why', 'when', 'is', 'are', 'were', 'did',
+  'does', 'has', 'have', 'worked', 'built', 'developed', 'responsible', 'tell', 'about',
+  'your', 'please', 'and', 'education', 'experience', 'projects', 'hello', 'thanks', 'strengths', 'weaknesses', 'teamwork', 'hours', 'permit', 'hobbies', 'resume', 'résumé'
+])
+
+export function detectAssistantLanguage(question: string) {
+  const words = question.toLowerCase().normalize('NFC').match(/\p{L}+/gu) ?? []
+  const scores = { de: 0, en: 0, ru: 0 }
+
+  for (const word of words) {
+    if (/\p{Script=Cyrillic}/u.test(word)) scores.ru++
+    if (germanWords.has(word)) scores.de++
+    if (englishWords.has(word)) scores.en++
+  }
+
+  if (scores.ru > scores.de && scores.ru > scores.en) return 'ru'
+  if (scores.de > scores.ru && scores.de > scores.en) return 'de'
+  if (scores.en > scores.ru && scores.en > scores.de) return 'en'
 }

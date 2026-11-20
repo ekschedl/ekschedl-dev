@@ -4,13 +4,13 @@ import { computed, nextTick, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 // Erkennt das Thema einer Frage und sucht passende Antworten im FAQ-Katalog.
 import {
+  detectAssistantLanguage,
   findKnowledgeTopics,
   findEmployerFaqAnswer,
   getEmployerFaqQuestions,
   type FollowUpKind
 } from './questionMatching'
-// Erkennt DE/EN/RU aus der Frage. Die Sprache der Website wird dabei nicht umgestellt.
-import { detectAssistantLanguage } from './language'
+import { usePixelContact } from './usePixelContact'
 import { cvPath, unoWebDemoUrl } from '../data/portfolioData'
 
 // i18n liefert die gewählte Website-Sprache und die übersetzten Texte.
@@ -37,134 +37,20 @@ const aiReply = ref('')
 const aiPending = ref(false)
 let aiRequest: AbortController | undefined
 let questionSequence = 0
-// Eigenständiges Kontaktformular. Die Nachricht geht über die Server-Schnittstelle an Resend.
-const contactOpen = ref(false)
-const privacyOpen = ref(false)
-const contactTrigger = ref<HTMLButtonElement | null>(null)
-const contactBack = ref<HTMLButtonElement | null>(null)
-const contactEmail = ref('')
-const contactMessage = ref('')
-// Für Besucher unsichtbares Feld zum Erkennen automatisch ausgefüllter Spam-Nachrichten.
-const contactWebsite = ref('')
-const contactState = ref<'idle' | 'sending' | 'sent' | 'error' | 'unavailable'>('idle')
-// Gleicher Inhalt behält beim Wiederholen dieselbe Kennung, damit Resend Doppelversand vermeiden kann.
-let contactAttempt: { body: string; requestId: string } | undefined
-
-// Turnstile prüft das Kontaktformular vor dem Versand. Der Token wird mit der Nachricht gesendet.
-const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY?.trim()
-const turnstileContainer = ref<HTMLDivElement | null>(null)
-const turnstileToken = ref('')
-const turnstileFailed = ref(false)
-let turnstileScript: Promise<void> | undefined
-let turnstileWidget: string | undefined
 let disposed = false
 
-type Turnstile = {
-  render: (container: HTMLElement, options: {
-    sitekey: string
-    action: string
-    size: 'flexible' | 'compact'
-    callback: (token: string) => void
-    'expired-callback': () => void
-    'error-callback': () => void
-  }) => string | undefined
-  reset: (widgetId: string) => void
-  remove: (widgetId: string) => void
-}
-
-function turnstileApi() {
-  return (window as Window & { turnstile?: Turnstile }).turnstile
-}
-
-// Lädt das Turnstile-Skript bei Bedarf und teilt einen laufenden Ladevorgang zwischen Aufrufen.
-function loadTurnstile() {
-  if (turnstileApi()) return Promise.resolve()
-
-  turnstileScript ??= new Promise<void>((resolve, reject) => {
-    const script = document.createElement('script')
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
-    script.async = true
-    script.onload = () => resolve()
-    script.onerror = () => {
-      script.remove()
-      turnstileScript = undefined
-      reject(new Error('Turnstile could not be loaded'))
-    }
-    document.head.append(script)
-  })
-
-  return turnstileScript
-}
-
-async function showContact() {
-  contactOpen.value = true
-  await nextTick()
-  contactBack.value?.focus({ preventScroll: true })
-  void prepareContactVerification()
-}
-
-async function returnToChat() {
-  contactOpen.value = false
-  await nextTick()
-  contactTrigger.value?.focus({ preventScroll: true })
-}
-
-// Startet die Sicherheitsprüfung beim Öffnen der Kontaktansicht.
-async function prepareContactVerification() {
-  if (!contactOpen.value || !turnstileSiteKey || turnstileWidget !== undefined) return
-
-  turnstileFailed.value = false
-
-  try {
-    await loadTurnstile()
-
-    if (
-      disposed ||
-      !contactOpen.value ||
-      !turnstileContainer.value ||
-      turnstileWidget !== undefined
-    ) return
-
-    const api = turnstileApi()
-    if (!api) throw new Error('Turnstile unavailable')
-
-    turnstileWidget = api.render(turnstileContainer.value, {
-      sitekey: turnstileSiteKey,
-      action: 'pixel_contact',
-      size: turnstileContainer.value.clientWidth < 300 ? 'compact' : 'flexible',
-
-      callback(token) {
-        turnstileToken.value = token
-        turnstileFailed.value = false
-      },
-
-      'expired-callback'() {
-        turnstileToken.value = ''
-      },
-
-      'error-callback'() {
-        turnstileToken.value = ''
-        turnstileFailed.value = true
-      }
-    })
-
-    if (turnstileWidget === undefined) {
-      turnstileFailed.value = true
-    }
-  } catch {
-    turnstileFailed.value = true
-  }
-}
-
-// Beim Entfernen des Vue-Bausteins laufende KI-Anfragen abbrechen und Turnstile aufräumen.
 onBeforeUnmount(() => {
   disposed = true
   aiRequest?.abort()
-
-  if (turnstileWidget !== undefined) {
-    turnstileApi()?.remove(turnstileWidget)
-  }
 })
+
+const privacyOpen = ref(false)
+const {
+  contactOpen, contactTrigger, contactBack,
+  contactEmail, contactMessage, contactWebsite, contactState,
+  turnstileSiteKey, turnstileContainer, turnstileToken, turnstileFailed,
+  showContact, returnToChat, sendContactMessage
+} = usePixelContact()
 
 type AssistantTopic = ReturnType<typeof findKnowledgeTopics>[number]
 
@@ -181,11 +67,20 @@ function isPortfolioTopic(topic: AssistantTopic) {
   return Boolean(topic.project) || topic.answerKey === 'assistant.overview.projects'
 }
 
-const answerLinksToPortfolio = computed(() =>
-  aiReply.value
+const answerProject = computed(() =>
+  currentTopics.value.length === 1 ? currentTopics.value[0]?.project : undefined
+)
+
+const answerPortfolioLink = computed(() => {
+  if (answerProject.value) {
+    return followUp.value ? undefined : `/#${answerProject.value.id}`
+  }
+
+  const showOverview = aiReply.value
     ? currentTopics.value.length === 1 && currentTopics.value.some(isPortfolioTopic)
     : employerFaqLinksToPortfolio.value
-)
+  return showOverview ? '/#projects' : undefined
+})
 
 // Unterscheidet Anschlussfragen nach Interesse, Technologien, Zeitraum und Aufgaben.
 const followUpPhrases: Record<FollowUpKind, RegExp> = {
@@ -230,6 +125,8 @@ function updateOpenedCategory(category: string, event: Event) {
 // Hier zusätzliche Themen für den KI-Pilot freigeben. Die Einträge sind i18n-Antwortschlüssel.
 // Einzelne Projekte, Ausbildungen und Berufsstationen werden zusätzlich weiter unten freigegeben.
 const aiAnswerTopics = new Set([
+  'assistant.profileAnswer',
+  'assistant.overview.projects',
   'assistant.educationAnswer', // Ausbildung im Überblick
   'assistant.learningAnswer', // Inhalte der Ausbildung
   'assistant.overview.experience', // Beruflicher Werdegang
@@ -318,7 +215,7 @@ const answers = computed(() =>
     return {
       title: titleKey ? replyText(titleKey) : undefined,
       stack: followUp.value ? undefined : topic.stack,
-      detailsPath: topic.detailsPath,
+      detailsPath: followUp.value && topic.project ? undefined : topic.detailsPath,
       detailsLabel: replyText(
         topic.detailsLabelKey ?? 'assistant.detailsLink'
       ),
@@ -503,8 +400,7 @@ function sendAssistantQuestion(
   scrollToCurrentQuestion(sequence)
 
   // Zuerst in den FAQ der erkannten Sprache suchen. Ohne Sprachhinweis gilt die Website-Sprache.
-  const detectedLanguage = detectAssistantLanguage(question)
-  const employerAnswer = findEmployerFaqAnswer(question, detectedLanguage ?? locale.value)
+  const employerAnswer = findEmployerFaqAnswer(question, answerLanguage.value)
 
   if (employerAnswer) {
     employerFaqReply.value = employerAnswer
@@ -513,9 +409,11 @@ function sendAssistantQuestion(
     if (faqTopics.some(topic => topic.project?.id === 'uno-web')) {
       employerFaqDemoUrl.value = unoWebDemoUrl
     }
-    currentTopics.value = []
+    const [faqTopic] = faqTopics
+    const projectTopic = faqTopics.length === 1 && faqTopic?.project ? faqTopic : null
+    currentTopics.value = projectTopic ? [projectTopic] : []
     followUp.value = null
-    lastTopic.value = null
+    lastTopic.value = projectTopic
     return
   }
 
@@ -589,100 +487,14 @@ function sendAssistantQuestion(
       )
     )
 
-  // KI nur bei aktivem Pilot und ein bis fünf freigegebenen Themen aufrufen.
-  // Bei fehlender Themenerkennung wird die KI hier nicht gestartet.
-  if (
-    aiPilotEnabled &&
-    topics.length >= 1 &&
-    topics.length <= 5 &&
-    !usePreparedFollowUp &&
-    topics.every(key =>
-      aiAnswerTopics.has(key) ||
-      /^assistant\.(projectReplies|educationReplies|experienceReplies)\./.test(key)
-    )
-  ) {
+  const canUseTopicSources = topics.length > 0 && topics.length <= 5 && topics.every(key =>
+    aiAnswerTopics.has(key) ||
+    /^assistant\.(projectReplies|educationReplies|experienceReplies)\./.test(key)
+  )
+  // Freie Fragen ohne erkennbares Thema können serverseitig im Portfolio gesucht werden.
+  const canSearchPortfolio = ownQuestion && !refersBack && topics.length === 0
+  if (aiPilotEnabled && !usePreparedFollowUp && (canUseTopicSources || canSearchPortfolio)) {
     void requestPilotAnswer(question, topics, sequence)
-  }
-}
-
-
-// Prüft die Kontaktdaten und sendet Nachricht, Turnstile-Token und Versandkennung an den Server.
-async function sendContactMessage() {
-  if (
-    contactState.value === 'sending' ||
-    !turnstileToken.value
-  ) return
-
-  const email = contactEmail.value.trim()
-  const message = contactMessage.value.trim()
-
-  if (!email || !message) {
-    contactState.value = 'error'
-    return
-  }
-
-  const fields = {
-    email,
-    message,
-    website: contactWebsite.value
-  }
-
-  const body = JSON.stringify(fields)
-
-  if (contactAttempt?.body !== body) {
-    contactAttempt = {
-      body,
-      requestId: crypto.randomUUID()
-    }
-  }
-
-  contactState.value = 'sending'
-
-  try {
-    const response = await fetch('/api/pixel-contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ...fields,
-        requestId: contactAttempt.requestId,
-        turnstileToken: turnstileToken.value
-      })
-    })
-
-    if (
-      response.status === 503 ||
-      response.status === 404 ||
-      !response.headers
-        .get('Content-Type')
-        ?.includes('application/json')
-    ) {
-      contactState.value = 'unavailable'
-      return
-    }
-
-    const result = await response.json()
-
-    if (!response.ok || result?.ok !== true) {
-      contactState.value = 'error'
-      return
-    }
-
-    contactEmail.value = ''
-    contactMessage.value = ''
-    contactWebsite.value = ''
-    contactAttempt = undefined
-    contactState.value = 'sent'
-  } catch {
-    contactState.value = 'error'
-  } finally {
-    // Für einen weiteren Versand muss Turnstile einen neuen Token ausstellen.
-    turnstileToken.value = ''
-
-    if (turnstileWidget !== undefined) {
-      turnstileApi()?.reset(turnstileWidget)
-    }
   }
 }
 </script>
@@ -853,7 +665,7 @@ async function sendContactMessage() {
 
                 <article v-else-if="aiReply || employerFaqReply" class="assistant-reply">
                   <p class="assistant-reply-text">{{ aiReply || employerFaqReply }}</p>
-                  <div v-if="answerLinksToPortfolio || employerFaqDemoUrl" class="assistant-answer-links">
+                  <div v-if="answerPortfolioLink || employerFaqDemoUrl" class="assistant-answer-links">
                     <a
                       v-if="employerFaqDemoUrl"
                       class="assistant-details"
@@ -864,12 +676,12 @@ async function sendContactMessage() {
                       {{ replyText('assistant.projectDemoLink') }}
                     </a>
                     <a
-                      v-if="answerLinksToPortfolio"
+                      v-if="answerPortfolioLink"
                       class="assistant-details"
-                      href="/#projects"
-                      @click="openAnswerLink($event)"
+                      :href="answerPortfolioLink"
+                      @click="openAnswerLink($event, answerProject?.id)"
                     >
-                      {{ replyText('nav.1') }}
+                      {{ replyText(answerProject ? 'assistant.projectDetailsLink' : 'nav.1') }}
                     </a>
                   </div>
                 </article>
@@ -894,10 +706,11 @@ async function sendContactMessage() {
                     </p>
 
                     <div
-                      v-if="answer.detailsPath"
+                      v-if="answer.detailsPath || answer.project || answer.demoUrl"
                       class="assistant-answer-links"
                     >
                       <a
+                        v-if="answer.detailsPath"
                         class="assistant-details"
                         :href="answer.detailsPath"
                         :target="
@@ -1787,10 +1600,6 @@ async function sendContactMessage() {
 .assistant-footer-actions button:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-.assistant-status {
-  margin-top: 6px;
 }
 
 .assistant-status {

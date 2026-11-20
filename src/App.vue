@@ -189,7 +189,7 @@ function scrollToTop() {
           <a class="header-contact" :href="homeLink('#contact')" :aria-label="t('email')" :title="t('email')">
             <span class="header-contact-label">{{ t('contact') }}</span>
             <span class="header-contact-arrow" aria-hidden="true">↗</span>
-            <svg class="header-contact-icon contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <svg class="header-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
               <rect x="3" y="5" width="18" height="14" rx="2" />
               <path d="m4 7 8 6 8-6" />
@@ -806,6 +806,8 @@ function scrollToTop() {
 
   .header-contact-icon {
     display: block;
+    width: 18px;
+    height: 18px;
   }
 
   .cv-label-full,

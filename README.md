@@ -40,3 +40,11 @@ npm run dev
 ```sh
 npm run build
 ```
+
+## Pixel pflegen
+
+- **Texte, Beispielfragen und vorbereitete Antworten:** In `src/locales/de.ts`, `en.ts` und `ru.ts` ändern. Bei FAQ-Einträgen dieselbe ID in allen drei Sprachen verwenden.
+- **Fragen werden falsch erkannt:** In `src/pixel/questionMatching.ts` die Schlagwörter oder Fragevarianten ergänzen. Dort wird auch die Fragesprache erkannt.
+- **Wissen für KI-Antworten:** `src/pixel/sources.ts` liest die veröffentlichten Texte, FAQ und Projektdaten. Bestehende Inhalte am Ursprung pflegen. `src/pixel/facts.ts` enthält gemeinsame Zeitangaben, Arbeitsstunden und Technologien.
+- **Dialog und Aussehen:** `src/pixel/Assistant.vue` enthält die Oberfläche und steuert die Unterhaltung. `src/pixel/usePixelContact.ts` verwaltet den Formularzustand, Turnstile und den Versand.
+- **Server:** `functions/api/pixel-chat.js` ruft bei aktivem KI-Modus Workers AI auf. `functions/api/pixel-contact.js` prüft das Kontaktformular und verschickt die Nachricht.
