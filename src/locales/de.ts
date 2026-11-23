@@ -143,11 +143,11 @@ export default {
                 answer: "Ekaterina ist schon mehrmals einen Halbmarathon gelaufen. Sie trainiert Pole Sport, tanzt gern Hip-Hop und liebt es, zu reisen und dabei Neues kennenzulernen.",
             },
         },
-        name: "Pixel – KI-Assistent",
+        name: "Hallo, ich bin Pixel.",
         title: 'KI-Assistent',
         status: "Testversion",
-        statusNote: "Bitte wichtige Angaben prüfen.",
-        greeting: "Fragen zu Ekaterinas Projekten, Ausbildung und Beruf.",
+        statusNote: "· Wichtige Angaben bitte auf der Website prüfen.",
+        greeting: "Frag mich nach Ekaterinas Projekten, Ausbildung oder Berufserfahrung.",
         showAnswer: 'Antwort anzeigen',
         questionLabel: 'Ihre Frage',
         send: 'Senden',
@@ -171,7 +171,7 @@ export default {
             projects: projectOverview,
             technologies: jawaVueExperience + " " + 'Ekaterina hat mit Vue und TypeScript Webanwendungen umgesetzt, mit Java eine Hotelverwaltung gebaut und bei JAWA mit PHP und SQL an bestehender Software gearbeitet.',
             contact: "Wenn Sie mit Ekaterina in Kontakt treten möchten, finden Sie ihr GitHub-Profil im Kontaktbereich des Portfolios. Sie freut sich über interessante Projekte und passende Stellenangebote in der Softwareentwicklung.",
-            python: "Ekaterina möchte selbst ausprobieren, wie Modelle aus Daten lernen und woran sich verlässliche Ergebnisse erkennen lassen. Ihr Einstieg ist ein Python-Kurs in Hagen, der für Ende November 2026 geplant ist.",
+            python: "Ekaterina möchte selbst ausprobieren, wie Modelle aus Daten lernen und woran sich verlässliche Ergebnisse erkennen lassen. Sie nimmt derzeit am Kurs „Python – Grundlagen, Konzepte, Programmierung“ an der FernUniversität in Hagen teil.",
             ai: "Ekaterina nutzt KI, um beim Entwickeln mehr Ideen auszuprobieren und Fehler gezielter einzugrenzen. Sie prüft die Vorschläge am Code und entscheidet selbst, welchen Ansatz sie weiterverfolgt.",
         },
         projectReplies: {
@@ -241,8 +241,9 @@ export default {
     educationFocus: 'Softwareentwicklung im Fokus',
     educationHeading: 'Akademisch geprüfte Softwareentwicklerin',
     educationMilestone: `Abgeschlossen im ${softwareEngineeringCompletion}`,
-    educationNext: 'Nächster Schritt',
-    educationNextCourse: 'Python-Kurs in Hagen · geplant für Ende November 2026',
+    educationNext: 'Weiterbildung',
+    educationNextCourse: 'University of Helsinki – Python Programming MOOC 2026 · November 2026 – laufend',
+    educationPlannedCourse: 'FernUniversität in Hagen · Python – Grundlagen, Konzepte, Programmierung · laufend',
     projectsTitle: 'Dinge, die ich entwickle.',
     projectsIntro: 'Eine Auswahl meiner Projekte und Ideen.',
     portfolioStatus: 'Derzeit in Bearbeitung',
@@ -275,7 +276,7 @@ export default {
         heading: 'Warum jetzt Python?',
         before: '',
         emphasis: 'Wie lernt ein Modell aus Daten?',
-        after: ' Und woran erkenne ich, ob ich seinem Ergebnis trauen kann? Das will ich selbst ausprobieren. Mein Einstieg ist der Python-Kurs in Hagen.'
+        after: ' Und woran erkenne ich, ob ich seinem Ergebnis trauen kann? Das will ich selbst ausprobieren. Ich mache gerade den Python-Kurs an der FernUniversität in Hagen.'
         },
     ],
     helloTitle: 'Lass uns etwas bewegen.',
@@ -780,7 +781,7 @@ export const employerFaq = [
   {
     "id": 40,
     "question": "Lernt Ekaterina nach ihrem Abschluss weiter?",
-    "answer": "Ja. Sie möchte ihre Programmierkenntnisse vertiefen und interessiert sich besonders für Python und künstliche Intelligenz. In ihren Portfolio-Daten ist ein Python-Kurs in Hagen als geplanter nächster Schritt genannt; eine erfolgreiche Teilnahme sollte erst nach Bestätigung als abgeschlossen bezeichnet werden."
+    "answer": "Ja. Sie möchte ihre Programmierkenntnisse vertiefen und interessiert sich besonders für Python und künstliche Intelligenz. Sie nimmt am Kurs „Python – Grundlagen, Konzepte, Programmierung“ an der FernUniversität in Hagen teil."
   },
   {
     "id": 41,
@@ -905,7 +906,7 @@ export const employerFaq = [
   {
     "id": 65,
     "question": "Hat sie Erfahrung mit JavaScript?",
-    "answer": "Ja. Sie hat JavaScript sowohl in einer Weiterbildung gelernt als auch in praktischen Webprojekten verwendet. Beispiele dafür sind das Kaffeehaus Mokka und das browserbasierte Kartenspiel."
+    "answer": "Ekaterina hat JavaScript in einer Weiterbildung gelernt und in Webprojekten eingesetzt, etwa beim Kaffeehaus Mokka und bei CAMPUS02 ColorSpiel. Ein genaues Niveau lässt sich aus dem Portfolio nicht ableiten."
   },
   {
     "id": 66,
@@ -925,7 +926,7 @@ export const employerFaq = [
   {
     "id": 69,
     "question": "Kennt sie Python?",
-    "answer": "Ekaterina beschäftigt sich mit Python und möchte ihre Kenntnisse weiter vertiefen. Ein Python-Kurs an der FernUniversität in Hagen ist in ihren Unterlagen als nächster Ausbildungsschritt vorgesehen. Berufliche Python-Erfahrung ist damit noch nicht belegt."
+    "answer": "Ekaterina beschäftigt sich mit Python und möchte ihre Kenntnisse weiter vertiefen. Sie besucht derzeit einen Python-Kurs an der FernUniversität in Hagen. Berufliche Python-Erfahrung ist damit noch nicht belegt."
   },
   {
     "id": 70,
@@ -2331,5 +2332,10 @@ export const employerFaq = [
     "id": 350,
     "question": "Können wir Ekaterina ein Angebot machen?",
     "answer": "Ja, Sie können sie über die Kontaktmöglichkeiten ihres Portfolios erreichen. Pixel kann Informationen bereitstellen, aber keine Angebote annehmen oder Zusagen in ihrem Namen machen."
+  },
+  {
+    "id": 351,
+    "question": "Was lernt sie aktuell?",
+    "answer": "Seit November 2026 absolviert Ekaterina den Python Programming MOOC 2026 der University of Helsinki. Parallel dazu macht sie den Kurs „Python – Grundlagen, Konzepte, Programmierung“ an der FernUniversität in Hagen."
   }
 ] as const

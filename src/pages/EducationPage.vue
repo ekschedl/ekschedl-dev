@@ -55,6 +55,11 @@ function formatMonth(value: string) {
       <span class="eyebrow">{{ t('educationPage.label') }}</span>
       <h1 id="education-title">{{ t('educationPage.title') }}</h1>
       <p>{{ t('educationPage.intro') }}</p>
+      <p>
+        <a href="https://www.fernuni-hagen.de/cew/kurse/informatik/python.shtml">
+          {{ t('educationPlannedCourse') }}
+        </a>
+      </p>
     </header>
     <div class="education-filters" role="group" :aria-label="t('educationPage.filter')">
       <button

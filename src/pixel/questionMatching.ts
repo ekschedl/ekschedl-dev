@@ -6,6 +6,8 @@ import { i18n } from '../i18n'
 import { pixelFacts } from './facts'
 import { cvPath, projects, skillGroups } from '../data/portfolioData'
 
+export const javascriptTopicKey = 'assistant.educationReplies.javascript'
+
 export type FollowUpKind = 'interest' | 'technology' | 'duration' | 'tasks'
 
 interface KnowledgeTopic {
@@ -345,7 +347,7 @@ const topics: KnowledgeTopic[] = [
     answerKey: 'assistant.overview.contact'
   },
   {
-    keywords: ['python'],
+    keywords: ['python', 'hagen', 'fernuniversität', 'хаген', 'хагене'],
     titleKey: 'educationNext',
     overview: true,
     detailsPath: '/#about',
@@ -482,9 +484,16 @@ function normalizeEmployerQuestion(value: string): string {
 }
 
 const employerQuestionAliases: Record<string, number> = {
+  'was lernt ekaterina aktuell': 351,
+  'was lernt sie gerade': 351,
+  'was lernt ekaterina gerade': 351,
+  'welchen kurs macht sie aktuell': 351,
   'kann sie php': 47,
   'kann ekaterina php': 47,
   'kennt sie php': 47,
+  'kann sie javascript': 65,
+  'wie gut kann sie javascript': 65,
+  'wie gut beherrscht sie javascript': 65,
   'was hat ekaterina selbst daran erweitert': 108,
   'welche aufgaben übernahm ekaterina bei yoganow': 93,
   'welche projekte hat sie mit vue': 63,
@@ -552,7 +561,13 @@ export function getEmployerFaqQuestions(ids: readonly number[], language: string
 
 const translatedAliases = {
   en: {
+    'what is she learning right now': 351,
+    'what is she learning at the moment': 351,
+    'what is she learning now': 351,
+    'what is she currently studying': 351,
+    'what course is she taking now': 351,
     'does she know php': 47,
+    'how good is she at javascript': 65,
     'can she use php': 47,
     'does ekaterina know php': 47,
     'what did ekaterina add to colorspiel herself': 108,
@@ -565,7 +580,12 @@ const translatedAliases = {
     'how long did ekaterina work at jawa': 42
   },
   ru: {
+    'что она изучает сейчас': 351,
+    'что екатерина изучает сейчас': 351,
+    'чему она сейчас учится': 351,
+    'какой курс она сейчас проходит': 351,
     'она умеет php': 47,
+    'насколько хорошо она знает javascript': 65,
     'умеет ли она php': 47,
     'она знает php': 47,
     'знает ли она php': 47,
@@ -591,11 +611,28 @@ const faqAliases = new Map([
 ])
 
 /** Liefert eine hinterlegte Antwort in der gewünschten Sprache oder null. */
-export function findEmployerFaqAnswer(question: string, language = 'de'): string | null {
+const skillFollowUps = new Set([
+  'kann sie es gut', 'kann sie das gut', 'kann sie damit gut',
+  'wie gut kann sie es', 'wie gut kann sie das', 'wie gut kennt sie sich damit aus',
+  'was sie es gut',
+  'is she good at it', 'how good is she at it', 'can she use it well',
+  'она хорошо это знает', 'она хорошо это умеет', 'она хорошо в этом разбирается',
+  'насколько хорошо она в этом разбирается'
+])
+
+export function isSkillFollowUp(question: string) {
+  return skillFollowUps.has(normalizeEmployerQuestion(question))
+}
+
+export function findEmployerFaqAnswer(question: string, language = 'de', previousTopicKey?: string): string | null {
   const index = faqIndexes.get(language)
   if (!index) return null
   const normalized = normalizeEmployerQuestion(question)
   if (!normalized) return null
+
+  if (previousTopicKey === javascriptTopicKey && isSkillFollowUp(question)) {
+    return index.entriesById.get(65)?.answer ?? null
+  }
 
   // Ein mehrdeutiger exakter Treffer darf nicht durch eine lockerere Regel ersetzt werden.
   if (index.exact.has(normalized)) return index.exact.get(normalized) ?? null

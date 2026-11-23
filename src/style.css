@@ -54,6 +54,14 @@
   box-sizing: border-box;
 }
 
+/* Jede Verwendung des Pixel-Avatars nutzt dieselbe Wink-Pose. */
+@media (hover: hover) {
+  img[src='/images/pixel-avatar.png']:hover,
+  .assistant-trigger:hover img[src='/images/pixel-avatar.png'] {
+    content: url('/images/pixel-waving.png');
+  }
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 30px;

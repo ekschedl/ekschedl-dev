@@ -227,6 +227,7 @@ function scrollToTop() {
         <div class="education-milestone-next">
           <strong class="education-milestone-label">{{ t('educationNext') }}</strong>
           <span>{{ t('educationNextCourse') }}</span>
+          <span>{{ t('educationPlannedCourse') }}</span>
         </div>
       </a>
 

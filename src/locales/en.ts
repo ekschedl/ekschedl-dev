@@ -162,7 +162,7 @@ const messages = {
             projects: "Ekaterina has built web apps, an iOS app, games and management tools. Here is what you can do with them.\n\nOn the web: Add, check off and delete tasks in the to-do app. In ShopPlatzi, search and filter products and add them to your cart. For the lollipop maker Feta, Ekaterina turned a static website into a custom WordPress theme using PHP templates. She implemented the product catalog, ingredient lists and contact form in WordPress. She built the small Café Mokka site as an exercise in HTML, CSS and JavaScript. She also developed her multilingual portfolio and integrated Pixel to answer questions about her projects.\n\nOn iPhone: YogaNow Studio offers a yoga library and studio class booking. Ekaterina handled the design, Supabase integration and booking feature on the team.\n\nManagement tools: The Java hotel management app handles guests, rooms, bookings and extras. Her Windows gift manager lets you add, edit, duplicate and filter gift records.\n\nGames: The team built a Java console version of UNO. In CAMPUS02 ColorSpiel, four people can play on one screen. Ekaterina extended the interface developed by the team and built a backend that deals cards, checks moves and keeps score.",
             technologies: jawaVueExperience + " " + 'Ekaterina has built web apps with Vue and TypeScript and a hotel management application with Java. At JAWA, she worked on existing software using PHP and SQL.',
             contact: "You can find Ekaterina’s GitHub profile in the contact section. She would be happy to hear about interesting projects and software development roles.",
-            python: "Ekaterina wants to explore how models learn from data and how to tell whether their results are reliable. She plans to start with a Python course in Hagen in late November 2026.",
+            python: "Ekaterina wants to explore how models learn from data and how to tell whether their results are reliable. She is currently taking Python – Fundamentals, Concepts, Programming at FernUniversität in Hagen.",
             ai: "Ekaterina uses AI to try more ideas and narrow down the causes of bugs. She checks suggestions against the code and decides which approach to pursue.",
         },
         projectReplies: {
@@ -232,8 +232,9 @@ const messages = {
     educationFocus: 'Software development in focus',
     educationHeading: 'Academically qualified software developer',
     educationMilestone: `Completed in ${softwareEngineeringCompletion}`,
-    educationNext: 'Next step',
-    educationNextCourse: 'Python course in Hagen · planned for late November 2026',
+    educationNext: 'Continuing education',
+    educationNextCourse: 'University of Helsinki – Python Programming MOOC 2026 · November 2026 – ongoing',
+    educationPlannedCourse: 'FernUniversität in Hagen · Python – Fundamentals, Concepts, Programming · ongoing',
     projectsTitle: 'Things I build.',
     projectsIntro: 'A selection of my projects and ideas.',
     portfolioStatus: 'Currently in progress',
@@ -266,7 +267,7 @@ const messages = {
         heading: 'Why Python now?',
         before: '',
         emphasis: 'How does a model learn from data?',
-        after: ' How can I tell whether I can trust its results? I want to find out for myself. My starting point is a Python course in Hagen.'
+        after: ' How can I tell whether I can trust its results? I want to find out for myself. I am currently taking a Python course at FernUniversität in Hagen.'
       },
     ],
     helloTitle: "Let's make something happen.",
@@ -656,7 +657,7 @@ export const employerFaq = [
   { id: 39, question: "Has she studied software architecture?",
     answer: "Yes. Architecture and software design were part of her training. Her hotel management project includes a data model and application structure." },
   { id: 40, question: "Does Ekaterina continue learning after graduation?",
-    answer: "She wants to deepen programming skills, particularly Python and AI. A Python course in Hagen is planned; completion must be confirmed before describing it as finished." },
+    answer: "She wants to deepen programming skills, particularly Python and AI. She is currently taking a Python course at FernUniversität in Hagen." },
   { id: 41, question: "Where did Ekaterina gain practical software development experience?",
     answer: `Ekaterina continues to gain hands-on experience through her own software projects. At WIFI Steiermark, she built a custom WordPress theme in PHP for Feta. At FH CAMPUS 02, she built a Java hotel management application. On the YogaNow Studio iOS team, she handled design, Supabase integration and class booking. She later turned the team project CAMPUS02 ColorSpiel into her own web version with a Node.js backend and hosted it herself. Her other projects include a to-do app and the ShopPlatzi demo, both built with Vue and TypeScript.\n\nFrom ${jawaStart} to ${jawaEnd}, she completed the workplace component of her dual training at JAWA Management Software GmbH in Graz. She contributed to the web-based management platform INFORUM and handled tasks across 16 client projects. She investigated reported issues, analysed and debugged existing code, and made changes to the applications.\n\nShe worked with Vue, TypeScript and PHP, using Xdebug to troubleshoot PHP code and HeidiSQL for database tasks. Her day-to-day tools also included Docker, Git and Bitbucket, and Jira for tracking work.` },
   { id: 42, question: "How long did she work at JAWA?",
@@ -706,7 +707,7 @@ export const employerFaq = [
   { id: 64, question: "Does she know TypeScript?",
     answer: "TypeScript is used in her projects, including Vue applications. Project use alone does not establish mastery of every TypeScript feature." },
   { id: 65, question: "Does she have JavaScript experience?",
-    answer: "She studied JavaScript and used it in web projects including Kaffeehaus Mokka and the browser card game." },
+    answer: "Ekaterina studied JavaScript and used it in web projects such as Kaffeehaus Mokka and CAMPUS02 ColorSpiel. The portfolio does not establish her exact level of proficiency." },
   { id: 66, question: "Can she program in Java?",
     answer: "Java was a major part of her training, including console UNO and hotel management. After limited recent use, she may need to refresh its syntax." },
   { id: 67, question: "What C# experience does she have?",
@@ -714,7 +715,7 @@ export const employerFaq = [
   { id: 68, question: "Does she know Swift?",
     answer: "YogaNow Studio used Swift and SwiftUI. Her team contributions included design, Supabase integration and the course-booking platform." },
   { id: 69, question: "Does she know Python?",
-    answer: "She is learning Python and plans to deepen her knowledge through a course at FernUniversität in Hagen. Professional Python experience is not established." },
+    answer: "She is learning Python and is deepening her knowledge through a course at FernUniversität in Hagen. Professional Python experience is not established." },
   { id: 70, question: "Which databases is she familiar with?",
     answer: "Her training and projects include SQL, SQLite and SQL Server LocalDB. At JAWA she also worked with database contents." },
   { id: 71, question: "Does she have REST API experience?",
@@ -1276,5 +1277,7 @@ export const employerFaq = [
   { id: 349, question: "Has she already applied to our company?",
     answer: "Pixel has no reliable access to her current job applications and cannot answer that." },
   { id: 350, question: "Can we make Ekaterina an offer?",
-    answer: "You can reach her through the portfolio's contact options. Pixel can provide information but cannot accept offers or make commitments for her." }
+    answer: "You can reach her through the portfolio's contact options. Pixel can provide information but cannot accept offers or make commitments for her." },
+  { id: 351, question: "What is she currently learning?",
+    answer: "Ekaterina has been taking the Python Programming MOOC 2026 at the University of Helsinki since November 2026. At the same time, she is taking Python – Fundamentals, Concepts, Programming at FernUniversität in Hagen." }
 ] as const

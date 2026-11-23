@@ -8,6 +8,8 @@ import {
   findKnowledgeTopics,
   findEmployerFaqAnswer,
   getEmployerFaqQuestions,
+  isSkillFollowUp,
+  javascriptTopicKey,
   type FollowUpKind
 } from './questionMatching'
 import { usePixelContact } from './usePixelContact'
@@ -93,7 +95,7 @@ const followUpPhrases: Record<FollowUpKind, RegExp> = {
 // Die Beispielfragen verwenden die übersetzten Einträge aus dem FAQ-Katalog.
 const suggestionCategories = {
   projects: [81, 108, 93, 86],
-  education: [31, 34, 32],
+  education: [351, 31, 34, 32],
   experience: [41, 46, 63],
   collaboration: [13, 140, 144]
 } as const
@@ -400,7 +402,7 @@ function sendAssistantQuestion(
   scrollToCurrentQuestion(sequence)
 
   // Zuerst in den FAQ der erkannten Sprache suchen. Ohne Sprachhinweis gilt die Website-Sprache.
-  const employerAnswer = findEmployerFaqAnswer(question, answerLanguage.value)
+  const employerAnswer = findEmployerFaqAnswer(question, answerLanguage.value, lastTopic.value?.answerKey)
 
   if (employerAnswer) {
     employerFaqReply.value = employerAnswer
@@ -413,7 +415,18 @@ function sendAssistantQuestion(
     const projectTopic = faqTopics.length === 1 && faqTopic?.project ? faqTopic : null
     currentTopics.value = projectTopic ? [projectTopic] : []
     followUp.value = null
-    lastTopic.value = projectTopic
+    if (!isSkillFollowUp(question)) {
+      lastTopic.value = faqTopics.length === 1 && faqTopic?.answerKey === javascriptTopicKey
+        ? faqTopic
+        : projectTopic
+    }
+    return
+  }
+
+  if (isSkillFollowUp(question)) {
+    currentTopics.value = []
+    followUp.value = null
+    employerFaqReply.value = replyText('assistant.incompleteQuestionAnswer')
     return
   }
 
@@ -507,13 +520,7 @@ function sendAssistantQuestion(
     aria-controls="portfolio-assistant"
     @click="assistantDialog?.showModal()"
   >
-    <img
-      class="assistant-avatar"
-      src="/images/pixel-avatar.png"
-      alt=""
-      width="32"
-      height="32"
-    />
+    <img class="assistant-avatar" src="/images/pixel-avatar.png" alt="" width="32" height="32" />
     {{ t('assistant.title') }}
   </button>
 
