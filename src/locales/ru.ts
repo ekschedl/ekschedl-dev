@@ -252,7 +252,7 @@ const messages = {
     educationMilestone: `Завершено в ${softwareEngineeringCompletion} года`,
     educationNext: 'Дополнительное обучение',
     educationNextCourse: 'University of Helsinki – Python Programming MOOC 2026 · ноябрь 2026 – по настоящее время',
-    educationPlannedCourse: 'FernUniversität in Hagen · Python — основы, концепции, программирование · курс продолжается',
+    educationPlannedCourse: 'FernUniversität in Hagen · Python — основы, концепции, программирование · ноябрь 2026 – по настоящее время',
     projectsTitle: 'То, что я создаю.',
     projectsIntro: 'Некоторые из моих проектов и идей.',
     portfolioStatus: 'Раздел обновляется',

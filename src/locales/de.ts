@@ -243,7 +243,7 @@ export default {
     educationMilestone: `Abgeschlossen im ${softwareEngineeringCompletion}`,
     educationNext: 'Weiterbildung',
     educationNextCourse: 'University of Helsinki – Python Programming MOOC 2026 · November 2026 – laufend',
-    educationPlannedCourse: 'FernUniversität in Hagen · Python – Grundlagen, Konzepte, Programmierung · laufend',
+    educationPlannedCourse: 'FernUniversität in Hagen · Python – Grundlagen, Konzepte, Programmierung · November 2026 – laufend',
     projectsTitle: 'Dinge, die ich entwickle.',
     projectsIntro: 'Eine Auswahl meiner Projekte und Ideen.',
     portfolioStatus: 'Derzeit in Bearbeitung',
