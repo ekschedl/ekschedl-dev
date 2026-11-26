@@ -626,7 +626,7 @@ export const employerFaq = [
   {
     "id": 9,
     "question": "Hat Ekaterina bereits in einem Unternehmen Software entwickelt?",
-    "answer": `Ja. Von ${jawaStart} bis ${jawaEnd} arbeitete sie bei JAWA Management Software GmbH in Graz. Dort war sie an Kundenprojekten und an der modularen Managementplattform INFORUM beteiligt.`
+    "answer": `Ja. Von ${jawaStart} bis ${jawaEnd} arbeitete Ekaterina bei JAWA Management Software GmbH in Graz. Sie wirkte an Kundenprojekten und an Aufgaben rund um die Managementplattform INFORUM mit.`
   },
   {
     "id": 10,

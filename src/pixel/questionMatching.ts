@@ -152,7 +152,7 @@ const personalTopics = {
     'work in a team', 'team player', 'colleagues', 'команд*', 'коллег*', 'общительн*', 'общение', 'любит людей', 'общаться с людьми'
   ],
   growth: [
-    'schwäche*', 'schwache seiten', 'verbessern', 'woran arbeitet sie', 'lernt sie', 'weiterlernen',
+    'schwäche*', 'schwache seiten', 'verbessern', 'woran arbeitet sie', 'weiterlernen',
     'weakness*', 'areas for improvement', 'improve', 'still learning', 'how does she learn',
     'слабые сторон*', 'слабост*', 'улучш*', 'над чем работает', 'как она учится'
   ],
@@ -481,9 +481,13 @@ function normalizeEmployerQuestion(value: string): string {
     .replace(/\s+/g, ' ')
     .replace(/\bvue ?3\b/g, 'vue')
     .trim()
+    .replace(/^lernt (?:sie|ekaterina(?: schedlberger)?) gerne?(?: neues)?$/, 'lernt sie gern')
 }
 
 const employerQuestionAliases: Record<string, number> = {
+  'hat sie schon als entwicklerin in einer firma gearbeitet': 9,
+  'hat sie berufserfahrung in der softwareentwicklung': 9,
+  'lernt sie gern': 18,
   'was lernt ekaterina aktuell': 351,
   'was lernt sie gerade': 351,
   'was lernt ekaterina gerade': 351,
@@ -561,6 +565,9 @@ export function getEmployerFaqQuestions(ids: readonly number[], language: string
 
 const translatedAliases = {
   en: {
+    'does she like learning': 18,
+    'does ekaterina enjoy learning': 18,
+    'does she enjoy learning': 18,
     'what is she learning right now': 351,
     'what is she learning at the moment': 351,
     'what is she learning now': 351,
@@ -580,6 +587,9 @@ const translatedAliases = {
     'how long did ekaterina work at jawa': 42
   },
   ru: {
+    'она любит учиться': 18,
+    'любит ли она учиться': 18,
+    'екатерина любит учиться': 18,
     'что она изучает сейчас': 351,
     'что екатерина изучает сейчас': 351,
     'чему она сейчас учится': 351,
